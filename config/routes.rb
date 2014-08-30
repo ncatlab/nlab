@@ -36,7 +36,6 @@ ActionController::Routing::Routes.draw do |map|
   connect_to_web map, ':web/list/:category', :controller => 'wiki', :action => 'list', :requirements => { :category => /.*/}, :category => nil
   connect_to_web map, ':web/:action/:id', :controller => 'wiki', :requirements => {:id => id_regexp}
   connect_to_web map, ':web/recently_revised/:category', :controller => 'wiki', :action => 'recently_revised', :requirements => { :category => /.*/}, :category => nil
-  connect_to_web map, ':web/recently_revised_nocache/:category', :controller => 'wiki', :action => 'recently_revised_nocache', :requirements => { :category => /.*/}, :category => nil
   connect_to_web map, ':web/:action', :controller => 'wiki'
   connect_to_web map, ':web', :controller => 'wiki', :action => 'index'
 

@@ -9,8 +9,9 @@ class WikiController < ApplicationController
 
   before_filter :load_page
   before_filter :dnsbl_check, :only => [:edit, :new, :save, :export_html, :export_markup]
-  caches_action :show, :published, :authors, :tex, :s5, :print, :list, :recently_revised, :file_list, :source,
+  caches_action :show, :published, :authors, :tex, :s5, :print, :list, :file_list, :source,
         :history, :revision, :atom_with_content, :atom_with_headlines, :if => Proc.new { |c| c.send(:do_caching?) }
+  caches_action :recently_revised, :expires_in => 30.minutes, :if => Proc.new { |c| c.send(:do_caching?) }
   cache_sweeper :revision_sweeper
 
   layout 'default', :except => [:atom_with_content, :atom_with_headlines, :atom, :source, :tex, :s5, :export_html]
@@ -170,11 +171,6 @@ EOL
       day = Date.new(page.revised_at.year, page.revised_at.month, page.revised_at.day)
       @pages_by_day[day] << page
     end
-  end
-
-  def recently_revised_nocache
-    recently_revised
-    render 'recently_revised'
   end
 
   def atom_with_content
