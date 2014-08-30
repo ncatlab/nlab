@@ -2,5 +2,6 @@
 *.log
 *~
 .bundle
+vendor/bundle
 database.yml
 secret
