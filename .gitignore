@@ -1,0 +1,6 @@
+*.~1~
+*.log
+*~
+.bundle
+database.yml
+secret
