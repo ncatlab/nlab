@@ -170,11 +170,11 @@ EOL
       day = Date.new(page.revised_at.year, page.revised_at.month, page.revised_at.day)
       @pages_by_day[day] << page
     end
-    puts @pages_by_day
   end
 
   def recently_revised_nocache
     recently_revised
+    render 'recently_revised'
   end
 
   def atom_with_content
