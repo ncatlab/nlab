@@ -36,7 +36,6 @@ gambling
 Good job man
 gucci
 guestbook
-hamburger
 hold-em
 holdem
 home\s*loan
@@ -68,7 +67,7 @@ rolex
 serotonin
 singtaotor
 slot\s*machin
-soma
+soma\W
 super\s+site
 thepussies
 Tramadol
@@ -83,3 +82,9 @@ Your site is great!
 zoloft
 \.iwarp\.
 \.tripod\.com
+cocktail\W*dresses
+color:\s+white
+color:\s*#ffffff
+color:\s*#fff
+\.5hiva\.com
+sentimancho

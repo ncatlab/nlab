@@ -47,7 +47,7 @@ module DNSBL_Check
         if addr[0,7]=="127.0.0"
           logger.info("#{ip} found using DNSBL #{host}")
           ban_help << "\n<p>See <a href='#{DNSBLS[dnsbl]}#{ip}'>here</a> for more information.</p>"
-          passed = false
+          # passed = false
         end
       end
     end

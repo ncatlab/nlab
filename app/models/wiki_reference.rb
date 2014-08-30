@@ -69,7 +69,7 @@ class WikiReference < ActiveRecord::Base
     redirected_pages.concat Thread.current[:page_redirects][page] if
             Thread.current[:page_redirects] && Thread.current[:page_redirects][page]
     redirected_pages.uniq.each { |name| names.concat self.pages_that_reference(web, name) }
-    names.uniq    
+    names.uniq
   end
 
   def self.pages_that_redirect_for(web, page_name)

@@ -4,12 +4,13 @@ require 'maruku/ext/math'
 require 'zip/zip'
 require 'instiki_stringsupport'
 require 'resolv'
+require 'json/add/core'
 
 class WikiController < ApplicationController
 
   before_filter :load_page
   before_filter :dnsbl_check, :only => [:edit, :new, :save, :export_html, :export_markup]
-  caches_action :show, :published, :authors, :tex, :s5, :print, :recently_revised, :list, :file_list, :source,
+  caches_action :show, :published, :authors, :tex, :s5, :print, :list, :recently_revised, :file_list, :source,
         :history, :revision, :atom_with_content, :atom_with_headlines, :if => Proc.new { |c| c.send(:do_caching?) }
   cache_sweeper :revision_sweeper
 
@@ -164,12 +165,41 @@ EOL
   
   def recently_revised
     parse_category
+    @pages_by_day = {}
+    if @web.address == "nlab"
+      begin
+        i = IO.read("/home/nlab/instiki/cache/recently_revised.json")
+        @pages_by_day = JSON.load(i)
+      rescue
+      end
+    end
+    unless @pages_by_day
+      @pages_by_revision = @pages_in_category.by_revision
+      @pages_by_day = Hash.new { |h, day| h[day] = [] }
+      @pages_by_revision.each do |page| 
+        day = Date.new(page.revised_at.year, page.revised_at.month, page.revised_at.day)
+        @pages_by_day[day] << page
+      end
+    end
+  end
+
+  def recently_revised_json
+    # this is meant to be called by a script, which runs every 30m (say),
+    # and saves this output to be served next time someone requests
+    # the recently_revised page
+    parse_category
     @pages_by_revision = @pages_in_category.by_revision
     @pages_by_day = Hash.new { |h, day| h[day] = [] }
-    @pages_by_revision.each do |page| 
-      day = Date.new(page.revised_at.year, page.revised_at.month, page.revised_at.day)
+    @pages_by_revision.each do |page|
+      day = DateTime.new(page.revised_at.year, page.revised_at.month, page.revised_at.day)
+      page = page.as_json.slice("name").merge({
+        :plain_name => page.plain_name,
+        :rev_ids    => page.rev_ids.map {|r| 0 },
+        :author     => page.author,
+	:revised_at => page.revised_at.to_datetime})
       @pages_by_day[day] << page
     end
+    render :json => @pages_by_day
   end
 
   def atom_with_content

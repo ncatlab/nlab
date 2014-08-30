@@ -37,14 +37,15 @@ require 'instiki_stringsupport'
   # Creates a hyperlink to a Wiki page, without checking if the page exists or not
   def link_to_existing_page(page, text = nil, html_options = {})
     link_to(
-        text || page.plain_name, 
-        {:web => @web.address, :action => 'show', :id => page.name, :only_path => true},
+        text || page["plain_name"], 
+        {:web => @web.address, :action => 'show', :id => page["name"], :only_path => true},
         html_options).html_safe
   end
   
   # Creates a hyperlink to a Wiki page, or to a "new page" form if the page doesn't exist yet
   def link_to_page(page_name, web = @web, text = nil, options = {})
     raise 'Web not defined' if web.nil?
+    raise 'Page empty' if page_name.nil?
     UrlGenerator.new(@controller).make_link(@web, page_name, nil, web, text, 
         options.merge(:base_url => "#{base_url}/#{web.address}")).html_safe
   end
@@ -55,22 +56,22 @@ require 'instiki_stringsupport'
 
   # Create a hyperlink to a particular revision of a Wiki page
   def link_to_revision(page, revision_number, text = nil, mode = nil, html_options = {})
-    revision_number == page.rev_ids.size ?
+    revision_number == page["rev_ids"].size ?
       link_to(
-        text || page.plain_name,
-            {:web => @web.address, :action => 'show', :id => page.name,
+        text || page["plain_name"],
+            {:web => @web.address, :action => 'show', :id => page["name"],
                :mode => mode}, html_options).html_safe :
       link_to(
-        text || page.plain_name + "(rev # #{revision_number})".html_safe,
-            {:web => @web.address, :action => 'revision', :id => page.name,
+        text || page["plain_name"] + "(rev # #{revision_number})".html_safe,
+            {:web => @web.address, :action => 'revision', :id => page["name"],
               :rev => revision_number, :mode => mode}, html_options).html_safe
   end
 
   # Create a hyperlink to the history of a particular Wiki page
   def link_to_history(page, text = nil, html_options = {})
     link_to(
-        text || page.plain_name + "(history)".html_safe,
-            {:web => @web.address, :action => 'history', :id => page.name},
+        text || page["plain_name"] + "(history)".html_safe,
+            {:web => @web.address, :action => 'history', :id => page["name"]},
             html_options).html_safe
   end
 

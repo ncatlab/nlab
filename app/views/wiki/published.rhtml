@@ -8,7 +8,7 @@
 
 <%= @renderer.display_published %>
 
-<div class="byline">
+<div class="revisedby">
   <%= @page.revisions? ? "Revised" : "Created" %> on <%= format_date(@page.revised_at) %> 
   by
   <%= author_link(@page, { :mode => (@link_mode || :show) }) %>

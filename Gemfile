@@ -17,3 +17,4 @@ gem "syntax", "~> 1.1.0"
 gem "maruku", :git => 'git://github.com/distler/maruku.git', :branch => 'nokogiri'
 gem 'iconv', :platforms => [:ruby_20, :ruby_21]
 gem 'rdoc-data', :platforms => :ruby_18
+gem "mysql", ">=2.9.1"

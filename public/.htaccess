@@ -1,4 +1,72 @@
 # General Apache options
+Deny from 178.235.218.81
+Deny from 88.185.7.3
+Deny from 5.254
+Deny from 2.0.134.186
+Deny from 96.43.130.70
+Deny from 75.181.123.202
+Deny from 110.139.206.134
+Deny from 110.139.206.64
+Deny from 114.79
+Deny from 114.79.19.140
+Deny from 119.235.251.195
+Deny from 66.230.230.230
+Deny from 82.225.132.175
+Deny from 77.247.181.165
+Deny from 91.197.136.36
+Deny from 122.179.42.84
+Deny from 78.112.204.182
+Deny from 174.143.244.103
+Deny from 125.163.179.114
+Deny from 118.96.173.86
+Deny from 201.159.37.160
+Deny from 174.37.16.81
+Deny from 204.152.215.132
+Deny from 201.22.12.246
+Deny from 49.244.90.243
+Deny from 112.205.235.54
+Deny from 124.6.181.
+Deny from 120.166.18.15
+Deny from 121.54.125.194
+Deny from 125.162.230.96
+Deny from 112.5.237.210
+Deny from 213.238.175.71
+Deny from 76.164.224.130
+Deny from 112.5.237.38
+Deny from 120.40.156.79
+Deny from 76.164.234.
+Deny from 112.5.237.
+Deny from 112.5.236.
+Deny from 162.244.13.18
+Deny from 173.77.165.72
+Deny from 173.61.194.56
+Deny from 173.44.37.226
+Deny from 183.60.183.73 
+Deny from 110.85.71.230
+Deny from 199.15.233.
+Deny from 188.143.232.6
+Deny from 91.207.5.58
+Deny from 117.89.217.236
+Deny from 94.102.56.210
+Deny from 117.26.198.135
+Deny from 49.143.192.215
+Deny from 117.26.198.135
+Deny from 62.210.78.209
+Deny from 27.159.220.57
+Deny from 27.150.203.233
+Deny from 175.44.29.47
+Deny from 182.245.141.97
+Deny from 216.244.81.250
+Deny from 175.44.58.130
+Deny from 202.199.240.236
+Deny from 80.82.64.118
+Deny from 58.22.79.152
+Deny from 116.24.82.204
+
+SetEnvIf User-Agent s~gsp-server Spammer=1
+Deny from env=Spammer
+
+PassengerAllowEncodedSlashes on
 AddHandler fastcgi-script .fcgi
 AddHandler cgi-script .cgi
 Options +FollowSymLinks +ExecCGI
@@ -19,6 +87,21 @@ Options +FollowSymLinks +ExecCGI
 #   RewriteRule ^(.*)$ dispatch.fcgi [QSA,L]
 RewriteEngine On
 
+# Block WebCopier
+RewriteCond %{HTTP_USER_AGENT} ^WebCopier.*
+RewriteRule ^nlab/(.*)$ /Please_dont_download_the_nLab.html [L]
+
+# Block google links to 'new'
+#RewriteCond %{HTTP_REFERER} ^https?://www.google.
+#RewriteRule ^nlab/new/(.*) /nlab/show/$1 [QSA,L,R]
+
+# Redirect root to nlab
+# Comment out the next line if it causes problems
+RedirectMatch ^/$ http://ncatlab.org/nlab/
+
+# Disable All Pages
+RewriteRule ^nlab/list$ /nlab/show/All+Pages [L,R]
+
 # If your Rails application is accessed via an Alias directive,
 # then you MUST also set the RewriteBase in this htaccess file.
 #
@@ -27,9 +110,10 @@ RewriteEngine On
 #   RewriteBase /myrailsapp
 
 RewriteRule ^$ index.html [QSA]
-RewriteRule ^([^.]+)$ $1.html [QSA]
+#RewriteRule ^([^.]+)$ $1.html [QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ dispatch.cgi [QSA,L]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ dispatch.fcgi [QSA,L]
 
 # In case Rails experiences terminal errors
 # Instead of displaying this message you can supply a file here which will be rendered instead

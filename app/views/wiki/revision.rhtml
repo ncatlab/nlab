@@ -15,7 +15,7 @@
   <%- end -%>
 </div> <!-- Revision -->
 
-<div class="byline">
+<div class="revisedby">
   <%= "Revision from #{format_date(@revision.revised_at)} by" %>
   <%= link_to_page @revision.author.purify %>
 </div>

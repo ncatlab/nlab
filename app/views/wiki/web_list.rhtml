@@ -14,7 +14,7 @@
         (<%= link_to_page 'HomePage', web, 'published version', :mode => 'publish' %>)
     <%- end -%>
 
-    <div class="byline" style="margin-bottom: 0px">
+    <div class="revisedby" style="margin-bottom: 0px">
 	<%= web.pages.size %> page<% if web.pages.size != 1 %>s<% end %> by <%= web.authors.size %> author<% if web.authors.size != 1 %>s<% end %>
 	- Last Update: <%= web.last_page.nil? ? format_date(web.created_at) : format_date(web.last_page.revised_at) %><br/>
 	<%- if ! web.last_page.nil? -%> 

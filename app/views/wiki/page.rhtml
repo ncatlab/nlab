@@ -16,7 +16,7 @@
   <%- end -%>
 </div>
 
-<div class="byline">
+<div class="revisedby">
   <%= @page.revisions? ? "Revised" : "Created" %> on <%= format_date(@page.revised_at) %> 
   by <%= author_link(@page) %>
   <%= "(#{@page.author.ip})" if @page.author.respond_to?(:ip) %>

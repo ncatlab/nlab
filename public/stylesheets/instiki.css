@@ -183,7 +183,7 @@ margin-top:1em;
 padding-left:1.5em;
 }
 
-.byline {
+.byline, .revisedby {
 color:#666;
 font-size:.8em;
 font-style:italic;

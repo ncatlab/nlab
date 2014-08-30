@@ -79,7 +79,8 @@ class Page < ActiveRecord::Base
   end
 
   def linked_from
-    web.select.pages_that_link_to(name)
+    Array.new # disable for now
+    # web.select.pages_that_link_to(name)
   end
 
   def redirects
@@ -87,7 +88,8 @@ class Page < ActiveRecord::Base
   end  
 
   def included_from
-    web.select.pages_that_include(name)
+    Array.new # disable for now
+    # web.select.pages_that_include(name)
   end
 
   # Returns the original wiki-word name as separate words, so "MyPage" becomes "My Page".
