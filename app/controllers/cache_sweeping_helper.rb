@@ -9,7 +9,7 @@ module CacheSweepingHelper
 
   def expire_cached_summary_pages(web)
     categories = WikiReference.list_categories(web)
-    list_of_actions = %(list recently_revised)
+    list_of_actions = %w(list recently_revised)
     if web.address == 'nlab'
       list_of_actions.delete('recently_revised')
     end
