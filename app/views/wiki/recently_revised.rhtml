@@ -3,8 +3,7 @@
 <%= categories_menu %>
 
 <%- @pages_by_day.keys.sort.reverse.each do |day| -%>
-  <h3><%= #format_date(day, include_time = false)
-%></h3>
+  <h3><%= format_date(day, include_time = false) %></h3>
   <ul>
   <%- for page in @pages_by_day[day] -%>
     <li>
