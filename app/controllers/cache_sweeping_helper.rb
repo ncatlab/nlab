@@ -8,9 +8,12 @@ module CacheSweepingHelper
   end
 
   def expire_cached_summary_pages(web)
-    # used to expire recently_revised as well, but now that is done manually
     categories = WikiReference.list_categories(web)
-    %w(list).each do |action|
+    list_of_actions = %(list recently_revised)
+    if web.address == 'nlab'
+      list_of_actions.delete('recently_revised')
+    end
+    list_of_actions.each do |action|
       expire_action :controller => 'wiki', :web => web.address, :action => action
       categories.each do |category|
         expire_action :controller => 'wiki', :web => web.address, :action => action, :category => category
@@ -23,6 +26,14 @@ module CacheSweepingHelper
     
     %w(file_name created_at).each do |sort_order|
       expire_action :controller => 'wiki', :web => web.address, :action => 'file_list', :sort_order => sort_order
+    end
+  end
+
+  def expire_recently_revised_page(web)
+    categories = WikiReference.list_categories(web)
+    expire_action :controller => 'wiki', :web => web.address, :action => 'recently_revised'
+    categories.each do |category|
+      expire_action :controller => 'wiki', :web => web.address, :action => 'recently_revised', :category => category
     end
   end
 

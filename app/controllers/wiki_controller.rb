@@ -173,6 +173,10 @@ EOL
     puts @pages_by_day
   end
 
+  def recently_revised_nocache
+    recently_revised
+  end
+
   def atom_with_content
     if rss_with_content_allowed? 
       render_atom(hide_description = false)
