@@ -1,0 +1,770 @@
+N.B.: You *must* run
+
+     ruby bundle
+     ruby bundle exec rake upgrade_instiki
+
+after installing the new software, to enjoy the benefits of this new version.
+
+------------------------------------------------------------------------------
+* 0.19.7
+
+New Features:
+* Supports Ruby 2.0 and 2.1
+* itex2MML 1.5.1:
+  * readers can access TeX source by
+     - double-clicking on a formula (Firefox)
+     - using the MathJax contextual menu (other browsers)
+  * Several new commands, including
+      \begintoggle{expr1}{expr2}...{exprN}\endtoggle
+* Support for LaTeX \cite{} command (with auto-linking of
+  INSPIRE and MathSciNet Bibtex keys).
+* MathJax 2.3
+* SVG-Edit 2.7.1
+* Rails 2.3.18
+
+Bugs Fixed:
+* Many SVG-Edit and Maruku bugs fixed
+* Maruku is now up to 50% faster
+* Fixed DNSBLcheck
+* Redirect #new to #edit if the page already exists
+* Unvendored several gems
+
+------------------------------------------------------------------------------
+* 0.19.6
+
+New Features:
+* SVG-Edit 1.6
+* Rails 2.3.16
+
+Bugs Fixed:
+* Fixed CVE-2013-0333
+
+------------------------------------------------------------------------------
+* 0.19.5
+
+New Features:
+* MathJax 2.0
+* Rails 2.3.15
+* Support for embedding Wolfram CDF files
+* Extended support for HTML5 audio and video
+* Maruku and file_signature unbundled
+
+Bugs Fixed:
+* Fixed CVE-2013-0155 and CVE-2013-0156
+* Stylesheet fixes
+------------------------------------------------------------------------------
+* 0.19.4
+
+New Feautures:
+* Update for itex2MML 1.4.10
+* Update SVG-Edit
+* Ruby 1.9.3 Compatibility
+
+Bugs Fixed:
+* Fix CVE-2012-2694 and CVE-2012-2695 (Security!)
+* Fix several Markuku bugs
+* Fix several SVG-Edit bugs
+* Don't escape style_additions
+* Avoid invalid WikiFile links
+* Fix tombstone bug
+* Fix Theorem Environment
+* Better Cache-Sweeping efficiency
+* Fix double-escaping of flash messages
+
+------------------------------------------------------------------------------
+* 0.19.3
+
+New Features:
+* Source view for Revisions
+* Rails updated to 2.3.14 (Security)
+* itextomml updated to 1.4.6
+* Replace REXML with Nokogiri in Maruku and
+  in xhtml_safe_sanitize().
+  (Huge speedup in rendering long pages)
+* MathJax updated to 1.1a final
+
+Bugs Fixed:
+* Bundler upgraded to 1.0.18
+* Fix null search bug
+* Better text/html serialization (thank you, Nokogiri)
+* Fix Maruku footnote backlink (reported by Shamaoke)
+* Fix Maruku link bug
+* Fix Maruku image title bug
+* Fix Maruku hrule, email address and header bugs
+* Fix Maruku bold-in-italics bug
+* Fix Maruku empty list-item bug
+
+------------------------------------------------------------------------------
+* 0.19.2
+
+New Features:
+* MathJax rendering for non-MathML capable browsers.
+* RedCloth (Textile) upgraded to 4.x (now handled
+  by Bundler).
+* Bundler upgraded to 1.0.7
+* Rails updated to 2.3.11
+
+Bugs Fixed:
+* Redirects and categories of included pages should
+  not be inherited. (Suggestion of Andrew Stacey).
+* Bug in Maruku equation handling (reported by Andrew Stacey).
+* SVG-Edit updates and bug-fixes.
+* Bug in editing S5 slideshows.
+* Unvendor Rack
+* Fix Maruku list-parsing bug (reported by Shamaoke)
+* Validate Web address (Reported by Richard Marquez).
+* Fix a well-formedness bug
+
+------------------------------------------------------------------------------
+* 0.19.1
+
+New Features:
+* From the "All" or Category listings, you can export selected pages (in any
+  desired order) to a single LaTeX file.
+* LaTeX export supports \array{} (with no options) and a LaTeX-style optional
+  argument for \sqrt[]{}. The latter requires itextomml 1.4.5 or later.
+* Updated to itextomml 1.4.5 (a bunch of new itex language features).
+* Updated to Rails 2.3.10. (There were security issues in 2.3.9 which, happily,
+  did NOT affect Instiki 0.19. But 2.3.10 has other improvements, as well.)
+
+Bugs Fixed:
+* Several SVG-Edit bugs fixed.
+* Removed some superfluous junk, to slim down the distribution (cuts the size of
+  the compressed .tar.gz nearly in half).
+
+------------------------------------------------------------------------------
+* 0.19
+
+New Features:
+
+* WYSIWYG SVG editing (via SVG-edit)
+* One-click S5 templates
+* Itex2MML is now a Rubygem. Latest is itextomml-1.4.2.
+* Rails Metal itex endpoint
+* HTML5 support
+* Support IALs on Markdown list items
+* Updated to Rails 2.3.9 and Erubis (now at 2.6.6)
+* Updated for Rack 1.2.1, sqlite3-ruby 1.3.1
+* Manages dependencies using Bundler. Before running Instiki for the first time
+  (and whenever you update), run
+  
+     ruby bundle
+     rake upgrade_instiki
+
+  from the instiki directory. (You may need to run
+  
+     ruby bundle exec rake upgrade_instiki
+
+  instead, if you get a complaint about your version of rake.)
+
+Bugs Fixed:
+
+* Works with Ruby 1.9.2
+* Fixed a bug in non-Latin WikiWord processing. (Reported by Alexander Hambug)
+* Fixed Cyrillic WikiWord support.
+* More informative dnsbl lookup responses (suggested by Toby Bartels)
+* Fixed a bug in LaTeX output
+* No longer conflicts with sqlite3-ruby 1.3.x Rubygem
+* Fixed some Category listing bugs
+* Fixed an escaping bug in 'new' and 'edit' templates. (Reported by Toby Bartels)
+* Allow special characters ('.', '/', etc) in page names.
+* Fix BlahTeX/PNG path, so equations render in diff and
+  previous revision pages.
+* Fix HTML Export feature so that uploaded files are
+  included, stylesheets load, etc.
+* Uploaded files inclided in Markup Export.
+* Fix Print View, so that uploaded images work.
+* Fix some more Ruby 1.9 isues.
+* Prevent page from being renamed to null.
+* Fix Migration to work under PostgreSQL (from J. Zellman).
+* Updated vendored plugins
+
+------------------------------------------------------------------------------
+* 0.18.1
+
+New Features:
+
+* (Markdown-Extra syle) fenced codeblocks. [From Jason Blevins]
+* Fortran syntax colouring. [From Jason Blevins]
+
+Bugs Fixed:
+
+* Fixed some Ruby 1.9 encoding issues, with unicode page names,
+  author names and categories.
+* Better display of inter-web wikilinks
+* various syntax-colouring fixes
+* Corrected length of wiki_references referenced_name (affects
+  MySQL users)
+
+------------------------------------------------------------------------------
+* 0.18
+
+New Features:
+
+* Syntax colouring: 'ansic', 'javascript', 'sqlite', 'yaml' and 'css' modes,
+  in addition to the existing 'html', 'xml', and 'ruby' modes,
+* Source view [suggested by Andrew Stacey]
+* Auto-resizing Textareas scale to fit viewing area.
+* Instiki upgraded to Rails 2.3.5 and Rack 1.1.
+* Now runs on Ruby 1.9. (If you're a Passenger user, you may need to upgrade to Passenger
+  2.2.8, which works around some bugs in Ruby 1.9.1.) 
+* Upgraded for itex2MML 1.3.19 (which works under Ruby 1.9, and has several new feautures,
+  relative to 1.3.15).
+
+Bugs Fixed:
+
+* Fixed a CSS bug, which screwed up printing (unless you used the "Print" view).
+* Fixed a well-formedness bug in the page-name truncation algorithm [reported by Toby Bartels]
+* Fixed a cache-sweeping bug [reported by Toby Bartels]
+* Better accessibility.
+* Improved log rotation under Passenger.
+* Omit a (seemingly superfluous) javascript hack which causes Gecko-based browsers to request
+     /my_wiki/s5/null
+  when they load an s5 slideshow.
+* Upgraded vendored sqlite3-ruby and rubyzip
+* Move files when renaming a web (so that links to uploaded files don't break).
+* Many Ruby 1.9 fixes, including removing the html5lib Sanitizer.
+
+------------------------------------------------------------------------------
+* 0.17.3
+
+The most important facet of this release is a small change in the database
+schema. Previously, people migrating from the default SQLite3 database to MySQL
+ran the risk of silent data loss, because MySQL had a more strict interpretation
+of the column types in the database. The new schema will prevent such problems.
+
+     rake upgrade_instiki
+
+will seamlessly upgrade your existing database to the new schema.
+
+New Features:
+* Passenger support (including X-Sendfile support, if the Apache mod_xsendfile
+  module is installed).
+* Update for itex2MML 1.3.13. (You should upgrade your itex2MML to the latest
+  version, too.)
+
+Bugs Fixed:
+* Refactored the Web model (from James Herdman).
+* Clean malformed utf-8 strings, rather than complaining about them.
+* Updated location of Textile help, since _why_the_lucky_stiff left the 'net.
+* Fixed a TeX rendering bug.
+* Updated list of XHTML+MathML named entities to match W3C Working Draft.
+* Refactored the Sanitizer (speedup).
+* Fix S5 Slideshows for non-root Instiki URLs.
+* Work around a Rails flash bug.
+* Links from published webs should work right (finally?).
+* An important database migration for MySQL users.
+
+------------------------------------------------------------------------------
+* 0.17.2
+
+Security: Updated to Rails 2.3.4
+* Fixes Timing Weakness in Rails MessageVerifier and the Cookie Store
+  http://weblog.rubyonrails.org/2009/9/4/timing-weakness-in-ruby-on-rails
+* Fixes XSS Vulnerability in Rails
+  http://weblog.rubyonrails.org/2009/9/4/xss-vulnerability-in-ruby-on-rails
+
+New Features:
+* Syntax colouring (`ruby` and `html`) for code blocks.
+* Updated for itex2MML 1.3.10 (supports \rlap{} and \underline{}). You should upgrade that, too.
+* Add a "Create New Page" Link to the Search Page. (Based on an idea by nowa)
+* Updated to Rails 2.3.4 
+
+Bugs Fixed:
+* Wikilinks to published webs should be to the published action. This didn't work
+  right for inter-web links. (Reported by Mike Shulman)
+* Use .size, rather than .length for ActiveRecord associations. A huge memory saving
+  in building the recently_revised page.
+* Refactor the upgrade_instiki rake task, to make it database-agnostic. (Many thanks to James Herdman)
+* Web#files_path and Web#blatex_pngs_path now return Pathname objects. (Thanks, again, to James Herdman)
+* Workaround for Mozilla Bug 449396. (Reported by Andrew Stacey)
+* Correctly Set noindex,nofollow On /diff Pages.
+* Page-renaming javascript deals correctly with page names containing ampersands, slashes, and other garbage.
+* List of Wanted Pages should not include redirected pages.
+* The Regexp, used in Maruku to detect "email" headers (used, e.g., for S5 slideshow metadata) could, for some inputs, interact badly with Instiki's Chunk Handler. Fixed.
+* Ensure "rollback" locks page for editing.
+* Generate relative URLs, when possible. (Patch by Dennis Knauf)
+* Expire revisions of an edited page. Use a `before_save` hook to deal with the situation where a page's name has been changed.
+
+------------------------------------------------------------------------------
+* 0.17
+
+New features:
+* Ability to rename pages
+* Ability to redirect Wikilinks, using
+    [[!redirect ...]]
+* HTTP 302 redirects, for redirected/renamed pages
+
+Bugs Fixed:
+* Rails gets very unhappy with "." in page or author names.
+  Make sure that doesn't happen.
+* Fix a Maruku escaping bug.
+* WEBrick should respond to TERM signals 
+  (needed by MacOSX and, perhaps, others).
+* Add a flash message for redirection to "new" page
+  when the target of "show" action is not found.
+* Flash[:info] messages use Web's colour scheme.
+* Uploaded files in published webs should be accessible
+
+------------------------------------------------------------------------------
+* 0.16.6
+
+New Features:
+* More colour schemes: blue, brown, scarlet red, and plum.
+  (From Jason Blevins)
+* History Pages: created a history page for each wiki page.
+  Link to it and to the "Diff" page from "Recently Revised".
+  (from Jason Blevins)
+* Support for SVG clipping paths
+  (requested by Andrew Stacey)
+* Updated for itex2MML 1.3.8. (You should
+  upgrade that, as well.) Support for blackboard bold lowercase
+  letters and digits.
+
+Bugs Fixed:
+* Fixed several bugs in Maruku, where "greedy" regexps
+  could lead to exponential slowdown on certain inputs.
+* Fixed a bug in listing/deleting links to uploaded video and
+  audio files.
+* Fixed some caching bugs.
+* Removed the defunct list.dsbl.org from anti-spam dnsbl lookups.
+* Resolved a conflict between form_spam_protect plugin and IE7.
+  (thanks to Jason Blevins)
+
+------------------------------------------------------------------------------
+* 0.16.5: Rails 2.3.2
+
+* Runs on the Stable Release, Rails 2.3.2.
+* Support for audio/speex audio files.
+* Updated for itex2MML 1.3.7. (You should
+  upgrade that, as well.)
+* Tests for BlahTeX/PNG (if installed).
+
+------------------------------------------------------------------------------
+* 0.16.4
+
+New Features:
+* Add x-sendfile support for downloading uploaded files in Instiki.
+* Add support for HTML5 <video> and <audio> elements:
+  [[mymovie.ogv:video]], [[mysound.wav:audio]].
+* Runs on Rails 2.3.1
+  
+Bugs Fixed:
+* Update to Rails 2.3.1, which fixes several bugs.
+* Removed bundled Rack (Rails 2.3.1 comes bundled with Rack 1.0).
+* Add config.action_view.cache_template_loading = true to production
+  environment.
+* Fix FastCGI bug
+  (http://rubyforge.org/tracker/index.php?func=detail&aid=24191&group_id=186 &atid=783).
+* Fix WikiWords bug
+  (http://rubyforge.org/pipermail/instiki-users/2009-February/001181.html).
+* Fix bug on Windows
+  (http://rubyforge.org/pipermail/instiki-users/2009-March/001183.html)
+
+------------------------------------------------------------------------------
+* 0.16.3: Big steps, Rails 2.3.0-RC1 and tons of new stuff!
+
+All the patching, developing and great hacking from Jacques Distler was
+merged into the main codebase of instiki. Jaques is now also maintaining the
+main branch (together with parasew), which brings instiki up-to-date!
+
+Find more information about all the changes in his site:
+
+  http://golem.ph.utexas.edu/instiki/
+
+New Features:
+* Instiki comes and runs with Rails 2.3.0-RC1
+* New Markdown interpreter: Maruku
+* Default markup dialect is Markdown+itex2MML
+* Mathematics suport, using itex2MML (Markdown+itex2MML)
+     http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html
+  or BlahTeX (Markdown+BlahTeX/PNG)
+     http://golem.ph.utexas.edu/instiki/show/BlahTeX
+* Theorem Environments
+* Automatic Equation numbering and automatic Theorem numbering,
+* Integrated presentation software
+     http://golem.ph.utexas.edu/instiki/show/S5
+  complete with support for themes
+  (available with Markdown, Markdown+itex2MML or Markdown+BlahTeX/PNG)
+* Sends application/xhtml+xml to compatible browsers
+  (available with Markdown, Markdown+itex2MML or Markdown+BlahTeX/PNG)
+  Serve Webs which use non-Markdown Text Filters (Textile, RDoc or Mixed) as
+  text/html. This makes those Text Filters usable, again.
+* Scalable Vector Graphics (SVG) enabled
+  (available with Markdown, Markdown+itex2MML or Markdown+BlahTeX/PNG).
+* Nifty SVG Logo
+  (available with Markdown, Markdown+itex2MML or Markdown+BlahTeX/PNG).
+* Atom 1.0 feeds.
+* ETag support.
+* Filesystem-based caching.
+* New, industrial-strength Sanitizer (anti-XSS protection).
+* Uses xhtmldiff for redline diff pages.
+* (Actually functional) LaTeX output.
+* InterWeb WikiLinks
+* Add a user interface to manage uploaded files.
+* Add a user interface to delete a Web.
+* Add a user interface to delete orphaned pages in a Category. In addition to
+  deleting all orphaned pages, you can now delete just the orphaned pages in a
+  particular category. Among other things, this provides a handy way to delete
+  a (selection of) page(s): just assign them to a new category (“delete”, say)
+  and delete the orphaned pages in that category.
+* Add the manage_fixtures plugin for easy database migration
+* Descriptions in the File Upload Dialog are used as the default alt text (for
+  pictures) or the default link text (for files).
+
+Bugfixes:
+(see http://golem.ph.utexas.edu/~distler/blog/archives/001893.html for a
+complete list)
+
+* fixes to xhtmldiff
+* fixed Sanitizer issues
+* Do dnsbl lookups more judiciously. Anti-spam effectiveness is undiminished,
+  but the application is more responsive.
+* Fix a Session CookieOverflow when rescuing Instiki::ValidationError
+* Domain independent caching
+* Fix for no Flash Messages 
+* Links on “published” Webs were all screwed-up. Fixed.
+* Make uploaded pictures display in the “published” view.
+* Make @import rules in the “Stylesheet Tweaks” work in the “published” view.
+* Actually verify the password, when setting a password for a Web, rather than
+  just pretending to do so.
+* fixes for nowiki “<nowiki>[[!include foo]]</nowiki>”)
+* Hide Equations From WikiChunk Processing
+* Fix a bug in the Chunk handler, which was mangling backslashes in included
+  pages.
+* Entering the wrong password on the “CreateWeb” form now redirects back to
+  the form, as it should.
+* Allow single-letter WikiLinks (e.g. “[[a]]”). Requested by a Japanese user.
+* Allow single-letter includes (e.g. “[[!include a]]”).
+* Huge improvements to caching and cache-sweeping
+* Category listing restricts to current Web.
+* All WikiReference methods limit results to the current web
+* File uploads work right.
+* Make WEBrick respond to TERM signal. (Launchd, in particular, requires this.)
+* Ditch the URIChunk and LocalURIChunk handlers. Slow, buggy, and of dubious
+  utility.
+* Ensure unsafe operations (new, save,...) are POSTs, not GETs.
+* Fix utf-8 bug in WikiChunk handling.
+* Disable WikiChunk processing in tags.
+* Hide Equations From WikiChunk Processing
+* Fix for the "Backslashes in Included Equations" bug.
+* Sessions are now stored in a cookie (signed and Base-64 encoded).
+  Form_spam_protection stores form_keys in the session.
+  Make sure spambots implement both cookies and javascript, by storing
+  hashed (with salt) keys in the session.
+* Make sure request.ip is a valid IPv4 or IPv6 address.
+* Make remove_orphaned_pages work in a proxied situation.
+* In the wiki_controller, only apply the dnsbl_check before_filter 
+  to the :edit, :new, and :save :export actions, instead of all actions.
+  This makes mundane "show" requests faster, but does not 
+  compromise spam-fighting ability.
+* Be a little gentler in recovering from Instiki::ValidationErrors, when
+  saving a page. Previously, we threw away all the user's changes upon
+  the redirect. Now we attempt to salvage what he wrote.
+* Drop hostname from cache key.
+* Fix Recursive Includes.
+* Entering an incorrect password on the Create Web form should redirect
+  back to the form, with a flash error.
+* In the Stylesheet Tweaks, the owner of a Web can specify an @import rule
+  to pull in CSS styles form an external file. This worked in the "show"
+  view, but was broken in the "published" view. Fixed.
+* Allow multiple leading capital letters in a WikiWord.
+
+------------------------------------------------------------------------------
+* 0.13.0:
+
+Mainly a Bugfix Release, which fixes two XSS Vulnerabilities.
+More information can be found on Jacques Distler's Blog:
+http://golem.ph.utexas.edu/~distler/blog/archives/001634.html
+
+------------------------------------------------------------------------------
+ * 0.12.0:
+ 
+ 0.12 is mainly a bugfix release. We recommend all instiki Users to upgrade.
+ In this version, some security holes where fixed
+	- An XSS vulnerability in categories
+	- An XSS vulnerability in <nowiki>
+	- fixes that Instiki allows "dangerous" operations as HTTP GETs
+
+ as well as some other small improvements.
+	- fixes for instiki running on mongrel
+	- fixes for instiki running on mongrel_cluster
+
+ We added a lot of tests, synced with Jacques Distler's version and fixed 
+ small bugs as well. A note to Mac OSX users: use the Ruby One-Click-Installer
+ for OSX ( http://rubyosx.com ) or make sure you are not running into problems
+ with sqlite (see http://instiki.5uper.net/instiki/show/SQLite+issues+on+OSX)
+
+------------------------------------------------------------------------------
+ * 0.11.pl1
+
+ - ANTISPAM: 
+   - updated and included spam_patterns.txt
+   - included dnsbl_check - DNS Blackhole Lists check
+     [thanks to joost from http://www.spacebabies.nl ]
+   - included the form-spam-protection rails plugin
+     http://form-spam-protection.googlecode.com/svn/form_spam_protection/
+
+ - BUGFIXES:
+   - fix PDF output not to contain garbage chars [Jesse Newland]
+   - fixed the pages and authors display for single webs 
+   - web list does not show a link to a published version if it has none
+     [Jesse Newland]
+   - Fixed bug that failed to expire cached diff view of a page
+   - Fixed rendering of WikiLinks in included pages in published or export 
+     mode
+   - lots of small bugfixes and changes
+
+ - UPDATES:
+   - Rails 1.2.1 tested and packaged with instiki
+   - updated RubyZip to 0.9.1
+   - updated packaged sqlite3-ruby
+
+ - FEATURES:
+   - fix: being logged in on more Webs at once works now [Jaques Distler]
+   - Stylesheet tweaks
+   - visual display if webs are pass-protected (div background)
+   - Linux packaging
+
+------------------------------------------------------------------------------
+ * 0.11.0:
+   - SQL-based backend (ActiveRecord)
+   - File uploads (finally)
+   - Upgraded to Rails 1.0.0
+   - Replaced internal link generator with routing
+   - Fixed --daemon option
+   - Removed Rubygem and native OS X distributions
+   - Improved HTML diff
+   - More accurate "See Changes"
+------------------------------------------------------------------------------
+ * 0.10.2:
+   - Upgraded to Rails 0.13.1
+   - Fixed HTML export
+   - Added layout=no option to the export_html action (it exports page
+     contents processed by the markup engine, but without the default layout -
+     so that they can be wrapped in some other layout)
+   - <nowiki> tag can span several lines (before it was applied when both 
+     opening and closing tags were on the same line only)
+   - Resolved the "endless redirection loop" condition and otherwise improved 
+     handling of errors in the rendering engines
+   - Fixed rendering of Markdown hyperlinks such as   
+     [Text](http://something.com/foo)
+------------------------------------------------------------------------------
+ * 0.10.1:
+   - Upgraded Rails to 0.12.0
+   - Upgraded rubyzip to version 0.5.8
+   - BlueCloth is back (RedCloth didn't do pure Markdown well enough)
+   - Handling of line breaks in Textile is as in 0.9 (inserts <br/> tag)
+   - Fixed HTML export (to enclose the output in <html> tags, include the
+     stylesheet etc)
+   - Corrected some compatibility issues with storages from earlier Instiki
+     versions
+   - Some other bug fixes
+------------------------------------------------------------------------------
+ * 0.10.0:
+   - Ported to ActionPack
+   - RedCloth 3.0.3
+   - BlueCloth is phased out, Markdown is rendered by RedCloth
+   - Mix markup option understands both Textile and Markdown on the same page
+   - Instiki can serve static content (such as HTML or plain-text files) from
+     ./public directory
+   - Much friendlier admin interface
+   - Wiki link syntax doesn't conflict with Textile hyperlink syntax.
+     Therefore "textile link":LinkToSomePlace will not look insane.
+   - RSS feeds accept query parameters, such as
+     http://localhost:2500/wiki/rss_with_headlines?start=2005-02-18&end=2005-02-19&limit=10
+   - RSS feed with page contents for a password-protected web behaves as 
+     follows: if the web is published, RSS feed links to the published version 
+     of the web. otherwise, the feed is not available
+     Madeleine will check every hour if there are new commands in the log or
+     24 hours have passed since last snapshot, and take snapshot if either of
+     these conditions is true. Madeleine will also not log read-only
+     operations, resulting in a better performance
+   - Wiki extracts (to HTML and plain text) will leave only the last extract
+     file in ./storage
+   - Wiki search handles multibyte (UTF-8) characters correctly
+   - Local hyperlinks in published pages point to published pages [Michael 
+     DeHaan]
+   - Fixed a bug that sometimes caused all past revisions of a page to be 
+     "forgotten" on restart
+   - Fixed parsing of URIs with a port number (http://someplace.org:8080)
+   - Instiki will not fork itself on a *nix, unless explicitly asked to
+   - Instiki can bind to IPs other than 127.0.0.1 (command-line option)
+   - Revisions that do not change anything on the page are rejected
+   - Automated tests for all controller actions
+   - category: lines are presented as links to "All Pages" for relevant 
+     categories
+   - Search looks at page titles, as well as content
+   - Multiple other usability enhancements and bug fixes
+------------------------------------------------------------------------------
+ * 0.9.2:
+   - Rollback takes the user to an edit form. The form has to be submitted for
+     the change to take place.
+   - Changed to use inline style on published pages
+   - Fixed "forward in time" on the last revision before current page
+   - Instiki won't log bogus error messages when creating a new Wiki
+   - Fixed deprecation warning for Object.id (introduced in Ruby 1.8.2)
+   - Madeleine upgraded to 0.7.1
+   - Madeleine snapshots are compressed
+   - Packaged as a gem
+------------------------------------------------------------------------------          
+ * 0.9.1:
+   - Added performance improvements for updating existing pages
+   - Fixed IP logging and RSS feeds behind proxies [With help from Guan Yang]
+   - Fixed default storage directory (borked running on Windows)
+     [Spotted by Curt Hibbs]
+------------------------------------------------------------------------------          
+ * 0.9.0:
+   - Added aliased links such as [[HomePage|that nice home page]] [Mark Reid]
+   - Added include other page content with [[!include TableOfContents]]
+     [Mark Reid]
+   - Added delete orphan pages from the Edit Web screen [by inspiration from
+     Simon Arnaud]
+   - Added logging of IP address for authors (who's behind the rollback wars)
+   - Added Categories pages through backlinks (use "categories: news, instiki"
+     on start of line) [Mark Reid]
+   - Added option to use bracket-style wiki links only (and hence ban
+     WikiWords)
+   - Added command-line option to specify different storage path
+   - Added print view without navigation
+   - Added character and page (2275 characters including spaces) counter 
+     (important for student papers)
+   - Off by default, activate it on the Edit Web screen
+   - Added LaTeX/PDF integration on Textile installations with pdflatex 
+     installed on system (EXPERIMENTAL)
+   - Use the home page as a table of contents with a unordered list to control 
+     sections
+   - Added limit of 15 to the number of pages included in RSS feed
+   - Moved static parts of stylesheet to separate file [Lau T?rnskov]
+   - Fixed better semantics for revision movement [Ryan Singer]
+   - Fixed color diffs to work much better [Xen/Mertz/Atkins]
+   - Fixed performance problems for All Pages list [Dennis Mertz]
+   - Fixed lots of rendering bugs [Mark Reid]
+   - Upgraded to RedCloth 2.0.11 [integrating the fine work of Dennis Mertz]
+------------------------------------------------------------------------------          
+ * 0.8.9:
+   - Added color diffs to see changes between revisions [Bill Atkins]
+     They're aren't quite perfect yet as new paragraphs split the <ins> tags 
+     (hence 0.8.9, not 0.9.0)
+   - Added redirect to edit if content of page generates an error
+     (so the page doesn't become unusable on bugs in the markup engines)
+   - Fixed update Web with different address bug [Denis Metz]
+   - Fixed a bunch of wiki word rendering issues by doing wiki word detection
+     and replacment at once
+   - Upgraded to BlueCloth 0.0.3b (should fix loads of problems on Markdown
+     wikis)
+------------------------------------------------------------------------------          
+ * 0.8.5:
+   - Instiki can now serve as a CMS by running a password-protected web with a 
+     published front
+   - Added version check at startup (Instiki needs Ruby 1.8.1)
+------------------------------------------------------------------------------          
+ * 0.8.1:
+   - Actually included RedCloth 2.0.7 in the release
+------------------------------------------------------------------------------          
+ * 0.8.0:
+   - NOTE: Single-web wikis created in versions prior to 0.8.0 have "instiki"
+     as their system password
+   - Accepts wiki words in bracket style.
+     Examples: [[wiki word]], [[c]], [[We could'nt have done it!]]
+   - Accepts camel-case wiki words in all latin, greek, cyrillian, and
+     armenian unicode characters
+   - Many thanks to Guan Yang for building the higher- and lower-case lookup 
+     tables. And thanks to Simon Arnaud for the initial patch that got the 
+     work started
+   - Changed charset to UTF-8
+   - Cut down on command-line options and replaced them with an per-web config 
+     screen
+   - Added option to extend the stylesheet on a per-web basis to tweak the 
+     look in details
+   - Added simple color options for variety
+   - Added option to add/remove password protection on each web
+   - Added the wiki name of the author locking a given page (instead of just 
+     "someone")
+   - Removed single/multi-web distinction -- all Instikis are now multi-web
+   - Load libraries from an unshifted load path, so that old installed 
+     libraries doesn't clash [Emiel van de Laar]
+   - Keeps the author cookie forever, so you don't have to enter your name 
+     again and again
+   - Fixed XHTML so it validates [Bruce D'Arcus]
+   - Authors are no longer listed under orphan pages
+   - Added export to markup (great for backups, potentially for switching wiki 
+     engine)
+   - Don't link wiki words that proceeds from either /, = or ?
+     (http://c2.com/cgi/wiki?WikiWikiClones,
+     /show/HomePage, cgi.pl?show=WikiWord without escaping)
+   - Accessing an unexisting page redirects to a different url (/new/PageName)
+   - Increased snapshot time to just once a day (cuts down on disk storage
+     requirements)
+   - Made RDoc support work better with 1.8.1 [Mauricio Fern?ndez]
+   - Added convinient redirect from /wiki/ to /wiki/show/HomePage
+   - Fixed BlueCloth bug with backticks at start of line
+   - Updated to RedCloth 2.0.7 (and linked to the new Textile reference)
+------------------------------------------------------------------------------          
+ * 0.7.0:
+   - Added Markdown (BlueCloth) and RDoc [Mauricio Fern?ndez] as command-line 
+     markup choices
+   - Added wanted and orphan page lists to All pages (only show up if there's 
+     actually orphan or wanted pages)
+   - Added ISO-8859-1 as XML encoding in RSS feeds (makes FeedReader among 
+     others happy for special entities)
+   - Added proper links in the RSS feed (but the body links are still 
+     relative, which NNW and others doesn't grok)
+   - Added access keys: E => Edit, H => HomePage, A => All Pages,
+     U => Recently Revised, X => Export
+   - Added password-login through URL (so you can subscribe to feed on a 
+     protected web)
+   - Added web passwords to the feed links for protected webs, so they work 
+     without manual login
+   - Added the web name in small letters above all pages within a web
+   - Polished authors and recently revised 
+   - Updated to RedCloth 2.0.6
+   - Changed content type for RSS feeds to text/xml (makes Mozilla Aggreg8
+     happy)
+   - Changed searching to be case insensitive
+   - Changed HomePage to display the name of the web instead
+   - Changed exported HTML pages to be valid XHTML (which can be preprocessed
+     by XSLT)
+   - Fixed broken recently revised
+------------------------------------------------------------------------------          
+ * 0.6.0:
+   - Fixed Windows compatibility [Florian]
+   - Fixed bug that would prevent Madeleine from taking snapshots in Daemon
+     mode
+   - Added export entire web as HTML in a zip file
+   - Added RSS feeds
+   - Added proper getops support for the growing number of options [Florian]
+   - Added safe mode that forbids style options in RedCloth [Florian]
+   - Updated RedCloth to 2.0.5
+------------------------------------------------------------------------------          
+ * 0.5.0:
+   - NOTE: 0.5.0 is NOT compatible with databases from earlier versions
+   - Added revisions
+   - Added multiple webs
+   - Added password protection for webs on multi-web setups
+   - Added the notion of authors (that are saved in a cookie)
+   - Added command-line option for not running as a Daemon on Unix
+------------------------------------------------------------------------------          
+ * 0.3.1:
+   - Added option to escape wiki words with \ 
+------------------------------------------------------------------------------          
+ * 0.3.0:
+   - Brought all files into common style (including Textile help on the edit
+     page)
+   - Added page locking (if someone already is editing a page there's a 
+     warning)
+   - Added daemon abilities on Unix (keep Instiki running after you close the 
+     terminal)
+   - Made port 2500 the default port, so Instiki can be launched by
+     dobbelt-click
+   - Added Textile cache to speed-up rendering of large pages
+   - Made WikiWords look like "Wiki Words"
+   - Updated RedCloth to 2.0.4
+------------------------------------------------------------------------------          
+ * 0.2.5:
+   - Upgraded to RedCloth 2.0.2 and Madeleine 0.6.1, which means the
+   - Windows problems are gone. Also fixed a problem with wikiwords
+   - that used part of other wikiwords.
+------------------------------------------------------------------------------       
+ * 0.2.0:
+   - First public release

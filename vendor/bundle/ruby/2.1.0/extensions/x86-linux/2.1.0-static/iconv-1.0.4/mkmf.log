@@ -1,0 +1,226 @@
+have_func: checking for rb_enc_get() in ruby/encoding.h... -------------------- yes
+
+"gcc -o conftest -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return 0;
+6: }
+/* end */
+
+"gcc -o conftest -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby/encoding.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     printf("%p", &t);
+11:   }
+12: 
+13:   return 0;
+14: }
+15: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_enc_get; return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_sys_fail_str() in ruby.h... -------------------- yes
+
+"gcc -o conftest -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <ruby.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     printf("%p", &t);
+11:   }
+12: 
+13:   return 0;
+14: }
+15: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_sys_fail_str; return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for iconv() in iconv.h... -------------------- yes
+
+"gcc -o conftest -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     printf("%p", &t);
+11:   }
+12: 
+13:   return 0;
+14: }
+15: int t(void) { void ((*volatile p)()); p = (void ((*)()))iconv; return 0; }
+/* end */
+
+--------------------
+
+check_signedness: checking signedness of size_t... -------------------- unsigned
+
+"gcc -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration   -c conftest.c"
+conftest.c:6: warning: comparison of unsigned expression < 0 is always false
+conftest.c:6: error: size of array ‘conftest_const’ is negative
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: typedef size_t rbcv_typedef_;
+4: 
+5: /*top*/
+6: int conftest_const[((rbcv_typedef_)-1 < 0) ? 1 : -1];
+/* end */
+
+"gcc -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration   -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: typedef size_t rbcv_typedef_;
+4: 
+5: /*top*/
+6: int conftest_const[((rbcv_typedef_)-1 > 0) ? 1 : -1];
+/* end */
+
+--------------------
+
+checking for const of iconv() 2nd argument... -------------------- no
+
+gcc -E -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration  conftest.c  |
+iconv (iconv_t __cd, char **__restrict __inbuf,
+       size_t *__restrict __inbytesleft,
+       char **__restrict __outbuf,
+       size_t *__restrict __outbytesleft);
+--------------------
+
+have_func: checking for iconvlist() in iconv.h... -------------------- no
+
+"gcc -o conftest -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function ‘t’:
+conftest.c:15: error: ‘iconvlist’ undeclared (first use in this function)
+conftest.c:15: error: (Each undeclared identifier is reported only once
+conftest.c:15: error: for each function it appears in.)
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     printf("%p", &t);
+11:   }
+12: 
+13:   return 0;
+14: }
+15: int t(void) { void ((*volatile p)()); p = (void ((*)()))iconvlist; return 0; }
+/* end */
+
+"gcc -o conftest -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function ‘t’:
+conftest.c:15: warning: implicit declaration of function ‘iconvlist’
+/tmp/ccuDj5ZD.o: In function `t':
+/home/nlab/instiki/vendor/bundle/ruby/2.1.0/gems/iconv-1.0.4/ext/iconv/conftest.c:15: undefined reference to `iconvlist'
+collect2: ld returned 1 exit status
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     printf("%p", &t);
+11:   }
+12: 
+13:   return 0;
+14: }
+15: int t(void) { iconvlist(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for __iconv_free_list() in iconv.h... -------------------- no
+
+"gcc -o conftest -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function ‘t’:
+conftest.c:15: error: ‘__iconv_free_list’ undeclared (first use in this function)
+conftest.c:15: error: (Each undeclared identifier is reported only once
+conftest.c:15: error: for each function it appears in.)
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     printf("%p", &t);
+11:   }
+12: 
+13:   return 0;
+14: }
+15: int t(void) { void ((*volatile p)()); p = (void ((*)()))__iconv_free_list; return 0; }
+/* end */
+
+"gcc -o conftest -I/usr/local/include/ruby-2.1.0/i686-linux -I/usr/local/include/ruby-2.1.0/ruby/backward -I/usr/local/include/ruby-2.1.0 -I.  -D_FILE_OFFSET_BITS=64   -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wunused-variable -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function ‘t’:
+conftest.c:15: warning: implicit declaration of function ‘__iconv_free_list’
+/tmp/ccUq9OuQ.o: In function `t':
+/home/nlab/instiki/vendor/bundle/ruby/2.1.0/gems/iconv-1.0.4/ext/iconv/conftest.c:15: undefined reference to `__iconv_free_list'
+collect2: ld returned 1 exit status
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <iconv.h>
+ 4: 
+ 5: /*top*/
+ 6: extern int t(void);
+ 7: int main(int argc, char **argv)
+ 8: {
+ 9:   if (argc > 1000000) {
+10:     printf("%p", &t);
+11:   }
+12: 
+13:   return 0;
+14: }
+15: int t(void) { __iconv_free_list(); return 0; }
+/* end */
+
+--------------------
+

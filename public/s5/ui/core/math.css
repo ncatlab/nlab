@@ -1,0 +1,80 @@
+merror {display:inline;font-size:1em;}
+math[display=block] {overflow:auto;}
+math { white-space: nowrap }
+.maruku-eq-number {float:right}
+.blockquotesource {margin-left:1em;}
+table.plaintable {
+    border-collapse:collapse;
+    margin-left:30px;
+    border:0;
+}
+.plaintable td {border:1px solid #000; padding: 3px;}
+.plaintable th {padding: 3px;}
+.plaintable caption {
+    font-weight: bold;
+    font-size:1.1em;
+    text-align:center;
+    margin-left:30px;
+}
+.noborder td, .noborder th {border:0}
+body {counter-reset: theorem lemma proposition corollary definition example remark note}
+.un_theorem, .num_theorem,
+.un_lemma, .num_lemma,
+.un_prop, .num_prop,
+.un_cor, .num_cor {font-style: italic}
+span.theorem_label {font-style:normal; font-weight:bold;}
+.proof span.theorem_label {font-style:italic;}
+.num_theorem .theorem_label:after {
+   content: " " counter(theorem); counter-increment: theorem;}
+.num_lemma .theorem_label:after {
+   content: " " counter(lemma); counter-increment: lemma;}
+.num_prop .theorem_label:after {
+   content: " " counter(proposition); counter-increment: proposition;}
+.num_cor .theorem_label:after {
+   content: " " counter(corollary); counter-increment: corollary;}
+.num_defn .theorem_label:after {
+   content: " " counter(definition); counter-increment: definition;}
+.num_example .theorem_label:after {
+   content: " " counter(example); counter-increment: example;}
+.num_remark .theorem_label:after {
+   content: " " counter(remark); counter-increment: remark;}
+.num_note .theorem_label:after {
+   content: " " counter(note); counter-increment: note;}
+
+/* Hack for Mozilla bug 449396 */
+[mathvariant="bold"] *  {
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+}
+[mathvariant="italic"] *  {
+  font-style: italic;
+  font-variant: normal;
+  font-weight: normal;
+}
+[mathvariant="bold-italic"] *  {
+  font-style: italic;
+  font-variant: normal;
+  font-weight: bold;
+}
+[mathvariant="sans-serif"] *  {
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+}
+[mathvariant="bold-sans-serif"] *  {
+  font-style: normal;
+  font-variant: normal;
+  font-weight: bold;
+}
+[mathvariant="sans-serif-italic"] *  {
+  font-style: italic;
+  font-variant: normal;
+  font-weight: normal;
+}
+[mathvariant="sans-serif-bold-italic"] *  {
+  font-style: italic;
+  font-variant: normal;
+  font-weight: bold;
+}
+.maruku_toc ul { list-style: none; }

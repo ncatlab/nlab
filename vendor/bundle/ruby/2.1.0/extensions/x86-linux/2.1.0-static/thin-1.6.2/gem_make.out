@@ -1,0 +1,22 @@
+/usr/local/bin/ruby extconf.rb 
+checking for main() in -lc... yes
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling parser.c
+compiling thin.c
+thin.c: In function ‘Thin_HttpParser_alloc’:
+thin.c:242: warning: implicit declaration of function ‘thin_http_parser_init’
+thin.c: In function ‘Thin_HttpParser_finish’:
+thin.c:294: warning: implicit declaration of function ‘thin_http_parser_finish’
+thin.c:296: warning: implicit declaration of function ‘thin_http_parser_is_finished’
+thin.c: In function ‘Thin_HttpParser_execute’:
+thin.c:334: warning: implicit declaration of function ‘thin_http_parser_execute’
+thin.c:338: warning: implicit declaration of function ‘thin_http_parser_has_error’
+linking shared-object thin_parser.so
+
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 thin_parser.so ./.gem.20140518-31867-ebkg97
+installing default thin_parser libraries

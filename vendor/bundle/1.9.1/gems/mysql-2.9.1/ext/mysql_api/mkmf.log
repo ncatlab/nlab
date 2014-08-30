@@ -1,0 +1,93 @@
+have_func: checking for mysql_ssl_set()... -------------------- yes
+
+"gcc -o conftest -I/usr/local/include/ruby-1.9.1/i686-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I.  -D_FILE_OFFSET_BITS=64  -I/usr/include/mysql  -DBIG_JOINS=1  -fno-strict-aliasing   -DUNIV_LINUX -DUNIV_LINUX  -O3 -ggdb -Wextra -Wno-unused-parameter -Wno-parentheses -Wpointer-arith -Wwrite-strings -Wno-missing-field-initializers -Wno-long-long  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L.  -rdynamic -Wl,-export-dynamic    -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main() {return 0;}
+/* end */
+
+"gcc -o conftest -I/usr/local/include/ruby-1.9.1/i686-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I.  -D_FILE_OFFSET_BITS=64  -I/usr/include/mysql  -DBIG_JOINS=1  -fno-strict-aliasing   -DUNIV_LINUX -DUNIV_LINUX  -O3 -ggdb -Wextra -Wno-unused-parameter -Wno-parentheses -Wpointer-arith -Wwrite-strings -Wno-missing-field-initializers -Wno-long-long  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L.  -rdynamic -Wl,-export-dynamic    -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function ‘t’:
+conftest.c:5: error: ‘mysql_ssl_set’ undeclared (first use in this function)
+conftest.c:5: error: (Each undeclared identifier is reported only once
+conftest.c:5: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))mysql_ssl_set; return 0; }
+/* end */
+
+"gcc -o conftest -I/usr/local/include/ruby-1.9.1/i686-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I.  -D_FILE_OFFSET_BITS=64  -I/usr/include/mysql  -DBIG_JOINS=1  -fno-strict-aliasing   -DUNIV_LINUX -DUNIV_LINUX  -O3 -ggdb -Wextra -Wno-unused-parameter -Wno-parentheses -Wpointer-arith -Wwrite-strings -Wno-missing-field-initializers -Wno-long-long  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L.  -rdynamic -Wl,-export-dynamic    -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { mysql_ssl_set(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_str_set_len()... -------------------- yes
+
+"gcc -o conftest -I/usr/local/include/ruby-1.9.1/i686-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I.  -D_FILE_OFFSET_BITS=64  -I/usr/include/mysql  -DBIG_JOINS=1  -fno-strict-aliasing   -DUNIV_LINUX -DUNIV_LINUX  -O3 -ggdb -Wextra -Wno-unused-parameter -Wno-parentheses -Wpointer-arith -Wwrite-strings -Wno-missing-field-initializers -Wno-long-long  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L.  -rdynamic -Wl,-export-dynamic    -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))rb_str_set_len; return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_thread_start_timer()... -------------------- no
+
+"gcc -o conftest -I/usr/local/include/ruby-1.9.1/i686-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I.  -D_FILE_OFFSET_BITS=64  -I/usr/include/mysql  -DBIG_JOINS=1  -fno-strict-aliasing   -DUNIV_LINUX -DUNIV_LINUX  -O3 -ggdb -Wextra -Wno-unused-parameter -Wno-parentheses -Wpointer-arith -Wwrite-strings -Wno-missing-field-initializers -Wno-long-long  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L.  -rdynamic -Wl,-export-dynamic    -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function ‘t’:
+conftest.c:5: error: ‘rb_thread_start_timer’ undeclared (first use in this function)
+conftest.c:5: error: (Each undeclared identifier is reported only once
+conftest.c:5: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))rb_thread_start_timer; return 0; }
+/* end */
+
+"gcc -o conftest -I/usr/local/include/ruby-1.9.1/i686-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I.  -D_FILE_OFFSET_BITS=64  -I/usr/include/mysql  -DBIG_JOINS=1  -fno-strict-aliasing   -DUNIV_LINUX -DUNIV_LINUX  -O3 -ggdb -Wextra -Wno-unused-parameter -Wno-parentheses -Wpointer-arith -Wwrite-strings -Wno-missing-field-initializers -Wno-long-long  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L.  -rdynamic -Wl,-export-dynamic    -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static -Wl,-Bsymbolic-functions -rdynamic -L/usr/lib/mysql -lmysqlclient  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+/tmp/ccZwCIg4.o: In function `t':
+/home/nlab/instiki/vendor/bundle/1.9.1/gems/mysql-2.9.1/ext/mysql_api/conftest.c:5: undefined reference to `rb_thread_start_timer'
+collect2: ld returned 1 exit status
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { rb_thread_start_timer(); return 0; }
+/* end */
+
+--------------------
+
+have_header: checking for mysql.h... -------------------- yes
+
+"gcc -E -I/usr/local/include/ruby-1.9.1/i686-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I.  -D_FILE_OFFSET_BITS=64  -I/usr/include/mysql  -DBIG_JOINS=1  -fno-strict-aliasing   -DUNIV_LINUX -DUNIV_LINUX  -O3 -ggdb -Wextra -Wno-unused-parameter -Wno-parentheses -Wpointer-arith -Wwrite-strings -Wno-missing-field-initializers -Wno-long-long  -fPIC  conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <mysql.h>
+/* end */
+
+--------------------
+

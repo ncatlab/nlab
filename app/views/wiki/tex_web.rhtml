@@ -1,0 +1,25 @@
+\documentclass[12pt,titlepage]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage{hyperref}
+
+%-------------------------------------------------------------------
+
+\title{<%= @web_name %>}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\pagebreak
+
+%-------------------------------------------------------------------
+
+<%= @tex_content %>
+
+\end{document}

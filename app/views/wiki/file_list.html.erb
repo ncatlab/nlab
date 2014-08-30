@@ -1,0 +1,32 @@
+<%- @title = "Uploaded Files" -%>
+
+<% form_tag({ :controller => 'admin', :action => 'delete_files', :web => @web.address },
+             {'method' => 'post', 'accept-charset' => 'utf-8' }) do
+%>
+<div id="allFiles">
+  <h2>
+    Uploaded Files in <%= @web.name %>
+  </h2>
+
+<%- if @file_list.empty? -%>
+  <p>No uploaded files in this Web</p>
+<%- else -%>
+  <p>Check the files you wish to delete (<%= link_to "sort by #{@alt_sort_name}", :controller => 'wiki',
+      :web => @web.address, :action => 'file_list', :sort_order => @alt_sort_order %>).</p>
+  <ul style="list-style-type:none">
+  <%- for file in @file_list -%>
+    <li>
+      <input type="checkbox" name="<%= file.file_name %>" value="delete"/>
+      <a href="<%= url_for :web => @web.address, :action => 'files', 
+            :id => file.file_name %>"><%= file.file_name%></a> (<%= file.created_at.asctime %>) <span class="linked"><%= "Linked to by: " unless
+            @web.pages_that_link_to_file(file.file_name).empty? -%>
+            <%= @web.pages_that_link_to_file(file.file_name).collect { |referring_page|  link_to_page(referring_page) }.join(", ").html_safe %></span>
+    </li>
+  <%- end -%>
+  </ul>
+  <label for="system_password">Enter system password</label>
+  <%= password_field_tag "system_password", '', :class => "disableAutoComplete" %>
+    and <%= submit_tag("Delete Files") %>
+<%- end -%>
+</div>
+<%- end -%>

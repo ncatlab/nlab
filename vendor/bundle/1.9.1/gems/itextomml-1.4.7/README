@@ -1,0 +1,40 @@
+INTRODUCTION:
+
+This package contains the Ruby bindings for itex2MML. 
+It converts itex, a dialect of LaTeX, to MathML.
+A summary of the LaTeX syntax supported in itex can be found at
+
+      http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html
+
+The source repository for the itex2MML project may be found at
+
+      http://golem.ph.utexas.edu/~distler/code/itexToMML/changes
+
+The Ruby module provides four public methods
+
+       require 'itextomml'
+       itex =  Itex2MML::Parser.new
+
+       itex.html_filter(a_string)
+               converts all itex equations in a_string to MathML, passing the
+               rest of a_string unmodified. Returns the converted string. 
+
+       itex.filter(a_string)
+               converts all itex equations in a_string to MathML. Returns just
+               the MathML equation(s), as a string.
+
+       itex.inline_filter(a_string)
+               treats a_string as an inline equation (automatically supplies
+               the surrounding $...$, so you don't have to) and converts it
+               MathML. Returns the MathML inline equation, as a string.
+
+       itex.block_filter(a_string)
+               treats a_string as a block equation (automatically supplies
+               the surrounding $$...$$, so you don't have to) and converts it
+               MathML. Returns the MathML block equation, as a string.
+
+      http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html
+
+LICENSE:
+
+Itex2MML is Open Source software, released under a dual license: GPL and MPL.

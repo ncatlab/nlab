@@ -1,0 +1,38 @@
+=== 2.9.1 / 2013-02-16 / Vacation time!
+
+* Bugfixes:
+  * Use C89 comment style in source code. #13 [knu]
+  * Use ULL2NUM to return `affected_rows`. #11, #12 [cbandy]
+
+=== 2.9.0 / 2012-11-17
+
+DEPRECATION: Ruby 1.8.6 is no longer supported. Do not update your production
+application blindly without testing first any dependency change!
+
+* Incompatibility:
+  * Requires Ruby 1.8.7 or newer.
+
+* Enhancements:
+  * Detect MySQL version at load time and fail on mismatch [ghazel]
+  * Use MySQL Connector/C for Windows binary bindings instead
+
+* Bug fixes:
+  * Use RbConfig since Config is deprecated in Ruby 2.0 [tenderlove]
+
+=== 2.8.2 / 2012-11-06 / *yanked*
+
+* Yanked:
+  * Changes in requirements render this gem incompatible for some users.
+
+=== 2.8.1 / 2009-08-21
+
+* New features:
+  * Early support for Ruby 1.9
+
+* Enhancements:
+  * Improved gem release process using Hoe as development dependency
+  * Implemented support for cross compilation
+  * Binary version built against MySQL 5.0.83
+
+* Bug fixes:
+  * Improved detection of mysql and it's configuration (mysql_config)
