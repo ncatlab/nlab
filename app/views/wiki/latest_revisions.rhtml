@@ -1,7 +1,5 @@
 <%- @title = "Latest Revisions" -%>
 
-<%= will_paginate @revisions %>
-
 <ul>
 <%- for rev in @revisions -%>
   <li>
@@ -21,3 +19,12 @@
   </li>
 <%- end -%>
 </ul>
+
+<%= will_paginate @revisions %>
+
+<style type="text/css">
+.pagination {
+  text-align: center;
+  margin: 10px 0;
+}
+</style>

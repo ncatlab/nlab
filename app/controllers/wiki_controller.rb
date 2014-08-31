@@ -174,7 +174,8 @@ EOL
 
   def latest_revisions
     @set_name = 'the web'
-    @revisions = @web.revisions.paginate :page => params[:page], :per_page => 100
+    @revisions = @web.revisions.reverse
+    @revisions = @revisions.paginate :page => params[:page], :per_page => 100
   end
 
   def atom_with_content
