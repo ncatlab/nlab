@@ -7,6 +7,7 @@ class Revision < ActiveRecord::Base
   end
 
   def number
+    # for long arrays, this is faster than array.index
     Hash[self.page.rev_ids.map.with_index.to_a][self] + 1
   end
 end

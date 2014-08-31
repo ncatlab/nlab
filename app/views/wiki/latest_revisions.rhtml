@@ -1,0 +1,23 @@
+<%- @title = "Latest Revisions" -%>
+
+<%= will_paginate @revisions %>
+
+<ul>
+<%- for rev in @revisions -%>
+  <li>
+    <%= link_to_existing_page rev.page %>
+    <%- if rev.page.rev_ids.size > 1 %>
+        <span class="views">
+        ( <%= link_to(rev.page.plain_name + "(rev # #{rev.number})".html_safe,
+            {:web => @web.address, :action => 'revision', :id => rev.page.name,
+             :rev => rev.number, :mode => 'diff'}).html_safe %> |
+          <%= link_to_history(rev.page, text='history') %> )
+        </span>
+    <%- end -%>
+    <div class="revisedby" style="margin-bottom: 0px">
+      by <%= link_to_page(rev.author) %>
+      at <%= format_date(rev.revised_at) %>
+    </div>
+  </li>
+<%- end -%>
+</ul>
