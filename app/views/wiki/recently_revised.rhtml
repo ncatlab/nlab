@@ -2,8 +2,6 @@
 
 <%= categories_menu %>
 
-<p id="last_modified_date" style="font-size: 0.9em; color: #666"></p>
-
 <%- @pages_by_day.keys.sort.reverse.each do |day| -%>
   <h3><%= format_date(day, include_time = false) %></h3>
   <ul>
@@ -24,12 +22,3 @@
   <%- end -%>
   </ul>
 <%- end -%>
-
-<script type="text/javascript">
-document.observe("dom:loaded", function() {
-  if (document.lastModified) {
-    $("last_modified_date").update(
-      "Last modified on: " + document.lastModified);
-  }
-})
-</script>
