@@ -175,9 +175,8 @@ EOL
   def latest_revisions
     @set_name = 'the web'
     @revisions = Revision.all(
-      :conditions => {
-        :web_id => @web.id,
-        :revised_at => (DateTime.now - 30.day)..DateTime.now},
+      :conditions => {:web_id => @web.id},
+      :limit => 1000,
       :order => "revised_at DESC")
     @revisions = @web.revisions.reverse
     @revisions = @revisions.paginate :page => params[:page], :per_page => 100
