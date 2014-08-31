@@ -5,4 +5,8 @@ class Revision < ActiveRecord::Base
   def content
     read_attribute(:content).as_utf8
   end
+
+  def number
+    Hash[self.page.rev_ids.map.with_index.to_a][self] + 1
+  end
 end

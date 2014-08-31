@@ -18,3 +18,4 @@ gem "maruku", :git => 'git://github.com/distler/maruku.git', :branch => 'nokogir
 gem 'iconv', :platforms => [:ruby_20, :ruby_21]
 gem 'rdoc-data', :platforms => :ruby_18
 gem "mysql", ">=2.9.1"
+gem "will_paginate", "~> 2.3.15"

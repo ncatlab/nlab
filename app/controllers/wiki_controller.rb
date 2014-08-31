@@ -172,6 +172,11 @@ EOL
     end
   end
 
+  def latest_revisions
+    @set_name = 'the web'
+    @revisions = @web.revisions.paginate :page => params[:page], :per_page => 100
+  end
+
   def atom_with_content
     if rss_with_content_allowed? 
       render_atom(hide_description = false)
