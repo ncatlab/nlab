@@ -7,7 +7,7 @@ class Web < ActiveRecord::Base
   has_many :pages,      :dependent => :destroy
   has_many :wiki_files, :dependent => :destroy
 
-  has_many :revisions,  :through => :pages
+  has_many :revisions
 
   ## Hooks
 

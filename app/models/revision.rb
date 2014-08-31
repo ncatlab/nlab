@@ -1,5 +1,6 @@
 class Revision < ActiveRecord::Base
   belongs_to :page
+  belongs_to :web
   composed_of :author, :mapping => [ %w(author name), %w(ip ip) ]
 
   def content
