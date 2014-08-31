@@ -178,7 +178,6 @@ EOL
       :conditions => {:web_id => @web.id},
       :limit => 1000,
       :order => "revised_at DESC")
-    @revisions = @web.revisions.reverse
     @revisions = @revisions.paginate :page => params[:page], :per_page => 100
   end
 
