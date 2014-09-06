@@ -65,6 +65,15 @@
   	<%= auto_discovery_link_tag(:atom, {:controller => 'wiki', :web => @web.address, :action => 'atom_with_content'},
   	      :title => 'Atom with full content') %>
   <%- end -%>
+  <script type="text/javascript">
+    /* counters for theorem environments */
+    var envs = ["theorem", "lemma", "prop", "cor", "defn", "example", "note", "remark"];
+    envs.each(function(env) {
+      $$(".num_" + env + " .theorem_label").each(function(label, index) {
+        label.insert(" " + (index+1));
+      });
+    });
+  </script>
 </head>
 
 <body>
