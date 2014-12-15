@@ -114,13 +114,15 @@ class Web < ActiveRecord::Base
   # @return [Hash] a Hash wherein the key is some author's name, and the
   #   values are an array of page names for that author.
   def page_names_by_author
-    revs = revisions.all(
-      :conditions => {:web_id => @web.id})
+    data = revisions.all(
+      :joins  => :page,
+      :select => "DISTINCT revisions.author AS author, pages.name AS page_name",
+      :order  => "pages.name")
 
-    revs.inject({}) do |hash, rev|
-      hash[rev.author] ||= []
-      hash[rev.author] <<  rev.page.name
-      hash
+    data.inject({}) do |result, revision|
+      result[revision.author] ||= []
+      result[revision.author] <<  revision.page_name
+      result
     end
   end
 
