@@ -50,7 +50,7 @@ class WikiController < ApplicationController
   # Within a single web ---------------------------------------------------------
 
   def authors
-    @authors = @web.revisions.all(
+    @revisions = @web.revisions.all(
       :select => "DISTINCT revisions.author AS author",
       :order  => "author ASC")
   end
