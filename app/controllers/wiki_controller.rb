@@ -54,7 +54,7 @@ class WikiController < ApplicationController
       :select => "DISTINCT revisions.author AS author",
       :order  => "author ASC")
     @authors = revisions.map { |rev|
-      Author.new(rev.author).sanitize_string.purify
+      Author.new(rev.author).sanitize.purify
     }
   end
 
