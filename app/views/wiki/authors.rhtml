@@ -3,7 +3,7 @@
 <ul id="authorList">
   <%- for rev in @revisions -%>
     <li>
-      <%= link_to_page rev.author.name.sanitize.purify %>
+      <%= link_to_page rev.author.sanitize.purify %>
       co- or authored:
       <%= raw @page_names_by_author[rev.author.name].collect { |page_name| link_to_page(page_name) }.sort.join ', ' %>
     </li>
