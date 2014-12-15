@@ -126,11 +126,12 @@ class Web < ActiveRecord::Base
     end
   end
 
+  # author should be an instance of Author
   def get_pages_by_author(author)
     revisions.all(
       :conditions => {:author => author},
       :joins => :page,
-      :select => "pages.name",
+      :select => "revisions.author AS author, pages.name AS page_name",
       :order => "1")
   end
 
