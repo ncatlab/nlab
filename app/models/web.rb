@@ -126,6 +126,14 @@ class Web < ActiveRecord::Base
     end
   end
 
+  def get_pages_by_author(author)
+    revisions.all(
+      :conditions => {:author => author},
+      :joins => :page,
+      :select => "pages.name",
+      :order => "1")
+  end
+
   # OPTIMIZE Use the +delete_all+ with conditions for extra efficiency
   def remove_pages(pages_to_be_removed)
     pages_to_be_removed.each { |p| p.destroy }
