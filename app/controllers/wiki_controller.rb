@@ -32,7 +32,7 @@ class WikiController < ApplicationController
   def authenticate
     if password_check(params['password'])
       redirect_home
-    else 
+    else
       flash[:info] = password_error(params['password'])
       redirect_to :action => 'login', :web => @web_name
     end
@@ -41,7 +41,7 @@ class WikiController < ApplicationController
   def login
     # to template
   end
-  
+
   def web_list
     @webs = wiki.webs.values.sort_by { |web| web.name }
   end
@@ -53,7 +53,7 @@ class WikiController < ApplicationController
     @page_names_by_author = @web.page_names_by_author
     @authors = @page_names_by_author.keys.sort
   end
-  
+
   def file_list
     sort_order = params['sort_order'] || 'file_name'
     case sort_order
@@ -66,9 +66,9 @@ class WikiController < ApplicationController
     end
     @file_list = @web.file_list(sort_order)
   end
-  
+
   def export_html
-    export_pages_as_zip(html_ext) do |page| 
+    export_pages_as_zip(html_ext) do |page|
       renderer = PageRenderer.new(page.current_revision)
       rendered_page = <<-EOL
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg-flat.dtd" >
@@ -76,20 +76,20 @@ class WikiController < ApplicationController
 <head>
   <title>#{page.plain_name} in #{@web.name}</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  
-  <script src="public/javascripts/page_helper.js" type="text/javascript"></script> 
+
+  <script src="public/javascripts/page_helper.js" type="text/javascript"></script>
   <link href="public/stylesheets/instiki.css" media="all" rel="stylesheet" type="text/css" />
   <link href="public/stylesheets/syntax.css" media="all" rel="stylesheet" type="text/css" />
   <style type="text/css">
-    h1#pageName, div.info, .newWikiWord a, a.existingWikiWord, .newWikiWord a:hover, [actiontype="toggle"]:hover, #TextileHelp h3 { 
-      color: ##{@web ? @web.color : "393"}; 
+    h1#pageName, div.info, .newWikiWord a, a.existingWikiWord, .newWikiWord a:hover, [actiontype="toggle"]:hover, #TextileHelp h3 {
+      color: ##{@web ? @web.color : "393"};
     }
     a:visited.existingWikiWord {
       color: ##{darken(@web ? @web.color : "393")};
-    }   
+    }
   </style>
-  
-  <style type="text/css"><!--/*--><![CDATA[/*><!--*/    
+
+  <style type="text/css"><!--/*--><![CDATA[/*><!--*/
     #{@web ? @web.additional_style : ''}
   /*]]>*/--></style>
   <script src="public/javascripts/prototype.js" type="text/javascript"></script>
@@ -114,7 +114,7 @@ class WikiController < ApplicationController
         c9-9,20-18,33-22C159,52,166,54,170,60' />
     </svg></span>} : ''}
   <span class="webName">#{@web.name}</span><br />
-  #{page.plain_name}    
+  #{page.plain_name}
   </h1>
 #{renderer.display_content_for_export}
   <div class="byline">
@@ -161,12 +161,12 @@ EOL
     @page_names_that_are_wanted = @pages_in_category.wanted_pages
     @pages_that_are_orphaned = @pages_in_category.orphaned_pages
   end
-  
+
   def recently_revised
     parse_category
     @pages_by_revision = @pages_in_category.by_revision
     @pages_by_day = Hash.new { |h, day| h[day] = [] }
-    @pages_by_revision.each do |page| 
+    @pages_by_revision.each do |page|
       day = Date.new(page.revised_at.year, page.revised_at.month, page.revised_at.day)
       @pages_by_day[day] << page
     end
@@ -182,7 +182,7 @@ EOL
   end
 
   def atom_with_content
-    if rss_with_content_allowed? 
+    if rss_with_content_allowed?
       render_atom(hide_description = false)
     else
       render :text => 'Atom feed with content for this web is blocked for security reasons. ' +
@@ -193,7 +193,7 @@ EOL
   def atom_with_headlines
     render_atom(hide_description = true)
   end
-  
+
   def tex_list
     return unless is_post
     if [:markdownMML, :markdownPNG, :markdown].include?(@web.markup)
@@ -230,7 +230,7 @@ EOL
   end
 
   # Within a single page --------------------------------------------------------
-  
+
   def cancel_edit
     @page.unlock
     redirect_to_page(@page_name)
@@ -245,11 +245,11 @@ EOL
       @page.lock(Time.now, @author)
     end
   end
-  
+
   def locked
     # to template
   end
-  
+
   def new
     redirect_to :web => @web_name, :action => 'edit', :id => @page_name unless @page.nil?
     # to template
@@ -280,7 +280,7 @@ EOL
   def published
     if not @web.published?
       render(:text => "Published version of web '#{@web_name}' is not available", :status => 404, :layout => 'error')
-      return 
+      return
     end
 
     @page_name ||= 'HomePage'
@@ -295,7 +295,7 @@ EOL
         if real_pages.length == 1
           flash[:info] = "Redirected from \"#{@page_name}\"."
         else
-          list_pages = real_pages.collect do |r| 
+          list_pages = real_pages.collect do |r|
             "<a href=\"#{url_for(:web => @web.address, :action => 'published', :id => r, :only_path => true)}\">#{r.escapeHTML}</a>"
           end
           c = list_pages.length > 2 ? 'all' : 'both'
@@ -307,9 +307,9 @@ EOL
       end
      end
   end
-  
+
   def revision
-    if @page.nil?    
+    if @page.nil?
       redirect_home
     else
       get_page_and_revision
@@ -332,7 +332,7 @@ EOL
     return unless is_post
     author_name = params['author'].purify
     author_name = 'AnonymousCoward' if author_name =~ /^\s*$/
-    
+
     begin
       the_content = params['content'].purify
       prev_content = ''
@@ -344,12 +344,12 @@ EOL
         prev_content = @page.current_revision.content
         raise Instiki::ValidationError.new('A page named "' + new_name.escapeHTML + '" already exists.') if
             @page_name != new_name && @web.has_page?(new_name)
-        wiki.revise_page(@web_name, @page_name, new_name, the_content, Time.now, 
+        wiki.revise_page(@web_name, @page_name, new_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
         @page.unlock
         @page_name = new_name
       else
-        wiki.write_page(@web_name, @page_name, the_content, Time.now, 
+        wiki.write_page(@web_name, @page_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
       end
       redirect_to_page @page_name
@@ -358,7 +358,7 @@ EOL
       logger.error e
       param_hash = {:web => @web_name, :id => @page_name}
       # Work around Rails bug: flash will not display if query string is longer than 10192 bytes
-      param_hash.update( :content => the_content ) if the_content && 
+      param_hash.update( :content => the_content ) if the_content &&
          CGI::escape(the_content).length < 10183 && the_content != prev_content
       if @page
         @page.unlock
@@ -375,7 +375,7 @@ EOL
         @renderer = PageRenderer.new(@page.current_revision)
         @show_diff = (params[:mode] == 'diff')
         render :action => 'page'
-      # TODO this rescue should differentiate between errors due to rendering and errors in 
+      # TODO this rescue should differentiate between errors due to rendering and errors in
       # the application itself (for application errors, it's better not to rescue the error at all)
       rescue => e
         logger.error e
@@ -470,7 +470,7 @@ EOL
   def do_caching?
     flash.empty?
   end
-  
+
   def load_page
     @page_name = params['id'] ? params['id'].purify : nil
     @page = @wiki.read_page(@web_name, @page_name) if @page_name
@@ -500,7 +500,7 @@ EOL
   end
 
   def export_pages_as_zip(file_type, &block)
-    
+
     file_prefix = "#{@web.address}-#{file_type}-"
     timestamp = @web.revised_at.strftime('%Y-%m-%d-%H-%M-%S')
     file_path = @wiki.storage_path.join(file_prefix + timestamp + '.zip')
@@ -567,13 +567,13 @@ EOL
       @set_name = 'the web'
     end
   end
-  
+
   def render_atom(hide_description = false, limit = 15)
     @pages_by_revision = @web.select.by_revision.first(limit)
     @hide_description = hide_description
     @link_action = @web.password ? 'published' : 'show'
     render :action => 'atom'
-  end 
+  end
 
   def render_tex_web
     @web.select.by_name.inject({}) do |tex_web, page|
@@ -592,7 +592,7 @@ EOL
 
   def filter_spam(content)
     @@spam_patterns ||= load_spam_patterns
-    @@spam_patterns.each do |pattern| 
+    @@spam_patterns.each do |pattern|
       raise Instiki::ValidationError.new("Your edit was blocked by spam filtering") if content =~ pattern
     end
   end
@@ -600,7 +600,7 @@ EOL
   def load_spam_patterns
     spam_patterns_file = Rails.root.join('config', 'spam_patterns.txt')
     if File.exists?(spam_patterns_file)
-      spam_patterns_file.readlines.inject([]) { |patterns, line| patterns << Regexp.new(line.chomp, Regexp::IGNORECASE) } 
+      spam_patterns_file.readlines.inject([]) { |patterns, line| patterns << Regexp.new(line.chomp, Regexp::IGNORECASE) }
     else
       []
     end
