@@ -12,7 +12,7 @@ class AddAuthorRevisionsTable < ActiveRecord::Migration
 
     Revision.find(:all).each {|rev|
       ar = AuthorRevision.new(
-        :author      => author,
+        :author      => rev.author,
         :revision_id => rev.id,
         :page_id     => rev.page_id,
         :web_id      => rev.web_id)
