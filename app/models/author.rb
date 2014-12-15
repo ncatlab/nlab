@@ -16,21 +16,17 @@ class Author < String
     name <=> other.to_s
   end
 
-  def sanitize_string(input)
-    if input.is_a? String
-      input = input.dup.force_encoding(Encoding::UTF_8)
+  def sanitize
+    input = self.dup.force_encoding(Encoding::UTF_8)
 
-      if input.valid_encoding?
-        input
-      else
-        input.
-          force_encoding(Encoding::ASCII_8BIT).
-          encode!(Encoding::UTF_8,
-                  invalid: :replace,
-                  undef:   :replace)
-      end
-    else
+    if input.valid_encoding?
       input
+    else
+      input.
+        force_encoding(Encoding::ASCII_8BIT).
+        encode!(Encoding::UTF_8,
+                invalid: :replace,
+                undef:   :replace)
     end
   end
 end
