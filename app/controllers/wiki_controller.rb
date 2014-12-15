@@ -55,7 +55,7 @@ class WikiController < ApplicationController
       :select => "DISTINCT revisions.author",
       :order  => "1"
     )
-    @revisions = @revisions.paginate :page => params[:page], :per_page => 20
+    @revisions = @revisions.paginate :page => params[:page], :per_page => 50
     @page_names_by_author = @revisions.inject({}) { |hash, rev|
       hash[rev.author.name] = @web.get_pages_by_author(rev.author)
       hash
