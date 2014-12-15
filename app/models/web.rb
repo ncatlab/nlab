@@ -131,7 +131,7 @@ class Web < ActiveRecord::Base
     revs = revisions.all(
       :conditions => [ "author = ?", author.name ],
       :joins => :page,
-      :select => "pages.name AS page_name",
+      :select => "DISTINCT pages.name AS page_name",
       :order => "1")
     revs.map { |rev|
       rev.page_name
