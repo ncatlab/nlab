@@ -50,9 +50,12 @@ class WikiController < ApplicationController
   # Within a single web ---------------------------------------------------------
 
   def authors
-    @revisions = @web.revisions.all(
+    revisions = @web.revisions.all(
       :select => "DISTINCT revisions.author AS author",
       :order  => "author ASC")
+    @authors = revisions.map { |rev|
+      Author.new(rev.author).purify
+    }
   end
 
   def file_list

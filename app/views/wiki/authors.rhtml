@@ -1,9 +1,9 @@
 <%- @title = 'Authors' -%>
 
 <ul id="authorList">
-  <%- for revision in @revisions -%>
+  <%- for author in @authors -%>
     <li>
-      <%= link_to_page revision.author.purify %>
+      <%= link_to_page author %>
     </li>
   <%- end -%>
 </ul>
