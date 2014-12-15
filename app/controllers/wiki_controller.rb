@@ -50,8 +50,9 @@ class WikiController < ApplicationController
   # Within a single web ---------------------------------------------------------
 
   def authors
-    @page_names_by_author = @web.page_names_by_author
-    @authors = @page_names_by_author.keys.sort
+    @authors = @web.revisions.all(
+      :select => "DISTINCT revisions.author AS author",
+      :order  => "author ASC")
   end
 
   def file_list
