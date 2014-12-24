@@ -4,6 +4,7 @@ class Revision < ActiveRecord::Base
   composed_of :author, :mapping => [ %w(author name), %w(ip ip) ]
 
   before_save :update_web_id
+  before_save :strip_whitespace_from_author_name
 
   def content
     read_attribute(:content).as_utf8
@@ -18,5 +19,9 @@ class Revision < ActiveRecord::Base
     if !self.web_id and self.page and self.page.web_id
       self.web_id = self.page.web_id
     end
+  end
+
+  def strip_whitespace_from_author_name
+    revision.author.name.strip!
   end
 end
