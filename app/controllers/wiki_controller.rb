@@ -53,8 +53,9 @@ class WikiController < ApplicationController
   def authors
     @revisions = @web.revisions.all(
       :select => "revisions.author",
+      :join   => :pages,
       :group  => "revisions.author",
-      :having => "count(revisions.id) > 2")
+      :having => "count(DISTINCT pages.id) > 2")
     @revisions = @revisions.paginate :page => params[:page], :per_page => 50
     @page_names_by_author = @revisions.inject({}) { |hash, rev|
       hash[rev.author.name] = @web.get_pages_by_author(rev.author)
