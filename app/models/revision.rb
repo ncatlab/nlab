@@ -22,6 +22,6 @@ class Revision < ActiveRecord::Base
   end
 
   def strip_whitespace_from_author_name
-    self.author.name.strip!
+    self.author.name = self.author.name.strip
   end
 end
