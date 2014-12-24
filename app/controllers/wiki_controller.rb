@@ -53,7 +53,7 @@ class WikiController < ApplicationController
   def authors
     @revisions = @web.revisions.all(
       :select => "revisions.author",
-      :join   => :pages,
+      :joins  => :pages,
       :group  => "revisions.author",
       :having => "count(DISTINCT pages.id) > 2")
     @revisions = @revisions.paginate :page => params[:page], :per_page => 50
