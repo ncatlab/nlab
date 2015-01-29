@@ -6,6 +6,14 @@ class ApplicationController < ActionController::Base
   before_filter :connect_to_model, :check_authorization, :setup_url_generator, :set_content_type_header, :set_robots_metatag
   after_filter :remember_location, :teardown_url_generator
 
+  rescue_from StandardError, :with => :render_error
+  rescue_from Exception, :with => :render_error
+  rescue_from ActiveRecord::RecordNotFound, :with => :render_not_found
+  rescue_from ActionController::RoutingError, :with => :render_not_found
+  rescue_from ActionController::UnknownController, :with => :render_not_found
+  rescue_from ActionController::UnknownAction, :with => :render_not_found
+
+
   # For injecting a different wiki model implementation. Intended for use in tests
   def self.wiki=(the_wiki)
     # a global variable is used here because Rails reloads controller and model classes in the 
@@ -274,6 +282,17 @@ class ApplicationController < ActionController::Base
       return false
     end
     return true
+  end
+
+  # error pages
+  def render_not_found(exception)
+    @exception = exception
+    render :template => "/error/404.rhtml", :status => 404
+  end
+
+  def render_error(exception)
+    @exception = exception
+    render :template => "/error/500.rhtml", :status => 500 
   end
 
 end
