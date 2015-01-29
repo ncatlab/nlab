@@ -287,12 +287,12 @@ class ApplicationController < ActionController::Base
   # error pages
   def render_not_found(exception)
     @exception = exception
-    render :template => "/error/404.rhtml", :status => 404
+    render :template => "/errors/404.rhtml", :status => 404
   end
 
   def render_error(exception)
     @exception = exception
-    render :template => "/error/500.rhtml", :status => 500 
+    render :template => "/errors/500.rhtml", :status => 500 
   end
 
 end
