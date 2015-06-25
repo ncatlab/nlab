@@ -10,11 +10,11 @@ class WikiController < ApplicationController
   before_filter :load_page
   before_filter :dnsbl_check, :only => [:edit, :new, :save, :export_html, :export_markup]
   caches_action :show, :published, :tex, :s5, :print, :list, :recently_revised, :file_list, :source,
-        :history, :revision, :atom_with_content, :atom_with_headlines, :if => Proc.new { |c| c.send(:do_caching?) }
+        :history, :revision, :atom_with_content, :atom_with_headlines, :atom_with_changes, :if => Proc.new { |c| c.send(:do_caching?) }
   caches_action :authors, :cache_path => Proc.new { |c| c.params }
   cache_sweeper :revision_sweeper
 
-  layout 'default', :except => [:atom_with_content, :atom_with_headlines, :atom, :source, :tex, :s5, :export_html]
+  layout 'default', :except => [:atom_with_content, :atom_with_headlines, :atom_with_changes, :atom, :source, :tex, :s5, :export_html]
 
   def index
     if @web_name
@@ -201,6 +201,15 @@ EOL
 
   def atom_with_headlines
     render_atom(hide_description = true)
+  end
+  
+  def atom_with_changes(limit = 15)
+    if rss_with_content_allowed?
+      render_atom_changes(hide_description = false)
+    else
+      render :text => 'Atom feed with content for this web is blocked for security reasons. ' +
+        'The web is password-protected and not published', :status => 403, :layout => 'error'
+    end
   end
 
   def tex_list
@@ -582,6 +591,13 @@ EOL
     @hide_description = hide_description
     @link_action = @web.password ? 'published' : 'show'
     render :action => 'atom'
+  end
+
+  def render_atom_changes(hide_description = false, limit = 15)
+    @revisions = @web.revisions_by_date.last(limit).reverse
+    @hide_description = hide_description
+    @link_action = @web.password ? 'published' : 'show'
+    render :action => 'atom_changes'
   end
 
   def render_tex_web
