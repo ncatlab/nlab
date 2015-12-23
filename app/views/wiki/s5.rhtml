@@ -29,7 +29,10 @@
     MathML: { useMathMLspacing: true },
     "HTML-CSS": { scale: 90,
                   extensions: ["handle-floats.js"]
-       }
+    },
+    TeX: {
+      extensions: ["AMScd.js"]
+    }
   });
   MathJax.Hub.Queue( function () {
     var fos = document.getElementsByTagName('foreignObject');
