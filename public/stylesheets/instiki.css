@@ -459,7 +459,7 @@ span.keyboard {
  text-align:center;
 }
 
-body {counter-reset: theorem lemma proposition corollary definition example remark note}
+body {counter-reset: theorem}
 .un_theorem, .num_theorem,
 .un_lemma, .num_lemma,
 .un_prop, .num_prop,

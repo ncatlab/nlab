@@ -17,7 +17,7 @@ table.plaintable {
     margin-left:30px;
 }
 .noborder td, .noborder th {border:0}
-body {counter-reset: theorem lemma proposition corollary definition example remark note}
+body {counter-reset: theorem}
 .un_theorem, .num_theorem,
 .un_lemma, .num_lemma,
 .un_prop, .num_prop,
@@ -27,19 +27,19 @@ span.theorem_label {font-style:normal; font-weight:bold;}
 .num_theorem .theorem_label:after {
    content: " " counter(theorem); counter-increment: theorem;}
 .num_lemma .theorem_label:after {
-   content: " " counter(lemma); counter-increment: lemma;}
+   content: " " counter(theorem); counter-increment: theorem;}
 .num_prop .theorem_label:after {
-   content: " " counter(proposition); counter-increment: proposition;}
+   content: " " counter(theorem); counter-increment: theorem;}
 .num_cor .theorem_label:after {
-   content: " " counter(corollary); counter-increment: corollary;}
+   content: " " counter(theorem); counter-increment: theorem;}
 .num_defn .theorem_label:after {
-   content: " " counter(definition); counter-increment: definition;}
+   content: " " counter(theorem); counter-increment: theorem;}
 .num_example .theorem_label:after {
-   content: " " counter(example); counter-increment: example;}
+   content: " " counter(theorem); counter-increment: theorem;}
 .num_remark .theorem_label:after {
-   content: " " counter(remark); counter-increment: remark;}
+   content: " " counter(theorem); counter-increment: theorem;}
 .num_note .theorem_label:after {
-   content: " " counter(note); counter-increment: note;}
+   content: " " counter(theorem); counter-increment: theorem;}
 
 /* Hack for Mozilla bug 449396 */
 [mathvariant="bold"] *  {

@@ -68,11 +68,10 @@
   <script type="text/javascript">
     /* counters for theorem environments */
     var envs = ["theorem", "lemma", "prop", "cor", "defn", "example", "note", "remark"];
+    var selector = envs.map(function(s) {return ".num_" + s + " .theorem_label"}).join(",");
     document.observe("dom:loaded", function() {
-      envs.each(function(env) {
-        $$(".num_" + env + " .theorem_label").each(function(label, index) {
-          label.insert(" " + (index+1));
-        });
+      $$(selector).each(function(label, index) {
+        label.insert(" " + (index+1));
       });
     });
   </script>
