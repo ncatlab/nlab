@@ -92,8 +92,18 @@
           tag.insert({top: section_counter + ". "});
         } else { // this is a theorem label
           theorem_counter += 1;
-          tag.insert(" " + section_counter + "." + theorem_counter);
+          var theorem_number = section_counter + "." + theorem_counter;
+          tag.writeAttribute("theoremNumber", theorem_number);
+          tag.insert(" " + theorem_number);
         }
+      });
+
+      // look at all references, replace them by the new theorem number
+      $$("a.maruku-ref").each(function(x) {
+        var thm_parent = $$(x.getAttribute("href")).first();
+        var thm_label = thm_parent.select(".theorem_label").first();
+        var thm_number = thm_label.getAttribute("theoremNumber");
+        x.update(theorem_number);
       });
     });
   </script>
