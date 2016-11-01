@@ -19,7 +19,7 @@ function generateThmNumbers() {
   var section_counter = 0;
   var theorem_counter = 0;
   // find both section titles and theorem labels, and iterate
-  $$(theorem_label_selector + ",#revision h2:not(.context_menu)").each(function(tag, index) {
+  $$(theorem_label_selector + ",#Content h2:not(.context_menu)").each(function(tag, index) {
     if (tag.tagName == "h2") { // this is a section title
       section_counter += 1;
       theorem_counter = 0;
@@ -34,8 +34,8 @@ function generateThmNumbers() {
 
   // look at all references, replace them by the new theorem number
   $$("a.maruku-ref").each(function(x) {
-    var x_id = x.getAttribute("href").substr(1);
-    var thm_parent = document.getElementById(x_id);
+    var thm_id = x.getAttribute("href").substr(1);
+    var thm_parent = document.getElementById(thm_id);
     var thm_label = thm_parent.select(".theorem_label").first();
     var thm_number = thm_label.getAttribute("theoremNumber");
     x.update(thm_number);
