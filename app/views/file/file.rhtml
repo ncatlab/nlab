@@ -27,7 +27,7 @@
   <div>
     <input type="submit" value="Upload" /> as 
     <%= text_field_tag :author, @author, 
-            :onfocus => "this.value == 'AnonymousCoward' ? this.value = '' : true;",
-            :onblur  => "this.value == '' ? this.value = 'AnonymousCoward' : true" %>
+            :onfocus => "this.value == 'Anonymous' ? this.value = '' : true;",
+            :onblur  => "this.value == '' ? this.value = 'Anonymous' : true" %>
   </div>
 <%- end -%>

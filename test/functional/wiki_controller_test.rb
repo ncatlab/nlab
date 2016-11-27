@@ -300,7 +300,7 @@ class WikiControllerTest < ActionController::TestCase
   def test_new
     r = process('new', 'id' => 'NewPage', 'web' => 'wiki1')
     assert_response(:success)
-    assert_equal 'AnonymousCoward', r.template_objects['author']
+    assert_equal 'Anonymous', r.template_objects['author']
     assert_equal 'NewPage', r.template_objects['page_name']
   end
 
@@ -838,13 +838,13 @@ class WikiControllerTest < ActionController::TestCase
     r = process 'save', 'web' => 'wiki1', 'id' => 'NewPage', 'content' => 'Contents of a new page', 
       'author' => ''
     new_page = @wiki.read_page('wiki1', 'NewPage')
-    assert_equal 'AnonymousCoward', new_page.author
+    assert_equal 'Anonymous', new_page.author
 
     r = process 'save', 'web' => 'wiki1', 'id' => 'AnotherPage', 'content' => 'Contents of a new page', 
       'author' => '   '
 
     another_page = @wiki.read_page('wiki1', 'AnotherPage')
-    assert_equal 'AnonymousCoward', another_page.author
+    assert_equal 'Anonymous', another_page.author
   end
   
   def test_save_revised_content_author_name_with_period
@@ -872,7 +872,7 @@ class WikiControllerTest < ActionController::TestCase
 
     assert_redirected_to :action => 'show', :controller => 'wiki', :web => 'wiki1', :id => 'AnotherPage'
     new_page = @wiki.read_page('wiki1', 'AnotherPage')
-    assert_equal 'AnonymousCoward', new_page.author
+    assert_equal 'Anonymous', new_page.author
 
     r = process 'save', 'web' => 'wiki1', 'id' => 'AnotherPage', 'content' => 'Revised contents of a new page', 
       'author' => "G&#xfffe;eo&#2147483647;rge &#38; June"

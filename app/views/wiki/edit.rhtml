@@ -28,8 +28,8 @@
 		<div id="editFormButtons">
 			<input type="submit" value="Submit" accesskey="s"/> as 
 			<%= text_field_tag :author, h(@author.purify), 
-			        :onfocus => "this.value == 'AnonymousCoward' ? this.value = '' : true;",
-			        :onblur  => "this.value == '' ? this.value = 'AnonymousCoward' : true" %>
+			        :onfocus => "this.value == 'Anonymous' ? this.value = '' : true;",
+			        :onblur  => "this.value == '' ? this.value = 'Anonymous' : true" %>
 			| 
 			<span>
 				<%= link_to('Cancel', {:web => @web.address, :action => 'cancel_edit', :id => @page.name},
@@ -64,7 +64,7 @@ function addRedirect(){
 
 function cleanAuthorName() {
   if (document.getElementById('authorName').value == "") {
-    document.getElementById('authorName').value = 'AnonymousCoward';
+    document.getElementById('authorName').value = 'Anonymous';
   }
 }
 

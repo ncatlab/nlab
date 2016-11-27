@@ -89,7 +89,7 @@ class WebTest < ActiveSupport::TestCase
         Time.local(2004, 4, 4, 16, 50), 'AlexeyVerkhovsky', x_test_renderer)
     self_linked = @web.add_page('SelfLinked', 
         "I am SelfLinked and link to EverBeenInLove\ncategory: fubar",
-        Time.local(2004, 4, 4, 16, 50), 'AnonymousCoward', x_test_renderer)
+        Time.local(2004, 4, 4, 16, 50), 'Anonymous', x_test_renderer)
         
     # page that links to itself, and nobody else links to it must be an orphan
     assert_equal ['EverBeenHated', 'SelfLinked'], 

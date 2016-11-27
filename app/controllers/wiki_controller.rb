@@ -340,7 +340,7 @@ EOL
     render(:status => 404, :text => 'Undefined page name', :layout => 'error') and return if @page_name.nil?
     return unless is_post
     author_name = params['author'].purify.strip
-    author_name = 'AnonymousCoward' if author_name =~ /^\s*$/
+    author_name = 'Anonymous' if author_name =~ /^\s*$/
 
     begin
       the_content = params['content'].purify

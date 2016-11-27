@@ -18,8 +18,8 @@
 		<div id="editFormButtons">
 		    <input type="submit" value="Submit" accesskey="s"/> as 
 		    <%= text_field_tag :author, @author, 
-		        :onfocus => "this.value == 'AnonymousCoward' ? this.value = '' : true;",
-		        :onblur  => "this.value == '' ? this.value = 'AnonymousCoward' : true" %> 
+		        :onfocus => "this.value == 'Anonymous' ? this.value = '' : true;",
+		        :onblur  => "this.value == '' ? this.value = 'Anonymous' : true" %> 
         </div>
 	<%- end -%>
 </div>
@@ -27,7 +27,7 @@
 <script type="text/javascript">
 function cleanAuthorName() {
   if (document.getElementById('authorName').value == "") {
-    document.getElementById('authorName').value = 'AnonymousCoward';
+    document.getElementById('authorName').value = 'Anonymous';
   }
 }
 document.forms["editForm"].elements["content"].focus();

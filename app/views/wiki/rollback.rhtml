@@ -17,7 +17,7 @@
 		<div id="editFormButtons">
 	        <input type="submit" value="Update" accesskey="u" /> as 
 		    <input type="text" name="author" id="authorName" value="<%= h(@author.purify) %>" 
-		        onclick="this.value == 'AnonymousCoward' ? this.value = '' : true" />
+		        onclick="this.value == 'Anonymous' ? this.value = '' : true" />
 		    | 
 			<span>
 				<%= link_to('Cancel', {:web => @web.address, :action => 'cancel_edit', :id => @page.name},
@@ -31,7 +31,7 @@
 <script type="text/javascript">
 function cleanAuthorName() {
   if (document.getElementById('authorName').value == "") {
-    document.getElementById('authorName').value = 'AnonymousCoward';
+    document.getElementById('authorName').value = 'Anonymous';
   }
 }
 </script>

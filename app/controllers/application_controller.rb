@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
     @action_name = params['action'] || 'index'
     @web_name = params['web']
     @wiki = wiki
-    @author = cookies['author'] || 'AnonymousCoward'
+    @author = cookies['author'] || 'Anonymous'
     if @web_name
       @web = @wiki.webs[@web_name]
       render(:status => 404, :text => "Unknown web '#{@web_name}'",
