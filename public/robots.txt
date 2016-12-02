@@ -7,7 +7,7 @@ Disallow: /cgi-bin/
 Disallow: /nlab/feeds
 Disallow: /nlab/export
 Disallow: /nlab/revision
-Disallow: /nlab/show/diff
+Disallow: /nlab/show/diff/
 Disallow: /nlab/print
 Disallow: /nlab/tex
 Disallow: /nlab/pdf
@@ -15,7 +15,7 @@ Disallow: /nlab/list
 Disallow: /schreiber/feeds
 Disallow: /schreiber/export
 Disallow: /schreiber/revision
-Disallow: /schreiber/show/diff
+Disallow: /schreiber/show/diff/
 Disallow: /schreiber/print
 Disallow: /schreiber/tex
 Disallow: /schreiber/pdf
@@ -23,7 +23,7 @@ Disallow: /schreiber/list
 Disallow: /ericforgy/feeds
 Disallow: /ericforgy/export
 Disallow: /ericforgy/revision
-Disallow: /ericforgy/show/diff
+Disallow: /ericforgy/show/diff/
 Disallow: /ericforgy/print
 Disallow: /ericforgy/tex
 Disallow: /ericforgy/pdf
@@ -31,7 +31,7 @@ Disallow: /ericforgy/list
 Disallow: /michaelshulman/feeds
 Disallow: /michaelshulman/export
 Disallow: /michaelshulman/revision
-Disallow: /michaelshulman/show/diff
+Disallow: /michaelshulman/show/diff/
 Disallow: /michaelshulman/print
 Disallow: /michaelshulman/tex
 Disallow: /michaelshulman/pdf
@@ -39,7 +39,7 @@ Disallow: /michaelshulman/list
 Disallow: /toddtrimble/feeds
 Disallow: /toddtrimble/export
 Disallow: /toddtrimble/revision
-Disallow: /toddtrimble/show/diff
+Disallow: /toddtrimble/show/diff/
 Disallow: /toddtrimble/print
 Disallow: /toddtrimble/tex
 Disallow: /toddtrimble/pdf
@@ -47,7 +47,7 @@ Disallow: /toddtrimble/list
 Disallow: /davidroberts/feeds
 Disallow: /davidroberts/export
 Disallow: /davidroberts/revision
-Disallow: /davidroberts/show/diff
+Disallow: /davidroberts/show/diff/
 Disallow: /davidroberts/print
 Disallow: /davidroberts/tex
 Disallow: /davidroberts/pdf
@@ -55,7 +55,7 @@ Disallow: /davidroberts/list
 Disallow: /tobybartels/feeds
 Disallow: /tobybartels/export
 Disallow: /tobybartels/revision
-Disallow: /tobybartels/show/diff
+Disallow: /tobybartels/show/diff/
 Disallow: /tobybartels/print
 Disallow: /tobybartels/tex
 Disallow: /tobybartels/pdf
@@ -63,7 +63,7 @@ Disallow: /tobybartels/list
 Disallow: /jamesdolan/feeds
 Disallow: /jamesdolan/export
 Disallow: /jamesdolan/revision
-Disallow: /jamesdolan/show/diff
+Disallow: /jamesdolan/show/diff/
 Disallow: /jamesdolan/print
 Disallow: /jamesdolan/tex
 Disallow: /jamesdolan/pdf
@@ -71,7 +71,7 @@ Disallow: /jamesdolan/list
 Disallow: /timporter/feeds
 Disallow: /timporter/export
 Disallow: /timporter/revision
-Disallow: /timporter/show/diff
+Disallow: /timporter/show/diff/
 Disallow: /timporter/print
 Disallow: /timporter/tex
 Disallow: /timporter/pdf
@@ -79,7 +79,7 @@ Disallow: /timporter/list
 Disallow: /zoranskoda/feeds
 Disallow: /zoranskoda/export
 Disallow: /zoranskoda/revision
-Disallow: /zoranskoda/show/diff
+Disallow: /zoranskoda/show/diff/
 Disallow: /zoranskoda/print
 Disallow: /zoranskoda/tex
 Disallow: /zoranskoda/pdf
@@ -87,7 +87,7 @@ Disallow: /zoranskoda/list
 Disallow: /davidcorfield/feeds
 Disallow: /davidcorfield/export
 Disallow: /davidcorfield/revision
-Disallow: /davidcorfield/show/diff
+Disallow: /davidcorfield/show/diff/
 Disallow: /davidcorfield/print
 Disallow: /davidcorfield/tex
 Disallow: /davidcorfield/pdf
@@ -95,7 +95,7 @@ Disallow: /davidcorfield/list
 Disallow: /alexhoffnung/feeds
 Disallow: /alexhoffnung/export
 Disallow: /alexhoffnung/revision
-Disallow: /alexhoffnung/show/diff
+Disallow: /alexhoffnung/show/diff/
 Disallow: /alexhoffnung/print
 Disallow: /alexhoffnung/tex
 Disallow: /alexhoffnung/pdf
@@ -103,7 +103,7 @@ Disallow: /alexhoffnung/list
 Disallow: /johnbaez/feeds
 Disallow: /johnbaez/export
 Disallow: /johnbaez/revision
-Disallow: /johnbaez/show/diff
+Disallow: /johnbaez/show/diff/
 Disallow: /johnbaez/print
 Disallow: /johnbaez/tex
 Disallow: /johnbaez/pdf
@@ -111,7 +111,7 @@ Disallow: /johnbaez/list
 Disallow: /brucebartlett/feeds
 Disallow: /brucebartlett/export
 Disallow: /brucebartlett/revision
-Disallow: /brucebartlett/show/diff
+Disallow: /brucebartlett/show/diff/
 Disallow: /brucebartlett/print
 Disallow: /brucebartlett/tex
 Disallow: /brucebartlett/pdf
@@ -119,7 +119,7 @@ Disallow: /brucebartlett/list
 Disallow: /nlabmeta/feeds
 Disallow: /nlabmeta/export
 Disallow: /nlabmeta/revision
-Disallow: /nlabmeta/show/diff
+Disallow: /nlabmeta/show/diff/
 Disallow: /nlabmeta/print
 Disallow: /nlabmeta/tex
 Disallow: /nlabmeta/pdf
@@ -127,7 +127,7 @@ Disallow: /nlabmeta/list
 Disallow: /schreiberprivate/feeds
 Disallow: /schreiberprivate/export
 Disallow: /schreiberprivate/revision
-Disallow: /schreiberprivate/show/diff
+Disallow: /schreiberprivate/show/diff/
 Disallow: /schreiberprivate/print
 Disallow: /schreiberprivate/tex
 Disallow: /schreiberprivate/pdf
@@ -135,7 +135,7 @@ Disallow: /schreiberprivate/list
 Disallow: /doriath/feeds
 Disallow: /doriath/export
 Disallow: /doriath/revision
-Disallow: /doriath/show/diff
+Disallow: /doriath/show/diff/
 Disallow: /doriath/print
 Disallow: /doriath/tex
 Disallow: /doriath/pdf
@@ -143,7 +143,7 @@ Disallow: /doriath/list
 Disallow: /bwebster/feeds
 Disallow: /bwebster/export
 Disallow: /bwebster/revision
-Disallow: /bwebster/show/diff
+Disallow: /bwebster/show/diff/
 Disallow: /bwebster/print
 Disallow: /bwebster/tex
 Disallow: /bwebster/pdf
@@ -151,7 +151,7 @@ Disallow: /bwebster/list
 Disallow: /chrisrogers/feeds
 Disallow: /chrisrogers/export
 Disallow: /chrisrogers/revision
-Disallow: /chrisrogers/show/diff
+Disallow: /chrisrogers/show/diff/
 Disallow: /chrisrogers/print
 Disallow: /chrisrogers/tex
 Disallow: /chrisrogers/pdf
@@ -159,7 +159,7 @@ Disallow: /chrisrogers/list
 Disallow: /domenicofiorenza/feeds
 Disallow: /domenicofiorenza/export
 Disallow: /domenicofiorenza/revision
-Disallow: /domenicofiorenza/show/diff
+Disallow: /domenicofiorenza/show/diff/
 Disallow: /domenicofiorenza/print
 Disallow: /domenicofiorenza/tex
 Disallow: /domenicofiorenza/pdf
@@ -167,7 +167,7 @@ Disallow: /domenicofiorenza/list
 Disallow: /dstevenson/feeds
 Disallow: /dstevenson/export
 Disallow: /dstevenson/revision
-Disallow: /dstevenson/show/diff
+Disallow: /dstevenson/show/diff/
 Disallow: /dstevenson/print
 Disallow: /dstevenson/tex
 Disallow: /dstevenson/pdf
@@ -175,7 +175,7 @@ Disallow: /dstevenson/list
 Disallow: /joyalscatlab/feeds
 Disallow: /joyalscatlab/export
 Disallow: /joyalscatlab/revision
-Disallow: /joyalscatlab/show/diff
+Disallow: /joyalscatlab/show/diff/
 Disallow: /joyalscatlab/print
 Disallow: /joyalscatlab/tex
 Disallow: /joyalscatlab/pdf
@@ -183,7 +183,7 @@ Disallow: /joyalscatlab/list
 Disallow: /eregion/feeds
 Disallow: /eregion/export
 Disallow: /eregion/revision
-Disallow: /eregion/show/diff
+Disallow: /eregion/show/diff/
 Disallow: /eregion/print
 Disallow: /eregion/tex
 Disallow: /eregion/pdf
