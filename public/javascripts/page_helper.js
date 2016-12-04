@@ -289,6 +289,46 @@ function retrieveTexSource() {
 	}
 }
 
+function initializeYoutubePlayer() {
+  var video_elts = $$('div.ytplayer');
+  if (video_elts.length > 0) {
+    // Load the IFrame Player API code asynchronously.
+    var youtube_script = document.createElement('script');
+    youtube_script.src = "https://www.youtube.com/player_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(youtube_script, firstScriptTag);
+ 
+    window.onYouTubePlayerAPIReady = function () {
+      video_elts.each(function(elt){
+        var video_id = (elt.dataset.videoId && elt.dataset.videoId.match(/\w+/)) ? elt.dataset.videoId : '';
+        var video_width  = (elt.dataset.videoWidth  && elt.dataset.videoWidth.match(/\d+/) ) ? elt.dataset.videoWidth  : '640';
+        var video_height = (elt.dataset.videoHeight && elt.dataset.videoHeight.match(/\d+/)) ? elt.dataset.videoHeight : '390';
+        var player;
+        player = new YT.Player(elt, {
+           height: video_height,
+           width: video_width,
+           videoId: video_id,
+           playerVars: {}
+        });
+      })
+    }
+  }
+}
+
+function columnAlignShim() {
+  var mtables = document.querySelectorAll('mtable[columnalign]');
+  for (var i = 0; i < mtables.length; i++) {
+    var mtable = mtables[i];
+    var colAligns = mtable.getAttribute('columnalign').split(/\s+/);
+    if (colAligns.length > 1) {
+      var mtds = mtable.querySelectorAll(':scope > mtr > mtd');
+      for (var j = 0; j < mtds.length; j++) {
+        mtds[j].style.textAlign = colAligns[j];
+      }
+    }
+  }
+}
+
 document.observe("dom:loaded", function (){
         extractBlockquoteCitations();
         fixRunIn();
@@ -296,4 +336,6 @@ document.observe("dom:loaded", function (){
         resizeableTextarea();
         embedCDFs();
         retrieveTexSource();
+        initializeYoutubePlayer();
+        columnAlignShim();
 });
