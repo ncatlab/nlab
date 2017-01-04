@@ -6,8 +6,8 @@ gem "unicorn"
 gem "rubyzip", '~> 0.9.9'
 gem "RedCloth", ">=4.0.0"
 gem "erubis"
-gem "nokogiri", '~>1.5.6'
-gem "rake"
+gem "nokogiri", '~>1.7.0'
+gem "rake", '~>10.4.0'
 gem "rdoc"
 gem "json", "~> 2.5.1"
 gem "abstract", "~> 1.0.0"
