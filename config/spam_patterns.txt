@@ -88,3 +88,7 @@ color:\s*#ffffff
 color:\s*#fff
 \.5hiva\.com
 sentimancho
+1337777\.OOO
+Maclane pentagon is some recursive square
+github\.com/1337777
+gitlab\.com/1337777
