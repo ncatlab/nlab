@@ -64,6 +64,7 @@ module Engines
       if @content.options[:mode] == :s5
         my_content = Maruku.new(text,
                            {:math_enabled => true,
+                            :html_math_generate_ids => true,
                             :math_numbered => ['\\[','\\begin{equation}'],
                             :content_only => true,
                             :author => @content.options[:engine_opts][:author],
@@ -74,6 +75,7 @@ module Engines
         (t = Time.now; nil)        
         html = Maruku.new(text,
              {:math_enabled => true,
+              :html_math_generate_ids => true,
               :math_numbered => ['\\[','\\begin{equation}']}).to_html
         (ApplicationController.logger.info("Maruku took " + (Time.now-t).to_s + " seconds."); nil)
         html.gsub(/\A<div class="maruku_wrapper_div">\n?(.*?)\n?<\/div>\Z/m, '\1')
