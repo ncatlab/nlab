@@ -359,6 +359,7 @@ EOL
       # hardcode a lock on the "monoidal categories" page due to spam
       flash[:info] = "The page \"#{@page_name}\" is currently locked due to spam."
       redirect_to :web => @web_name, :action => 'show', :id => @page_name
+    end
 
     begin
       the_content = params['content'].purify
