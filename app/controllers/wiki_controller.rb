@@ -440,6 +440,19 @@ EOL
     end
   end
 
+  def show_by_id
+    web = Web.find_by_address(@web_name)
+    if web.nil?
+      ApplicationController.logger.debug "Web '#{web_address}' not found"
+      return nil
+    else
+      page_id = params['id'].purify
+      page = web.pages.first(:conditions => ['id = ?', page_id])
+      ApplicationController.logger.debug "Page '#{page_name}' #{page.nil? ? 'not' : ''} found"
+      redirect_to :web => @web_name, :action => 'show', :id => page, :status => 301
+    end
+  end
+
   def history
     if @page
       @revisions_by_day = Hash.new { |h, day| h[day] = [] }
