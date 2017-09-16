@@ -1,3 +1,4 @@
+<%# coding: utf-8 %>
 xml.feed('xmlns' => "http://www.w3.org/2005/Atom", "xml:lang" => 'en') do
   xml.title(@web.name)
   xml.link( 'rel' => 'alternate', 'type' => "application/xhtml+xml", 'href' =>  url_for(:only_path => false, :web => @web_name, :action => @link_action, :id => 'HomePage') )
