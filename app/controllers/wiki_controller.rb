@@ -448,7 +448,7 @@ EOL
     else
       page_id = params['id'].purify
       page = web.pages.first(:conditions => ['id = ?', page_id])
-      ApplicationController.logger.debug "Page '#{page_name}' #{page.nil? ? 'not' : ''} found"
+      ApplicationController.logger.debug "Page with ID '#{page_id}' #{page.nil? ? 'not' : ''} found"
       redirect_to :web => @web_name, :action => 'show', :id => page, :status => 301
     end
   end
