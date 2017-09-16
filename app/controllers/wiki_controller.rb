@@ -355,7 +355,7 @@ EOL
     author_name = params['author'].purify.strip
     author_name = 'Anonymous' if author_name =~ /^\s*$/
 
-    if @page.id == 231
+    if not @page.nil? and @page.id == 231
       # hardcode a lock on the "monoidal categories" page due to spam
       flash[:info] = "The page \"#{@page_name}\" is currently locked due to spam."
       redirect_to :web => @web_name, :action => 'show', :id => @page_name
