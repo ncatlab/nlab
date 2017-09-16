@@ -72,3 +72,6 @@ require 'rack_stuff'
 #Additional Mime-types 
 mime_types = YAML.load_file(File.join(File.dirname(__FILE__), 'mime_types.yml'))
 Rack::Mime::MIME_TYPES.merge!(mime_types)
+
+Encoding.default_internal = 'utf-8'
+Encoding.default_external = 'utf-8'
