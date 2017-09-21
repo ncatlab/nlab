@@ -1,4 +1,3 @@
-<%# coding: utf-8 %>
 xml.feed('xmlns' => "http://www.w3.org/2005/Atom", "xml:lang" => 'en') do
   styles = { 'del.diffdel' => 'background-color:#FAA; text-decoration:line-through;', 'del.diffmod' => 'background-color:#FAA; text-decoration:line-through; border: 2px solid #FE0;', 'ins.diffins' => 'background-color:#AFA; text-decoration:underline;', 'ins.diffmod' => 'background-color:#AFA; text-decoration:underline; border: 2px solid #FE0;' }
   xml.title(@web.name + ' Changes')
