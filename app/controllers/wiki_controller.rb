@@ -430,9 +430,19 @@ EOL
           end
           redirect_to :web => @web_name, :action => 'show', :id => real_page, :status => 301
         else
-          flash[:info] = "Page \"#{@page_name}\" does not exist.\n" +
-                         "Please create it now, or hit the \"back\" button in your browser."
+          # try converting @page_name to ascii and see if that exists
+          page_name_tr = @page_name.tr(
+            "ÀÁÂÃÄÅàáâãäåĀāĂăĄąÇçĆćĈĉĊċČčÐðĎďĐđÈÉÊËèéêëĒēĔĕĖėĘęĚěĜĝĞğĠġĢ‌​ģĤĥĦħÌÍÎÏìíîïĨĩĪīĬĭĮ‌​įİıĴĵĶķĸĹĺĻļĽľĿŀŁłÑñ‌​ŃńŅņŇňŉŊŋÒÓÔÕÖØòóôõö‌​øŌōŎŏŐőŔŕŖŗŘřŚśŜŝŞşŠ‌​šȘșſŢţŤťŦŧȚțÙÚÛÜùúûü‌​ŨũŪūŬŭŮůŰűŲųŴŵÝýÿŶŷŸ‌​ŹźŻżŽž",
+            "AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgG‌​gHhHhIIIIiiiiIiIiIiI‌​iIiJjKkkLlLlLlLlLlNn‌​NnNnNnnNnOOOOOOooooo‌​oOoOoOoRrRrRrSsSsSsS‌​sSssTtTtTtTtUUUUuuuu‌​UuUuUuUuUuUuWwYyyYyY‌​ZzZzZz")
+          page_ = @wiki.read_page(@web_name, page_name_tr) if page_name_tr
+          if page_
+            flash[:info] = "Redirected from \"#{@page_name}\"."
+            redirect_to :web => @web_name, :action => 'show', :id => page_, :status => 301
+          else
+            flash[:info] = "Page \"#{@page_name}\" does not exist.\n" +
+                           "Please create it now, or hit the \"back\" button in your browser."
           redirect_to :web => @web_name, :action => 'new', :id => @page_name
+          end
         end
       else
         render :text => 'Page name is not specified', :status => 404, :layout => 'error'
