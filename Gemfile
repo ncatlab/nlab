@@ -14,7 +14,7 @@ gem "abstract", "~> 1.0.0"
 gem "rails_xss", "~> 0.4.0"
 gem "file_signature", "~> 1.2.0"
 gem "syntax", "~> 1.1.0"
-gem "maruku", :git => 'git://github.com/distler/maruku.git', :branch => 'nokogiri'
+gem "maruku", :git => 'git@github.com:adeel/maruku.git'
 gem 'iconv', :platforms => [:ruby_20, :ruby_21, :ruby_22]
 gem 'rdoc-data', :platforms => :ruby_18
 gem "mysql", ">=2.9.1"
