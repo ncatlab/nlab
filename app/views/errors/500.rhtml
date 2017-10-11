@@ -8,4 +8,6 @@
 
 <!-- exception:
 <%= @exception %>
+
+<%= @exception.backtrace.join("\n") unless @exception.backtrace.nil? %>
 -->
