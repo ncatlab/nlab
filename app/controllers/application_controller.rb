@@ -177,7 +177,6 @@ class ApplicationController < ActionController::Base
 
   def rescue_action_in_public(exception)
       logger.debug "EXCEPTION!!!!!!!!!!!!!!!!!!: #{exception.message}"
-      puts exception.message
       logger.debug exception.backtrace.join("\n")
       render :status => 500, :text => <<-EOL
         <html xmlns="http://www.w3.org/1999/xhtml"><body>
