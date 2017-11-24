@@ -11,9 +11,9 @@
         Showing changes from revision #<%= @page.rev_ids.size - 1 %> to #<%= @page.rev_ids.size %>:  
         <ins class="diffins">Added</ins> | <del class="diffdel">Removed</del> | <del class="diffmod">Chan</del><ins class="diffmod">ged</ins>  
     </p>
-    <%= @renderer.display_diff %>
+    <%= @renderer.display_diff if @renderer.display_diff %>
   <%- else -%>
-    <%= @renderer.display_content %>
+    <%= @renderer.display_content if @renderer.display_content %>
   <%- end -%>
 </div>
 
