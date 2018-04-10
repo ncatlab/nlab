@@ -52,11 +52,9 @@ class WikiController < ApplicationController
 
   def authors
     @revisions = @web.revisions.all(
-      :select => "revisions.author",
-      :joins  => :page,
-      :group  => "revisions.author",
-      :having => "count(DISTINCT pages.id) > 2")
-    @revisions = @revisions.paginate :page => params[:page], :per_page => 50
+      :select => "author, count(DISTINCT page_id) AS c",
+      :group  => "author",
+      :having => "c > 2")
     @page_names_by_author = @revisions.inject({}) { |hash, rev|
       hash[rev.author.name] = @web.get_pages_by_author(rev.author)
       hash
@@ -202,7 +200,7 @@ EOL
   def atom_with_headlines
     render_atom(hide_description = true)
   end
-  
+
   def atom_with_changes(limit = 15)
     if rss_with_content_allowed?
       render_atom_changes(hide_description = false)
@@ -310,6 +308,7 @@ EOL
     @link_mode ||= :publish
     if @page
        @renderer = PageRenderer.new(@page.current_revision)
+
     else
       real_pages = WikiReference.pages_that_redirect_for(@web, @page_name)
       real_page = real_pages.last
@@ -374,11 +373,51 @@ EOL
             @page_name != new_name && @web.has_page?(new_name)
         wiki.revise_page(@web_name, @page_name, new_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
+
         @page.unlock
         @page_name = new_name
+
+        if (@web.name == "nLab") && (@page_name != "Sandbox")
+          announcement = params[:announcement].purify
+          make_announcement = params[:makeAnnouncement]
+          generate_nforum_post_from_nlab_edit_binary = File.join(
+            Rails.root,
+            "script/generate_nforum_post_from_nlab_edit")
+          if make_announcement
+            system(
+              generate_nforum_post_from_nlab_edit_binary,
+              "edit",
+              new_name,
+              announcement,
+              author_name,
+              @page.id.to_s)
+          else
+            system(
+              generate_nforum_post_from_nlab_edit_binary,
+              "edit",
+              new_name,
+              announcement,
+              author_name,
+              @page.id.to_s,
+              "--is_trivial")
+          end
+        end
       else
         wiki.write_page(@web_name, @page_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
+
+        if @web.name == "nLab"
+          announcement = params[:announcement].purify
+          generate_nforum_post_from_nlab_edit_binary = File.join(
+            Rails.root,
+            "script/generate_nforum_post_from_nlab_edit")
+          system(
+            generate_nforum_post_from_nlab_edit_binary,
+            "create",
+            @page_name,
+            announcement,
+            author_name)
+        end
       end
       redirect_to_page @page_name
     rescue Instiki::ValidationError => e
@@ -400,6 +439,8 @@ EOL
   def show
     if @page
       begin
+        @is_author = nlab_author?()
+        @link_to_nforum_discussion = link_to_nforum_discussion()
         @renderer = PageRenderer.new(@page.current_revision)
         @show_diff = (params[:mode] == 'diff')
         render :action => 'page'
@@ -664,4 +705,27 @@ EOL
     end
   end
 
+  def link_to_nforum_discussion()
+    if @page == nil
+      return
+    end
+    detect_nforum_discussion_binary = File.join(
+      Rails.root,
+      "script/detect_nforum_discussion")
+    link = %x(
+      "#{detect_nforum_discussion_binary}" "#{@page.name}")
+    link.strip! unless link.nil?
+    if !(link.nil?) && !(link == "")
+      return link
+    end
+  end
+
+  def nlab_author?()
+    author_contributions_binary = File.join(
+      Rails.root,
+      "script/author_contributions")
+    is_nlab_author = %x(
+      "#{author_contributions_binary}" is_author "#{@page.name}")
+    is_nlab_author.strip! == "True" unless is_nlab_author.nil?
+  end
 end

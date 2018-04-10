@@ -16,7 +16,7 @@ class Page < ActiveRecord::Base
       raise Instiki::ValidationError.new(
           "You have tried to save page '#{name}' without changing its content")
     end
-    
+
     self.name = name
     author = Author.new(author.to_s) unless author.is_a?(Author)
 
@@ -26,7 +26,7 @@ class Page < ActiveRecord::Base
     renderer.display_content(update_references = true)
 
     # A user may change a page, look at it and make some more changes - several times.
-    # Not to record every such iteration as a new revision, if the previous revision was done 
+    # Not to record every such iteration as a new revision, if the previous revision was done
     # by the same author, not more than 30 minutes ago, then update the last revision instead of
     # creating a new one
     if (revisions_size > 0) && continous_revision?(time, author)
@@ -52,9 +52,9 @@ class Page < ActiveRecord::Base
   end
 
   def previous_revision(revision)
-    revision_index = rev_ids.each_with_index do |rev, index| 
-      if rev.id == revision.id 
-        break index 
+    revision_index = rev_ids.each_with_index do |rev, index|
+      if rev.id == revision.id
+        break index
       else
         nil
       end
@@ -85,7 +85,7 @@ class Page < ActiveRecord::Base
 
   def redirects
     wiki_references.select { |ref| ref.redirected_page? }.map { |ref| ref.referenced_name }
-  end  
+  end
 
   def included_from
     Array.new # disable for now
@@ -102,15 +102,15 @@ class Page < ActiveRecord::Base
   def lock(time, locked_by)
     update_attributes(:locked_at => time, :locked_by => locked_by)
   end
-  
+
   def lock_duration(time)
     ((time - locked_at) / 60).to_i unless locked_at.nil?
   end
-  
+
   def unlock
     update_attribute(:locked_at, nil)
   end
-  
+
   def locked?(comparison_time)
     locked_at + LOCKING_PERIOD > comparison_time unless locked_at.nil?
   end

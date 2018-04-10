@@ -5,17 +5,6 @@
   <%- for rev in @revisions -%>
     <li>
       <%= link_to_page rev.author.sanitize.purify %>
-      co- or authored:
-      <%= raw @page_names_by_author[rev.author.name].collect { |page_name| link_to_page(page_name) }.sort.join ', ' %>
     </li>
   <%- end -%>
 </ul>
-
-<%= will_paginate @revisions %>
-
-<style type="text/css">
-.pagination {
-  text-align: center;
-  margin: 10px 0;
-}
-</style>

@@ -1,5 +1,5 @@
 <%# coding: utf-8 %>
-<%- 
+<%-
   @title = "Editing #{@page.name.escapeHTML}".html_safe
   @content_width = 720
   @hide_navigation = true
@@ -13,8 +13,8 @@
 	<% form_tag({ :action => 'save', :web => @web.address, :id => @page.name },
 	             { 'id' => 'editForm', 'method' => 'post', 'onsubmit' => 'cleanAuthorName()',
 	               'accept-charset' => 'utf-8' }) do %>
-	   <div>	
-		<textarea name="content" id="content" rows="24" cols="60"><%= h(flash[:content] || 
+	   <div>
+		<textarea name="content" id="content" style="height: 45em; width: 70%;"><%= h(flash[:content] ||
                          (params['content'] ?  params['content'] : @page.content).purify) %></textarea>
 <% if @page_name != 'HomePage' -%>
 	   <p>
@@ -25,16 +25,30 @@
 	   </p>
 <% else -%>
        <%= hidden_field_tag 'new_name', @page_name %>
-<% end%> 
+<% end%>
+            <% if (@web.name == "nLab") && (@page_name != "Sandbox") -%>
+                <div>
+                    <p style="font-size: 0.8em; width: 70%;">
+                        For nontrivial edits, please tick the checkbox below and briefly describe your changes. Your comments will be added to the <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" target="_blank">nForum</a> discussion thread for this page, which can also be used for further discussion related to it. For trivial edits, such as correcting typos, please leave the checkbox unticked; feel free to ask for advice at the nForum if you are unsure.
+                    </p>
+                </div>
+                <div>
+                    <input name="makeAnnouncement" id="makeAnnouncement" type="checkbox"></input>
+                    <label for="isTrivial">Indicate your changes on the nForum</label>
+                </div>
+                <div>
+                    <textarea name="announcement" id="announcement" style="height: 10em; width: 70%"></textarea>
+                </div>
+            <% end%>
 		<div id="editFormButtons">
-			<input type="submit" value="Submit" accesskey="s"/> as 
-			<%= text_field_tag :author, h(@author.purify), 
+			<input type="submit" value="Submit" accesskey="s"/> as
+			<%= text_field_tag :author, h(@author.purify),
 			        :onfocus => "this.value == 'Anonymous' ? this.value = '' : true;",
 			        :onblur  => "this.value == '' ? this.value = 'Anonymous' : true" %>
-			| 
+			|
 			<span>
 				<%= link_to('Cancel', {:web => @web.address, :action => 'cancel_edit', :id => @page.name},
-				      {:accesskey => 'c'}) %> 
+				      {:accesskey => 'c'}) %>
                 <span class="unlock">(unlocks page)</span>
 			</span>
 		</div>

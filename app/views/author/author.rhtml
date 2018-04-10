@@ -1,0 +1,27 @@
+<%# coding: utf-8 %>
+<%-
+  @title = "Author — " + @author
+  @show_footer = true
+-%>
+
+<div>
+  <h3>Overview</h3>
+  <p><%= link_to_page @author =%> has contributed to <%= @number_of_contributions =%> nLab pages.</p>
+
+  <h3>Most recent contributions</h3>
+  <table style="border: 0">
+  <%- for contribution_details in @last_pages_contributed_to %>
+    <tr>
+      <td style="border: 0; padding-right: 1em"><a style="color: #005c19" href="<%= link_to_nlab_revision(contribution_details["revision_number"], contribution_details["page"]) %>"><%= contribution_details["page"] %></a></td>
+      <td style="border: 0"><%= contribution_details["edit_time"] %></td>
+    </tr>
+  <%- end -%>
+  </table>
+
+  <h3>All pages contributed to</h3>
+  <ul style="list-style: none; padding-left: 0">
+  <%- for page in @pages_contributed_to %>
+    <li><a style="color: #005c19" href="<%= link_to_nlab_page(page) %>"><%= page %></a></li>
+  <%- end -%>
+  </ul>
+</div>
