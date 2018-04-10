@@ -18,6 +18,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'delete_files', :controller => 'admin', :action => 'delete_files'
   map.connect 'web_list', :controller => 'wiki', :action => 'web_list'
 
+  connect_to_web map, ":web/author/:name", :controller => "author", :requirements => { :name => /.*/ }, :action => "author", :name => nil
   connect_to_web map, ':web/edit_web', :controller => 'admin', :action => 'edit_web'
   connect_to_web map, ':web/remove_orphaned_pages', :controller => 'admin', :action => 'remove_orphaned_pages'
   connect_to_web map, ':web/remove_orphaned_pages_in_category', :controller => 'admin', :action => 'remove_orphaned_pages_in_category'

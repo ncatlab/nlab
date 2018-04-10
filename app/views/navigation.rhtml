@@ -4,7 +4,7 @@ def list_item(text, link_options, description, accesskey = nil)
   link_options[:controller] = 'wiki'
   link_options[:web] = @web.address
   link_to_unless_current(text, link_options, :title => description, :accesskey => accesskey) {
-    content_tag('b', text, 'title' => description, 'class' => 'navOn') 
+    content_tag('b', text, 'title' => description, 'class' => 'navOn')
   }
 end
 %>
@@ -12,12 +12,25 @@ end
 <div class="navigation">
     <span class="skipNav"><a href='#navEnd'>Skip the Navigation Links</a> | </span>
 <%- if params['action'] != 'published' then -%>
-    <%= list_item 'Home Page', {:action => 'show', :id => 'HomePage'}, 'Home, Sweet Home', 'H' %> | 
-    <%= list_item 'All Pages', {:action => 'list'}, 'Alphabetically sorted list of pages', 'A' %> | 
-    <%= list_item 'Latest Revisions', {:action =>'latest_revisions'}, 'View latest revisions on this web', 'U' %> |
-    <%= list_item 'Authors', {:action => 'authors'}, 'Who wrote what' %> | 
-    <%= list_item 'Feeds', {:action => 'feeds'}, 'Subscribe to changes by Atom' %> | 
-    <%= list_item 'Export', {:action => 'export'}, 'Download a zip with all the pages in this wiki', 'X' %> |
+    <%= list_item 'Home Page', {:action => 'show', :id => 'HomePage'}, 'Home page', 'H' %> |
+  <%- if @web.name != "nLab" -%>
+    <%= list_item 'All Pages', {:action => 'list'}, 'Alphabetically sorted list of pages', 'A' %> |
+  <%- end -%>
+    <%= list_item 'Latest Revisions', {:action =>'latest_revisions'}, 'Latest edits and page creations', 'U' %> |
+  <%- if @web.name != "nLab" -%>
+    <%= list_item 'Authors', {:action => 'authors'}, 'Everybody who has made an edit' %> |
+  <%- end -%>
+<%- if (@web.name == "nLab") && (@page != nil) && (@page.name != "Sandbox") -%>
+  <%- if !(@link_to_nforum_discussion.nil?) && !(@link_to_nforum_discussion == "")  -%>
+    <a href="<%= @link_to_nforum_discussion -%>" title="Discuss this page in its dedicated thread on the nForum" style="color: black">Discuss this page</a> |
+  <%- else -%>
+    <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" title="Discuss this page on the nForum. It does not yet have a dedicated thread; feel free to create one, giving it the same name as the title of this page" style="color:black">Discuss this page</a> |
+  <%- end -%>
+  <%- if (@web.name == "nLab") && (@page != nil) && (@page.name != "HomePage") && @is_author -%>
+    <a href="https://ncatlab.org/nlab/author/<%= u @page.name =%>" title="Overview of nLab pages which <%= @page.name =%> has edited" style="color: black">Pages contributed to</a> |
+  <%- end -%>
+    <%= list_item 'Feeds', {:action => 'feeds'}, 'Subscribe to changes by Atom' %> |
+<% end -%>
     <% form_tag({ :controller => 'wiki', :action => 'search', :web => @web.address},
                  {'id' => 'navigationSearchForm', 'method' => 'get', 'accept-charset' => 'utf-8' }) do %>
       <fieldset class="search"><input type="text" id="searchField" name="query" value="Search"
@@ -25,7 +38,7 @@ end
              onblur="this.value == '' ? this.value = 'Search' : true" /></fieldset>
     <% end %>
 <%- else -%>
-    <%= list_item 'Home Page', {:action => 'published', :id => 'HomePage'}, 'Home, Sweet Home', 'H' %> | 
+    <%= list_item 'Home Page', {:action => 'published', :id => 'HomePage'}, 'Home, Sweet Home', 'H' %> |
     <%= list_item 'Feeds', {:action => 'feeds'}, 'Subscribe to changes by Atom' %>
 <% end-%>
   <span id='navEnd'></span>

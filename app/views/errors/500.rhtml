@@ -1,13 +1,16 @@
 <%# coding: utf-8 %>
-<%- 
+<%-
   @title = "500 Internal Server Error"
   @show_footer = true
 -%>
-<p>Oops! Please report this on the <a href="http://nforum.mathforge.org">nForum</a> (in the <em><a href="http://nforum.mathforge.org/21/">Technical</a></em> category), giving as precise details as you can as to what triggered the error.</p>
-<p>Back to the <a href="/">Home Page</a>.</p>
+<p>Please report this on the <a href="https://nforum.ncatlab.org/">nForum</a> in the <a href="https://nforum.ncatlab.org/21/"><em>nLab Technical Matters</em></a> category. Please give as precise details as you can as to what triggered the error.</p>
 
-<!-- exception:
-<%= @exception %>
+<p><a href="https://ncatlab.org/nlab/show/HomePage">nLab home page</a></p>
 
-<%= @exception.backtrace.join("\n") unless @exception.backtrace.nil? %>
--->
+<%- if !(@exception.nil?) && !(@exception.backtrace.nil?) -%>
+  <!-- exception:
+    <%= @exception %>
+
+    <%= @exception.backtrace.join("\n") %>
+  -->
+<%- end -%>

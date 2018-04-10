@@ -1,4 +1,4 @@
-class Wiki 
+class Wiki
 
   cattr_accessor :storage_path, :logger
   self.storage_path = Rails.root.join('storage')
@@ -9,7 +9,7 @@ class Wiki
 
   def create_web(name, address, password = nil)
     @webs = nil
-    Web.create(:name => name, :address => address, :password => password) 
+    Web.create(:name => name, :address => address, :password => password)
   end
 
   def delete_web(address)
@@ -20,16 +20,16 @@ class Wiki
     end
   end
 
-  def edit_web(old_address, new_address, name, markup, color, additional_style, safe_mode = false, 
-      password = nil, published = false, brackets_only = false, count_pages = false, 
+  def edit_web(old_address, new_address, name, markup, color, additional_style, safe_mode = false,
+      password = nil, published = false, brackets_only = false, count_pages = false,
       allow_uploads = true, max_upload_size = nil)
 
     if not (web = Web.find_by_address(old_address))
       raise Instiki::ValidationError.new("Web with address '#{old_address}' does not exist")
     end
     old_files_path = web.files_path
-    
-    web.update_attributes(:address => new_address, :name => name, :markup => markup, :color => color, 
+
+    web.update_attributes(:address => new_address, :name => name, :markup => markup, :color => color,
       :additional_style => additional_style, :safe_mode => safe_mode, :password => password, :published => published,
       :brackets_only => brackets_only, :count_pages => count_pages, :allow_uploads => allow_uploads, :max_upload_size => max_upload_size)
     @webs = nil
@@ -37,7 +37,7 @@ class Wiki
     web
     move_files(old_files_path, web.files_path)
   end
-  
+
   def move_files(old_path, new_path)
     return if new_path == old_path
     default_path = Rails.root.join("webs", "files")
@@ -62,12 +62,12 @@ class Wiki
       return page
     end
   end
-  
+
   def remove_orphaned_pages(web_address)
     web = Web.find_by_address(web_address)
     web.remove_pages(web.select.orphaned_pages)
   end
-  
+
   def remove_orphaned_pages_in_category(web_address,category)
     web = Web.find_by_address(web_address)
     pages_in_category = PageSet.new(web, web.select.pages_in_category(category))
@@ -83,7 +83,7 @@ class Wiki
     page = read_page(web_address, page_name)
     page.rollback(revision_number, time, author_id)
   end
-  
+
   def setup(password, web_name, web_address)
     system.update_attribute(:password, password)
     create_web(web_name, web_address)
@@ -104,7 +104,7 @@ class Wiki
   def storage_path
     self.class.storage_path
   end
-  
+
   def write_page(web_address, page_name, content, written_on, author, renderer)
     Web.find_by_address(web_address).add_page(page_name, content, written_on, author, renderer)
   end
