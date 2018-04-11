@@ -371,10 +371,16 @@ EOL
         prev_content = @page.current_revision.content
         raise Instiki::ValidationError.new('A page named "' + new_name.escapeHTML + '" already exists.') if
             @page_name != new_name && @web.has_page?(new_name)
+        if (@web.name == "nLab") && (@page_name != "Sandbox") &&
+            (new_name != @page_name) && !(params[:makeAnnouncement])
+          raise Instiki::ValidationError.new(
+            "A change of page name must be indicated on the nForum")
+        end
         wiki.revise_page(@web_name, @page_name, new_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
 
         @page.unlock
+        old_name = @page_name
         @page_name = new_name
 
         if (@web.name == "nLab") && (@page_name != "Sandbox")
@@ -384,13 +390,25 @@ EOL
             Rails.root,
             "script/generate_nforum_post_from_nlab_edit")
           if make_announcement
-            system(
-              generate_nforum_post_from_nlab_edit_binary,
-              "edit",
-              new_name,
-              announcement,
-              author_name,
-              @page.id.to_s)
+            if old_name != new_name
+              system(
+                generate_nforum_post_from_nlab_edit_binary,
+                "edit",
+                new_name,
+                announcement,
+                author_name,
+                @page.id.to_s,
+                "--old_page_name",
+                old_name)
+            else
+              system(
+                generate_nforum_post_from_nlab_edit_binary,
+                "edit",
+                new_name,
+                announcement,
+                author_name,
+                @page.id.to_s)
+            end
           else
             system(
               generate_nforum_post_from_nlab_edit_binary,

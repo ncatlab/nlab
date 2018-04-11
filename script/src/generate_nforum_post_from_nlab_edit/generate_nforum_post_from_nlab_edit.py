@@ -315,6 +315,24 @@ def revision_number(nlab_page_id):
 class NoExistingDiscussionException(Exception):
     pass
 
+"""
+Finds the DiscussionID of the last used forum thread whose name is that of
+the nLab page. The search is case insensitive.
+"""
+def latest_forum_discussion_id(nlab_page_name):
+    query_results = execute_single_with_parameters(
+        "SELECT DiscussionID FROM mathforge_nforum_Discussion " +
+        "WHERE Name = %s " +
+        "AND CategoryID = %s " +
+        "ORDER BY DateLastActive DESC " +
+        "LIMIT 1",
+        [nlab_page_name,
+         _ForumPostParameters._latest_changes_category_id])
+    try:
+        return query_results[0][0]
+    except IndexError:
+        raise NoExistingDiscussionException()
+
 class _ForumPostParameters:
     _nlab_edit_announcer_user_id = 1691
     _nlab_edit_announcer_local_user_id = 693
@@ -333,7 +351,7 @@ class _ForumPostParameters:
     Creates discussion in the nForum in the 'Latest changes' category whose
     name is the same (case insensitive) as the nLab page. Posts an
     announcement of the nLab page to the nForum as the first comment in this
-    discussion. The author is 'nLab edit announcer' with UserID 1691.
+    discussion.
     """
     def create_discussion_and_post_to_it(self, announcement):
         query_with_parameters_one = (
@@ -382,7 +400,7 @@ class _ForumPostParameters:
     """
     Posts announcement to nForum when there is an existing discussion in the
     'Latest changes' category with the same name (case insensitive) as the nLab
-    page. The author is 'nLab edit announcer' with UserID 1691.
+    page.
     """
     def post_to_existing_discussion(
             self,
@@ -416,6 +434,50 @@ class _ForumPostParameters:
             query_with_parameters_three ]
         execute_with_parameters(queries_with_parameters)
 
+    """
+    Posts announcement to nForum when there is an existing discussion in the
+    'Latest changes' category with the same name (case insensitive) as the old
+    name of an nLab page whose name has been changed, and changes the name of
+    the discussion to the new name of the nLab page.
+    """
+    def post_to_existing_discussion_with_name_change(
+            self,
+            discussion_id,
+            announcement):
+        query_with_parameters_one = (
+            "UPDATE mathforge_nforum_Discussion " +
+            "SET Name = %s " +
+            "WHERE DiscussionID = %s",
+            [self.nlab_page_name,
+             discussion_id])
+        query_with_parameters_two = (
+            "INSERT INTO mathforge_nforum_Comment (" +
+            "DiscussionID, AuthUserID, DateCreated, Body, FormatType) " +
+            "VALUES (%s, %s, NOW(), %s, %s)",
+            [discussion_id,
+             self.user_id,
+             announcement,
+             "MarkdownItex"])
+        query_with_parameters_three = (
+            "UPDATE mathforge_nforum_Discussion " +
+            "SET CountComments = CountComments + 1, " +
+            "DateLastActive = NOW(), " +
+            "LastUserID = %s " +
+            "WHERE DiscussionID = %s",
+            [self.user_id,
+             discussion_id])
+        query_with_parameters_four = (
+            "UPDATE mathforge_nforum_User " +
+            "SET CountComments = CountComments + 1, " +
+            "DateLastActive = NOW() " +
+            "WHERE LocalID = %s",
+            [self.local_id])
+        queries_with_parameters = [
+            query_with_parameters_one,
+            query_with_parameters_two,
+            query_with_parameters_three,
+            query_with_parameters_four ]
+        execute_with_parameters(queries_with_parameters)
 
 class _CreateForumPostParameters(_ForumPostParameters):
     def __init__(
@@ -484,24 +546,6 @@ class _EditForumPostParameters(_ForumPostParameters):
         self.page_id = page_id
 
     """
-    Finds the DiscussionID of the last used forum thread whose name is that of
-    the nLab page. The search is case insensitive.
-    """
-    def latest_forum_discussion_id(self):
-        query_results = execute_single_with_parameters(
-            "SELECT DiscussionID FROM mathforge_nforum_Discussion " +
-            "WHERE Name = %s " +
-            "AND CategoryID = %s " +
-            "ORDER BY DateLastActive DESC " +
-            "LIMIT 1",
-            [self.nlab_page_name,
-             _ForumPostParameters._latest_changes_category_id])
-        try:
-            return query_results[0][0]
-        except IndexError:
-            raise NoExistingDiscussionException()
-
-    """
     See if there is an existing nForum discussion thread in the 'Latest changes'
     category with the same title as the edited nLab page, and post the
     announcement to this thread if so. If there is more than one, choose the
@@ -509,10 +553,30 @@ class _EditForumPostParameters(_ForumPostParameters):
     """
     def post(self, found_nforum_user):
         try:
-            discussion_id = self.latest_forum_discussion_id()
+            discussion_id = latest_forum_discussion_id(self.nlab_page_name)
             self.post_to_existing_discussion(
                 discussion_id,
                 self.nforum_announcement(found_nforum_user))
+        except NoExistingDiscussionException:
+            forum_post_parameters = _ForumPostParameters(
+                self.nlab_page_name,
+                self.user_id,
+                self.local_id)
+            forum_post_parameters.create_discussion_and_post_to_it(
+                self.nforum_announcement(found_nforum_user))
+
+    def post_with_name_change(self, found_nforum_user, old_page_name):
+        try:
+            discussion_id = latest_forum_discussion_id(old_page_name)
+            self.post_to_existing_discussion_with_name_change(
+                discussion_id,
+                self.nforum_announcement(found_nforum_user))
+            logger.info(
+                "Successfully changed the title of nForum " +
+                "discussion from " +
+                old_page_name +
+                " to " +
+                self.nlab_page_name)
         except NoExistingDiscussionException:
             forum_post_parameters = _ForumPostParameters(
                 self.nlab_page_name,
@@ -584,7 +648,11 @@ def argument_parser():
         "'Latest Changes' category with the same name as the edited nLab " +
         "page and posts an announcement to it, or creates a new discussion " +
         "in this category with this title if it does not already exist, and " +
-        "posts an announcement to it. If it is a trivial edit, only logs it.")
+        "posts an announcement to it. If it is a trivial edit, only logs " +
+        "it. If the edit involves a change of name of the nLab page and a " +
+        "discussion on the nForum with the same title as the old name of the " +
+        "nLab page exists, changes the title of the discussion to the new " +
+        "name of the page.")
     parser_create_page.add_argument(
         "nlab_page_name",
         help = "Name of created nLab page")
@@ -596,7 +664,9 @@ def argument_parser():
         help = "Author of the created nLab page")
     parser_edit_page.add_argument(
         "nlab_page_name",
-        help = "Name of edited nLab page")
+        help = "Name of edited nLab page. If the edit involves a change " +
+            "in the name of the page, this should be the new name of the " +
+            "page")
     parser_edit_page.add_argument(
         "announcement",
         help = "Comments on the edited nLab page")
@@ -607,8 +677,15 @@ def argument_parser():
         "page_id",
         help = "ID of the edited nLab page")
     parser_edit_page.add_argument(
+        "-o",
+        "--old_page_name",
+        help = (
+            "Old page name for the edited nLab page if the edit involves " +
+            "a name change"))
+    parser_edit_page.add_argument(
         "--is_trivial",
-        action = "store_true")
+        action = "store_true",
+        help = "Indicate that the edit was trivial")
     return parser
 
 def main():
@@ -626,7 +703,6 @@ def main():
         local_id = _ForumPostParameters._nlab_edit_announcer_local_user_id
         found_nforum_user = False
     if arguments.subcommand == "create":
-        print(author)
         forum_post_parameters = _CreateForumPostParameters(
             nlab_page_name,
             user_id,
@@ -682,37 +758,65 @@ def main():
             author,
             announcement,
             arguments.page_id)
+        old_page_name = arguments.old_page_name
         try:
-            forum_post_parameters.post(found_nforum_user)
-            logger.info(
-                "Successfully made nForum post for newly edited nLab " +
-                "page with name: " +
-                nlab_page_name +
-                ". Author: " +
-                author)
+            if old_page_name:
+                forum_post_parameters.post_with_name_change(
+                    found_nforum_user,
+                    old_page_name)
+                logger.info(
+                    "Successfully made nForum post for newly edited nLab " +
+                    "page with name: " +
+                    nlab_page_name +
+                    ". Author: " +
+                    author)
+            else:
+                forum_post_parameters.post(found_nforum_user)
+                logger.info(
+                    "Successfully made nForum post for newly edited nLab " +
+                    "page with name: " +
+                    nlab_page_name +
+                    ". Author: " +
+                    author)
         except FailedToCarryOutQueryException:
-            logger.warning(
+            log_message = (
                 "Due to a database error, could not make nForum post for " +
                 "newly edited nLab page with name: " +
                 nlab_page_name +
                 ". Author: " +
-                author +
+                author)
+            if old_page_name:
+                log_message = log_message + (
+                    ". Change of page name from " +
+                    old_page_name +
+                    " to " +
+                    nlab_page_name)
+            log_message = log_message + (
                 ". Announcement: " +
                 announcement)
+            logger.warning(log_message)
             overall_failure_message = (
                 "Failed to make nForum post to the discussion for the " +
                 "edited nLab page")
         except Exception as e:
-            logger.warning(
+            log_message = (
                 "Due to an unforeseen error, could not make nForum post for " +
                 "newly edited nLab page with name: " +
                 nlab_page_name +
                 ". Author: " +
-                author +
+                author)
+            if old_page_name:
+                log_message = log_message + (
+                    ". Change of page name from " +
+                    old_page_name +
+                    " to " +
+                    nlab_page_name)
+            log_message = log_message + (
                 ". Announcement: " +
                 announcement +
-                ". Error: " +
+                " Error: " +
                 str(e))
+            logger.warning(log_message)
             failure_message = (
                 "Failed to make nForum post to the discussion for the " +
                 "edited nLab page")
