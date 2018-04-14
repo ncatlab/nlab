@@ -18,16 +18,10 @@
 </div>
 
 <div class="revisedby">
-  <%= @page.revisions? ? "Revised" : "Created" %> on <%= format_date(@page.revised_at) %>
-  by <%= author_link(@page) %>
-  <%= "(#{@page.author.ip})." if @page.author.respond_to?(:ip) %>
-<%- if @web.name == "nLab" -%>
-  See <a href="https://ncatlab.org/nlab/author/<%= @page.author.name =%>" style="color: #005c19">Author — <%= @page.author.name =%></a> for an overview of the nLab pages to which <%= @page.author.name =%> has contributed.
-<%- end -%>
-  <% if @web.count_pages? %>
-    <% total_chars = @page.content.length %>
-    (<%= total_chars %> characters / <%= sprintf("%-.1f", (total_chars / 2275 rescue 0)) %> pages)
-  <% end %>
+  <p>
+  <%= @page.revisions? ? "Revised" : "Created" %> on <%= format_date(@page.revised_at) %>.
+  See the <a href="https://ncatlab.org/<%= @web.address %>/history/<%= @page.name %>">history</a> of this page for a list of all contributions to it.
+  </p>
 </div>
 
 <div class="navigation navfoot">

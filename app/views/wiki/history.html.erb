@@ -19,9 +19,18 @@
           </span>
       <%- end -%>
       <div class="revisedby" style="margin-bottom: 0px">
-        by <%= link_to_page(rev.author) %>
-        at <%= format_date(rev.revised_at) %>
-        <%= "from #{rev.author.ip}" if rev.author.respond_to?(:ip) %>
+        by
+        <%- if @web.name == "nLab" -%>
+          <a href="https://ncatlab.org/nlab/author/<%= rev.author.name %>" style="color: #005c19"><%= rev.author %></a>
+        <%- else %>
+          <%= link_to_page(rev.author) %>
+        <%- end %>
+        on <%= format_date(rev.revised_at) %>
+        <%- if rev.author.respond_to?(:ip) %>
+          <%= "from #{rev.author.ip}." %>
+        <%- else %>
+          <%= "." %>
+        <%- end %>
       </div>
     </li>
   <%- end -%>
