@@ -2,7 +2,7 @@
 module ApplicationHelper
 require 'instiki_stringsupport'
 
-  # Accepts a container (hash, array, enumerable, your type) and returns a string of option tags. Given a container 
+  # Accepts a container (hash, array, enumerable, your type) and returns a string of option tags. Given a container
   # where the elements respond to first and last (such as a two-element array), the "lasts" serve as option values and
   # the "firsts" as option text. Hashes are turned into this form automatically, so the keys become "firsts" and values
   # become lasts. If +selected+ is specified, the matching "last" or element will get the selected option-tag.
@@ -18,8 +18,8 @@ require 'instiki_stringsupport'
   #     <option value="$20">Basic</option>\n<option value="$40" selected>Plus</option>
   def html_options(container, selected = nil)
     container = container.to_a if Hash === container
-  
-    html_options = container.inject([]) do |options, element| 
+
+    html_options = container.inject([]) do |options, element|
       if element.is_a? Array
         if element.last != selected
           options << "<option value=\"#{element.last}\">#{element.first}</option>"
@@ -30,23 +30,23 @@ require 'instiki_stringsupport'
         options << ((element != selected) ? "<option>#{element}</option>" : "<option selected>#{element}</option>")
       end
     end
-    
+
     html_options.join("\n").html_safe
   end
 
   # Creates a hyperlink to a Wiki page, without checking if the page exists or not
   def link_to_existing_page(page, text = nil, html_options = {})
     link_to(
-        text || page.plain_name, 
+        text || page.plain_name,
         {:web => @web.address, :action => 'show', :id => page.name, :only_path => true},
         html_options).html_safe
   end
-  
+
   # Creates a hyperlink to a Wiki page, or to a "new page" form if the page doesn't exist yet
   def link_to_page(page_name, web = @web, text = nil, options = {})
     raise 'Web not defined' if web.nil?
     raise 'Page empty' if page_name.nil?
-    UrlGenerator.new(@controller).make_link(@web, page_name, nil, web, text, 
+    UrlGenerator.new(@controller).make_link(@web, page_name, nil, web, text,
         options.merge(:base_url => "#{base_url}/#{web.address}")).html_safe
   end
 
@@ -84,11 +84,11 @@ require 'instiki_stringsupport'
   def categories_menu
     if @categories.empty?
       ''
-    else 
+    else
       ("<div id=\"categories\">\n" +
       '<strong>Categories</strong>:' +
       '[' + link_to_unless_current('Any', :web => @web.address, :action => self.action_name, :category => nil) + "]\n" +
-      @categories.map { |c| 
+      @categories.map { |c|
         link_to_unless_current(c.html_safe, :web => @web.address, :action => self.action_name, :category => c)
       }.join(', ') + "\n" +
       '</div>').html_safe
@@ -103,7 +103,7 @@ require 'instiki_stringsupport'
   def format_date(date, include_time = true)
     # Must use DateTime because Time doesn't support %e on at least some platforms
     if include_time
-      DateTime.new(date.year, date.mon, date.day, date.hour, date.min, date.sec).strftime("%B %e, %Y %H:%M:%S")
+      DateTime.new(date.year, date.mon, date.day, date.hour, date.min, date.sec).strftime("%B %e, %Y at %H:%M:%S")
     else
       DateTime.new(date.year, date.mon, date.day).strftime("%B %e, %Y")
     end
@@ -122,7 +122,7 @@ require 'instiki_stringsupport'
     text.split.collect do |word|
       if t.num_chars + word.num_chars <= len
         t << word + ' '
-      else 
+      else
         return (t.chop + options[:omission]).html_safe
       end
     end
