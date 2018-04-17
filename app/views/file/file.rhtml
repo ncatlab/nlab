@@ -7,28 +7,39 @@
 
 <%= error_messages_for 'file' %>
 
-<% form_tag({ :controller => 'file', :web => @web_name, :action => 'file' }, 
+<% form_tag({ :controller => 'file', :web => @web_name, :action => 'file' },
         { 'multipart' => true , 'accept-charset' => 'utf-8' }) do %>
   <div class="inputFieldWithPrompt">
-    <input type="hidden" name="referring_page" value="<%= h @referring_page %>" />
+    <div style="display: none;">
+      <input name="see_if_human" id="see_if_human" style="tabindex: -1; autocomplete: off"/>
+      <input type="hidden" name="referring_page" value="<%= h @referring_page %>" style="tabindex: -1; autocomplete: off"/>
+    </div>
     <%= hidden_field 'file', 'file_name' %>
-    <label for="file_content"><b>Content of <%= h @file_name %> to upload</b>:</label>
-    <br />
+    <p>
+    <label for="file_content"><b>Upload:</b></label>
+    </p>
+    <p>
     <input type="file" id="file_content" name="file[content]" size="40" />
-    <br />
-    Please note that the file you are uploading will be named <%= h @file_name %> on the wiki - 
-    regardless of how it is named on your computer. To change the wiki name of the file, please go 
-    <%= link_to("back", @referring_page) %> and edit the wiki page that refers to the file.
+    </p>
+    <p>
+    Please note that regardless of the name of the file you are uploading, it will be named <%= h @file_name %> on the nLab. To change the name which the file will have on the nLab, please go
+    <%= link_to("back", @referring_page) %> and edit the page that refers to the file.
+    </p>
   </div>
   <div class="inputFieldWithPrompt">
+    <p>
     <label for="file_description"><b>Description</b>:</label>
-    <br/>
+    </p>
+    <p>
     <%= text_field "file", "description", "size" => 40 %>
+    </p>
   </div>
   <div>
-    <input type="submit" value="Upload" /> as 
-    <%= text_field_tag :author, @author, 
+    <p>
+    <input type="submit" value="Upload" /> as
+    <%= text_field_tag :author, @author,
             :onfocus => "this.value == 'Anonymous' ? this.value = '' : true;",
             :onblur  => "this.value == '' ? this.value = 'Anonymous' : true" %>
+    </p>
   </div>
 <%- end -%>
