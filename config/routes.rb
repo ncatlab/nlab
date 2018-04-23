@@ -29,6 +29,8 @@ ActionController::Routing::Routes.draw do |map|
   connect_to_web map, ':web/import/:id', :controller => 'file', :action => 'import'
   connect_to_web map, ':web/login', :controller => 'wiki', :action => 'login'
   connect_to_web map, ':web/web_list', :controller => 'wiki', :action => 'web_list'
+  connect_to_web map, ":web/show/:page_name/cite", :controller => "cite", :requirements => { :page_name => /.*/}, :action => "cite_current", :page_name => nil
+  connect_to_web map, ":web/revision/:page_name/:revision_number/cite", :controller => "cite", :requirements => { :page_name => /.*/}, :action => "cite", :page_name => nil, :revision_number => nil
   connect_to_web map, ':web/show/diff/:id', :controller => 'wiki', :action => 'show', :mode => 'diff', :requirements => {:id => id_regexp}
   connect_to_web map, ':web/revision/diff/:id/:rev', :controller => 'wiki', :action => 'revision', :mode => 'diff',
        :requirements => { :rev => /\d+/, :id => id_regexp}
