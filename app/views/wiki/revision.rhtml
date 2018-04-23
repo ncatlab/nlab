@@ -30,6 +30,9 @@
 
 <div class="navigation navfoot">
   <%= raw navigation_menu_for_revision.join(' | ') %>
+  <%- if @web.name == "nLab" %>
+  | <a href="https://ncatlab.org/nlab/revision/<%= h @page.name %>/<%= @revision_number.to_s %>/cite" style="color: black">Cite</a>
+  <%- end %>
     <span class="views">
     | View:
     <%= link_to 'Source', {:web => @web.address, :action => 'source', :id => @page.name, :rev => @revision_number},

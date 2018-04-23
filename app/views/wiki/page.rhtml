@@ -27,7 +27,9 @@
 <div class="navigation navfoot">
 
   <%= raw navigation_menu_for_page.join(' | ') %>
-
+  <%- if @web.name == "nLab" %>
+  | <a href="https://ncatlab.org/nlab/show/<%= h @page.name %>/cite" style="color: black">Cite</a>
+  <%- end %>
   <span class="views">
     | Views:
     <%= link_to('Print',

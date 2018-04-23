@@ -39,11 +39,7 @@ NLAB_DATABASE_PASSWORD
 NLAB_DATABASE_NAME
 NLAB_LOG_DIRECTORY
 
-These should be set in .bash_profile for use when developing, and in
-
-/etc/default/unicorn
-
-for when the script is caled from Instiki.
+Currently these are hardcoded in config/environment_variables.rb (not in git).
 
 Deployment
 ----------

@@ -1,0 +1,21 @@
+<%# coding: utf-8 %>
+<%-
+  @title = "Cite — " + @page_name
+  @show_footer = true
+-%>
+
+<div>
+  <h3>Overview</h3>
+  <p>We recommend the following .bib file entries for citing the current version of the page <a style="color: #005c19" href="<%= link_to_nlab_page(@page_name) %>"><%= @page_name %></a>. The first is to be used if one does not have unicode support, which is likely the case if one is using bibtex. The second can be used if one does has unicode support. If there are no non-ascii characters in the page name, then the two entries are the same.</p>
+  <p>In either case, the hyperref package needs to have been imported in one's tex (or sty) file. There are no other dependencies.</p>
+  <p>The author field has been chosen so that the reference appears in the 'alpha' citation style. Feel free to adjust this.</p>
+
+  <h3>Bib entry — Ascii</h3>
+  <p><pre><%= bib_entry(@page_name, @revision_number, @revision_id, true, false) %></pre></p>
+
+  <h3>Bib entry — Unicode</h3>
+  <p><pre><%= bib_entry(@page_name, @revision_number, @revision_id, true, true) %></pre></p>
+
+  <h3>Problems?</h3>
+  <p>Please report any problems with the .bib entries at the <a href="https://nforum.ncatlab.org/">nForum</a>.</p>
+</div>
