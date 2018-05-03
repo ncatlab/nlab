@@ -46,7 +46,7 @@ class AbstractUrlGenerator
       text = text || description
     end
     text = (text || WikiWords.separate(asked_name)).unescapeHTML.escapeHTML
-    
+
     case link_type
     when :show
       page_link(mode, name, anchor_name, text, web.address, known_page)
@@ -69,7 +69,7 @@ class AbstractUrlGenerator
 
   def url_for(hash = {})
     @controller.url_for hash
-  end  
+  end
 end
 
 class UrlGenerator < AbstractUrlGenerator
@@ -77,28 +77,28 @@ class UrlGenerator < AbstractUrlGenerator
   private
 
   def file_link(mode, name, text, web_address, known_file, description)
-    return bad_filename(name) unless WikiFile.is_valid?(name) 
+    return bad_filename(name) unless WikiFile.is_valid?(name)
     case mode
     when :export
       if known_file
         %{<a class="existingWikiWord" title="#{description}" href="files/#{CGI.escape(name)}">#{text}</a>}
-      else 
+      else
         %{<span class="newWikiWord">#{text}</span>}
       end
     when :publish
-      if known_file 
+      if known_file
         href = @controller.url_for :controller => 'file', :web => web_address, :action => 'file',
             :id => name, :only_path => true
         %{<a class="existingWikiWord"  title="#{description}" href="#{href}">#{text}</a>}
-      else 
+      else
         %{<span class="newWikiWord">#{text}</span>}
       end
-    else 
-      href = @controller.url_for :controller => 'file', :web => web_address, :action => 'file', 
+    else
+      href = @controller.url_for :controller => 'file', :web => web_address, :action => 'file',
           :id => name, :only_path => true
       if known_file
         %{<a class="existingWikiWord"  title="#{description}" href="#{href}">#{text}</a>}
-      else 
+      else
         %{<span class="newWikiWord">#{text}<a href="#{href}">?</a></span>}
       end
     end
@@ -107,22 +107,22 @@ class UrlGenerator < AbstractUrlGenerator
   def page_link(mode, name, anchor_name, text, web_address, known_page)
     case mode
     when :export
-      if known_page 
+      if known_page
         %{<a class="existingWikiWord" href="#{CGI.escape(name)}.#{html_ext}#{'#'+anchor_name if anchor_name}">#{text}</a>}
-      else 
-        %{<span class="newWikiWord">#{text}</span>} 
+      else
+        %{<span class="newWikiWord">#{text}</span>}
       end
     when :publish
       if known_page
         wikilink_for(mode, name, anchor_name, text, web_address)
-      else 
-        %{<span class="newWikiWord">#{text}</span>} 
+      else
+        %{<span class="newWikiWord">#{text}</span>}
       end
-    else 
+    else
       if known_page
         wikilink_for(mode, name, anchor_name, text, web_address)
-      else 
-        href = @controller.url_for :controller => 'wiki', :web => web_address, :action => 'new', 
+      else
+        href = @controller.url_for :controller => 'wiki', :web => web_address, :action => 'new',
             :id => name, :only_path => true
         %{<span class="newWikiWord">#{text}<a href="#{href}">?</a></span>}
       end
@@ -130,27 +130,27 @@ class UrlGenerator < AbstractUrlGenerator
   end
 
   def pic_link(mode, name, text, web_address, known_pic)
-    return bad_filename(name) unless WikiFile.is_valid?(name) 
+    return bad_filename(name) unless WikiFile.is_valid?(name)
     href = @controller.url_for :controller => 'file', :web => web_address, :action => 'file',
       :id => name, :only_path => true
     case mode
     when :export
-      if known_pic 
+      if known_pic
         %{<img alt="#{text}" src="files/#{CGI.escape(name)}" />}
-      else 
+      else
         %{<img alt="#{text}" src="no image" />}
       end
     when :publish
-      if known_pic 
+      if known_pic
         %{<img alt="#{text}" src="#{href}" />}
-      else 
-        %{<span class="newWikiWord">#{text}</span>} 
+      else
+        %{<span class="newWikiWord">#{text}</span>}
       end
-    else 
-      if known_pic 
+    else
+      if known_pic
         %{<img alt="#{text}" src="#{href}" />}
-      else 
-        %{<span class="newWikiWord">#{text}<a href="#{href}">?</a></span>} 
+      else
+        %{<span class="newWikiWord">#{text}<a href="#{href}">?</a></span>}
       end
     end
   end
@@ -175,11 +175,11 @@ class UrlGenerator < AbstractUrlGenerator
           link << %{\n  <source src="files/#{CGI.escape(name)}"#{type_attr}/>} if known
       when :publish
           link << %{\n  <source src="#{href}"#{type_attr}/>} if known
-      else 
-        if known 
+      else
+        if known
           link << %{\n  <source src="#{href}"#{type_attr}/>}
-        else 
-          link << %{ <span class="newWikiWord">#{name}<a href="#{href}">?</a></span>} 
+        else
+          link << %{ <span class="newWikiWord">#{name}<a href="#{href}">?</a></span>}
         end
       end
     end
@@ -187,7 +187,7 @@ class UrlGenerator < AbstractUrlGenerator
   end
 
   def cdf_link(mode, name, text, web_address, known_cdf)
-    return bad_filename(name) unless WikiFile.is_valid?(name) 
+    return bad_filename(name) unless WikiFile.is_valid?(name)
     href = @controller.url_for :controller => 'file', :web => web_address, :action => 'file',
       :id => name, :only_path => true
     badge_path = @controller.image_path("cdf-player-white.png").split(/\?/)[0]
@@ -204,22 +204,22 @@ class UrlGenerator < AbstractUrlGenerator
     when :export
       if known_cdf
         cdf_div("files/#{CGI.escape(name)}", width, height, badge_path)
-      else 
+      else
         CGI.escape(name)
       end
     when :publish
       if known_cdf
         cdf_div(href, width, height, badge_path)
-      else 
-        %{<span class="newWikiWord">#{CGI.escape(name)}</span>} 
+      else
+        %{<span class="newWikiWord">#{CGI.escape(name)}</span>}
       end
-    else 
-      if known_cdf 
+    else
+      if known_cdf
         cdf_div(href, width, height, badge_path)
-      else 
-        %{<span class="newWikiWord">#{CGI.escape(name)}<a href="#{href}">?</a></span>} 
+      else
+        %{<span class="newWikiWord">#{CGI.escape(name)}<a href="#{href}">?</a></span>}
       end
-    end    
+    end
   end
 
   def cdf_div(s, w, h, b)
@@ -233,7 +233,7 @@ class UrlGenerator < AbstractUrlGenerator
         :action => 'delete', :id => name, :only_oath => true
     if mode == :show and known_file
       %{<span class="deleteWikiWord"><a href="#{href}">Delete #{name}</a></span>}
-    else 
+    else
       %{<span class="deleteWikiWord">[[#{name}:delete]]</span>}
     end
   end
@@ -247,12 +247,12 @@ class UrlGenerator < AbstractUrlGenerator
     def wikilink_for(mode, name, anchor_name, text, web_address)
       web = Web.find_by_address(web_address)
       action = web.published? && (web != @web || [:publish, :s5].include?(mode) ) ? 'published' : 'show'
-      href = @controller.url_for :controller => 'wiki', :web => web_address, :action => action, 
+      href = @controller.url_for :controller => 'wiki', :web => web_address, :action => action,
             :id => name, :only_path => true
       title = web == @web ? '' : %{ title="#{web_address}"}
       %{<a class="existingWikiWord" href="#{href}#{'#'+anchor_name if anchor_name}"#{title}>#{text}</a>}
     end
-    
+
     def html_ext
       @html_ext ||= @controller.method(:html_ext).call
       # Why method().call ? A Ruby 1.9.2preview1 bug:

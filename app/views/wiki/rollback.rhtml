@@ -1,5 +1,5 @@
 <%# coding: utf-8 %>
-<%- 
+<%-
   @title = "Rollback to #{@page.plain_name} Rev ##{@revision_number}".html_safe
   @content_width = 720
   @hide_navigation = true
@@ -11,28 +11,23 @@
 </div>
 
 	<% form_tag({:web => @web.address, :action => 'save', :id => @page.name},
-	      { :id => 'editForm', :method => 'post', :onsubmit => 'cleanAuthorName();', 
-	        'accept-charset' => 'utf-8' }) do %>
+	      { :id => 'editForm', :method => 'post', 'accept-charset' => 'utf-8' }) do %>
+
+        <div style="display: none;">
+          <input name="see_if_human" id="see_if_human" style="tabindex: -1; autocomplete: off"/>
+        </div>
 	<div>
         <textarea name="content" id="content" rows="24" cols="60"><%= h(@revision.content.purify) %></textarea>
 		<div id="editFormButtons">
-	        <input type="submit" value="Update" accesskey="u" /> as 
-		    <input type="text" name="author" id="authorName" value="<%= h(@author.purify) %>" 
+	        <input type="submit" value="Update" accesskey="u" /> as
+		    <input type="text" name="author" id="authorName" value="<%= h(@author.purify) %>"
 		        onclick="this.value == 'Anonymous' ? this.value = '' : true" />
-		    | 
+		    |
 			<span>
 				<%= link_to('Cancel', {:web => @web.address, :action => 'cancel_edit', :id => @page.name},
-				      {:accesskey => 'c'}) %> 
+				      {:accesskey => 'c'}) %>
                 <span class="unlock">(unlocks page)</span>
 			</span>
 	    </div>
 	</div>
 	<%- end -%>
-
-<script type="text/javascript">
-function cleanAuthorName() {
-  if (document.getElementById('authorName').value == "") {
-    document.getElementById('authorName').value = 'Anonymous';
-  }
-}
-</script>
