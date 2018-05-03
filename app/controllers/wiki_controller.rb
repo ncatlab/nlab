@@ -351,14 +351,19 @@ EOL
   def save
     render(:status => 404, :text => 'Undefined page name', :layout => 'error') and return if @page_name.nil?
     return unless is_post
-    author_name = params['author'].purify.strip
-    author_name = 'Anonymous' if author_name =~ /^\s*$/
 
-    if not @page.nil? and @page.id == 231
-      # hardcode a lock on the "monoidal categories" page due to spam
-      flash[:info] = "The page \"#{@page_name}\" is currently locked due to spam."
-      redirect_to :web => @web_name, :action => 'show', :id => @page_name
+    # Check for spam
+    if !(params["see_if_human"].blank?)
+      flash[:error] = "Cannot save page due to activation of spam filter"
+      return
     end
+
+    if @page
+      @page.unlock
+    end
+
+    author_name = params['author'].purify.strip
+    author_name = 'Anonymous' if (author_name.empty? || (author_name =~ /^\s*$/))
 
     begin
       the_content = params['content'].purify
@@ -379,7 +384,6 @@ EOL
         wiki.revise_page(@web_name, @page_name, new_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
 
-        @page.unlock
         old_name = @page_name
         @page_name = new_name
 

@@ -11,8 +11,11 @@
 </div>
 
 	<% form_tag({ :action => 'save', :web => @web.address, :id => @page.name },
-	             { 'id' => 'editForm', 'method' => 'post', 'onsubmit' => 'cleanAuthorName()',
-	               'accept-charset' => 'utf-8' }) do %>
+	            { 'id' => 'editForm', 'method' => 'post', 'accept-charset' => 'utf-8' }) do %>
+           <div style="display: none;">
+             <input name="see_if_human" id="see_if_human" style="tabindex: -1; autocomplete: off"/>
+           </div>
+
 	   <div>
 		<textarea name="content" id="content" style="height: 45em; width: 70%;"><%= h(flash[:content] ||
                          (params['content'] ?  params['content'] : @page.content).purify) %></textarea>
@@ -75,12 +78,6 @@ function addRedirect(){
     var content = document.getElementById('content');
     content.value = '[[!redirects <%= escape_javascript(@page.name) %>]]\n' + content.value
     }
-}
-
-function cleanAuthorName() {
-  if (document.getElementById('authorName').value == "") {
-    document.getElementById('authorName').value = 'Anonymous';
-  }
 }
 
 document.forms["editForm"].elements["content"].focus();

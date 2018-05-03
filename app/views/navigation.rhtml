@@ -38,7 +38,7 @@ end
              onblur="this.value == '' ? this.value = 'Search' : true" /></fieldset>
     <% end %>
 <%- else -%>
-    <%= list_item 'Home Page', {:action => 'published', :id => 'HomePage'}, 'Home, Sweet Home', 'H' %> |
+    <%= list_item 'Home Page', {:action => 'published', :id => 'HomePage'}, 'Home page', 'H' %> |
     <%= list_item 'Feeds', {:action => 'feeds'}, 'Subscribe to changes by Atom' %>
 <% end-%>
   <span id='navEnd'></span>

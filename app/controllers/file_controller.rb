@@ -50,6 +50,11 @@ class FileController < ApplicationController
   end
 
   def delete
+    # Check for spam
+    if !(params["see_if_human"].blank?)
+      flash[:error] = "Cannot delete file due to activation of spam filter"
+      return
+    end
     @file_name = params['id']
     file = WikiFile.find_by_file_name(@file_name)
     unless file

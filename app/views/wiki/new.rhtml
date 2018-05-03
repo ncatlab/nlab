@@ -13,6 +13,9 @@
 <div id="editForm">
 	<% form_tag({ :action => 'save', :web => @web.address, :id => @page_name },
 	        { 'id' => 'editForm', 'method' => 'post', 'onsubmit' => 'cleanAuthorName();', 'accept-charset' => 'utf-8' }) do %>
+            <div style="display: none;">
+              <input name="see_if_human" id="see_if_human" style="tabindex: -1; autocomplete: off"/>
+            </div>
 
 	    <textarea name="content" id="content" style="height: 45em; width: 70%"><%= h(flash[:content] ||
                      params['content'] ?  params['content'].purify : '' ) %></textarea>

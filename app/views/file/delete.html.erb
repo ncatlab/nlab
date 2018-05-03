@@ -8,6 +8,9 @@
 
 <% form_tag({ :controller => 'file', :web => @web_name, :action => 'delete' },
         {'accept-charset' => 'utf-8' }) do %>
+  <div style="display: none;">
+    <input name="see_if_human" id="see_if_human" style="tabindex: -1; autocomplete: off"/>
+  </div>
   <div class="inputFieldWithPrompt">
     <%= hidden_field 'file', 'file_name' %>
     <p>
