@@ -255,7 +255,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorization_needed?
-    not %w(login authenticate feeds published atom_with_headlines atom_with_content atom_with_changes file blahtex_png).include?(action_name)
+    not %w(login authenticate feeds published atom_with_headlines atom_with_content atom_with_changes file blahtex_png all all_in_category).include?(action_name)
   end
 
   def authorized?

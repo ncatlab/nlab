@@ -8,8 +8,7 @@ class AuthorController < ApplicationController
     if !nlab_author?(name)
       render(
         :status => 404,
-        :text => "#{name} is not the author of any nLab page",
-        :layout => "/errors/404.rhtml")
+        :template => "/errors/404.rhtml")
       return
     end
     @author = name

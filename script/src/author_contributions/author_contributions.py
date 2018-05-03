@@ -28,15 +28,15 @@ This will describe the available options. As will be seen, there are three
 subcommands, 'is_author', 'pages', and 'recent', whose descriptions can be
 obtained by running
 
-   python generate_nforum_post_from_nlab_edit.py is_author --help
+   python author_contributions.py is_author --help
 
 or
 
-   python generate_nforum_post_from_nlab_edit.py pages --help
+   python author_contributions.py pages --help
 
 or
 
-   python generate_nforum_post_from_nlab_edit.py recent --help
+   python author_contributions.py recent --help
 
 When finished, shut down the virtual environment by running:
 
