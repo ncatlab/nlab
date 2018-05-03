@@ -1,0 +1,17 @@
+<%# coding: utf-8 %>
+<%-
+  @title = "Category — " + @category_name
+  @show_footer = true
+-%>
+
+<div>
+  <h3>Overview</h3>
+  <p><%= @name_text =%> has <%= @number_of_pages =%> pages in this category.</p>
+
+  <h3>Pages</h3>
+  <ul style="list-style: none; padding-left: 0">
+  <%- for page in @all_pages_in_category %>
+    <li><a style="color: #005c19" href="<%= link_to_web_page(page) %>"><%= page %></a></li>
+  <%- end -%>
+  </ul>
+</div>

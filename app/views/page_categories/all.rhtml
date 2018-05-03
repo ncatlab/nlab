@@ -1,0 +1,27 @@
+<%# coding: utf-8 %>
+<%-
+  @title = "All categories"
+  @show_footer = true
+-%>
+
+<div>
+  <h3>Overview</h3>
+  <p><%= @name_text =%> has <%= @number_of_categories =%>
+     <%- if @number_of_categories == 1 -%>
+       page category. Click on the category to see the list of pages belonging to it.
+     <%- elsif @number_of_categories == 0 -%>
+       page categories.
+     <%- else -%>
+       page categories. Click on a category to see the list of pages belonging to it.
+     <%- end -%>
+  </p>
+
+  <%- if @number_of_categories != 0 -%>
+    <h3>Categories</h3>
+    <ul style="list-style: none; padding-left: 0">
+    <%- for category in @all_categories %>
+      <li><a style="color: #005c19" href="<%= link_to_category(category) %>"><%= category %></a></li>
+    <%- end -%>
+    </ul>
+  <%- end -%>
+</div>

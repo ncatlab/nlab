@@ -36,7 +36,11 @@ ActionController::Routing::Routes.draw do |map|
        :requirements => { :rev => /\d+/, :id => id_regexp}
   connect_to_web map, ':web/revision/:id/:rev', :controller => 'wiki', :action => 'revision', :requirements => { :rev => /\d+/, :id => id_regexp}
   connect_to_web map, ':web/source/:id/:rev', :controller => 'wiki', :action => 'source', :requirements => { :rev => /\d+/, :id => id_regexp}
-  connect_to_web map, ':web/list/:category', :controller => 'wiki', :action => 'list', :requirements => { :category => /.*/}, :category => nil
+  connect_to_web map, ':web/list', :controller => 'all_pages', :action => 'all'
+  connect_to_web map, ':web/list/:category', :controller => 'all_pages', :action => 'all_in_category', :requirements => { :category => /.*/}, :category => nil
+  connect_to_web map, ":web/all_pages", :controller => "all_pages", :action => "all"
+  connect_to_web map, ":web/all_pages/:category", :controller => "all_pages", :action => "all_in_category", :requirements => {:category => /.*/}, :category => nil
+  connect_to_web map, ":web/page_categories", :controller => "page_categories", :action => "all"
   connect_to_web map, ':web/:action/:id', :controller => 'wiki', :requirements => {:id => id_regexp}
   connect_to_web map, ':web/recently_revised/:category', :controller => 'wiki', :action => 'recently_revised', :requirements => { :category => /.*/}, :category => nil
   connect_to_web map, ':web/:action', :controller => 'wiki'

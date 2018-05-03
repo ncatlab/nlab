@@ -1,0 +1,27 @@
+<%# coding: utf-8 %>
+<%-
+  @title = "All pages"
+  @show_footer = true
+-%>
+
+<div>
+  <h3>Overview</h3>
+  <p><%= @name_text =%> has <%= @number_of_pages =%>
+    <%- if @number_of_pages == 1 -%>
+      page.
+    <%- else -%>
+      pages.
+      <%- if @has_categories -%>
+        Some of these are
+        organised into <a style="color: #005c19" href="<%= link_to_all_categories_page() %>">categories</a>.
+      <%- end -%>
+    <%- end -%>
+  </p>
+
+  <h3>Pages</h3>
+  <ul style="list-style: none; padding-left: 0">
+  <%- for page in @all_pages %>
+    <li><a style="color: #005c19" href="<%= link_to_web_page(page) %>"><%= page %></a></li>
+  <%- end -%>
+  </ul>
+</div>
