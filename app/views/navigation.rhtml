@@ -13,9 +13,7 @@ end
     <span class="skipNav"><a href='#navEnd'>Skip the Navigation Links</a> | </span>
 <%- if not @web.published? then -%>
     <%= list_item 'Home Page', {:action => 'show', :id => 'HomePage'}, 'Home page', 'H' %> |
-  <%- if @web.name != "nLab" -%>
     <%= list_item 'All Pages', {:action => "all_pages"}, 'List of all pages', 'A' %> |
-  <%- end -%>
     <%= list_item 'Latest Revisions', {:action =>'latest_revisions'}, 'Latest edits and page creations', 'U' %> |
   <%- if @web.name != "nLab" -%>
     <%= list_item 'Authors', {:action => 'authors'}, 'Everybody who has made an edit' %> |
