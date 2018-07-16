@@ -257,10 +257,6 @@ EOL
       redirect_home
     elsif @page.locked?(Time.now) and not params['break_lock']
       redirect_to :web => @web_name, :action => 'locked', :id => @page_name
-    elsif @page.id == 231
-      # hardcode a lock on the "monoidal categories" page due to spam
-      flash[:info] = "The page \"#{@page_name}\" is currently locked due to spam."
-      redirect_to :web => @web_name, :action => 'show', :id => @page_name
     else
       @page.lock(Time.now, @author)
     end
