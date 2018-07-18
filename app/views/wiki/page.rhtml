@@ -39,11 +39,6 @@
     |
     <%= link_to 'TeX', {:web => @web.address, :action => 'tex', :id => @page.name},
             {:id => 'view_tex', :rel => 'nofollow' } %>
-   <% if WikiReference.pages_in_category(@web, 'S5-slideshow').map.include?(@page.name) %>
-    |
-    <%= link_to 'S5', {:web => @web.address, :action => 's5', :id => @page.name},
-            {:id => 'view_S5'} %>
-   <%- end -%>
   <%- end -%>
     |
     <%= link_to 'Source', {:web => @web.address, :action => 'source', :id => @page.name},

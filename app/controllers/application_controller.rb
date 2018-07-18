@@ -229,7 +229,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_robots_metatag
-    if controller_name == 'wiki' and %w(show published s5).include? action_name and !(params[:mode] == 'diff')
+    if controller_name == 'wiki' and %w(show published).include? action_name and !(params[:mode] == 'diff')
       @robots_metatag_value = 'index,follow'
     else
       @robots_metatag_value = 'noindex,nofollow'
@@ -262,8 +262,7 @@ class ApplicationController < ActionController::Base
     @web.nil? or
     @web.password.nil? or
     cookies.signed[CGI.escape(@web_name)] == @web.password or
-    password_check(params['password']) or
-    (@web.published? and action_name == 's5')
+    password_check(params['password'])
 
     rescue ActiveSupport::MessageVerifier::InvalidSignature
       flash[:info] = 'Bad cookie. Please reauthenticate.'
