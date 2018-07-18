@@ -1,8 +1,8 @@
 module CacheSweepingHelper
-  
+
   def expire_cached_page(web, page_name)
     expire_action :controller => 'wiki', :web => web.address,
-        :action => %w(show published s5 tex print history source), :id => page_name
+        :action => %w(show published tex print history source), :id => page_name
     expire_action :controller => 'wiki', :web => web.address,
         :action => 'show', :id => page_name, :mode => 'diff'
   end
@@ -23,7 +23,7 @@ module CacheSweepingHelper
     %w(authors atom_with_content atom_with_headlines atom_with_changes file_list).each do |action|
       expire_action :controller => 'wiki', :web => web.address, :action => action
     end
-    
+
     %w(file_name created_at).each do |sort_order|
       expire_action :controller => 'wiki', :web => web.address, :action => 'file_list', :sort_order => sort_order
     end

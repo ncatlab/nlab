@@ -9,12 +9,12 @@ class WikiController < ApplicationController
 
   before_filter :load_page
   before_filter :dnsbl_check, :only => [:edit, :new, :save, :export_html, :export_markup]
-  caches_action :show, :published, :tex, :s5, :print, :list, :recently_revised, :file_list, :source,
+  caches_action :show, :published, :tex, :print, :list, :recently_revised, :file_list, :source,
         :history, :revision, :atom_with_content, :atom_with_headlines, :atom_with_changes, :if => Proc.new { |c| c.send(:do_caching?) }
   caches_action :authors, :cache_path => Proc.new { |c| c.params }
   cache_sweeper :revision_sweeper
 
-  layout 'default', :except => [:atom_with_content, :atom_with_headlines, :atom_with_changes, :atom, :source, :tex, :s5, :export_html]
+  layout 'default', :except => [:atom_with_content, :atom_with_headlines, :atom_with_changes, :atom, :source, :tex, :export_html]
 
   def index
     if @web_name
@@ -560,17 +560,6 @@ EOL
     render(:layout => 'tex')
   end
 
-  def s5
-    if [:markdownMML, :markdownPNG, :markdown].include?(@web.markup)
-      my_rendered = PageRenderer.new(@page.current_revision)
-      @s5_content = my_rendered.display_s5
-      @s5_theme = my_rendered.s5_theme
-    else
-      @s5_content = "S5 not supported with this text filter"
-      @s5_theme = "default"
-    end
-  end
-
   def image_path(s)
     @template.image_path(s)
   end
@@ -629,7 +618,7 @@ EOL
             "<meta http-equiv=\"Refresh\" content=\"0;URL=HomePage.#{html_ext}\" /></head></html>"
         end
         dir = Rails.root.join('public')
-        Dir["#{dir}/{images,javascripts,s5,stylesheets}/**/*"].each do |f|
+        Dir["#{dir}/{images,javascripts,stylesheets}/**/*"].each do |f|
           zip_out.add "public#{f.sub(dir.to_s,'')}", f
         end
       end

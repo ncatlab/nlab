@@ -20,10 +20,10 @@ module Engines
       content.replace(new_chunk.mask)
     end
 
-    private 
+    private
 
     # Never create engines by constructor - use apply_to instead
-    def initialize(content) 
+    def initialize(content)
       @content = content
     end
 
@@ -34,7 +34,7 @@ module Engines
       @content.as_utf8
       redcloth = RedCloth.new(@content, [:hard_breaks] + @content.options[:engine_opts])
       redcloth.filter_html = false
-      redcloth.no_span_caps = false  
+      redcloth.no_span_caps = false
       html = redcloth.to_html(:textile)
     end
   end
@@ -42,76 +42,36 @@ module Engines
   class Markdown < AbstractEngine
     def mask
       text = @content.as_utf8.delete("\r").to_utf8
-      # If the request is for S5, call Maruku accordingly (without math)
-      if @content.options[:mode] == :s5
-        my_content = Maruku.new(text,
-                           {:math_enabled => false, :content_only => true,
-                            :author => @content.options[:engine_opts][:author],
-                            :title => @content.options[:engine_opts][:title]})
-        @content.options[:renderer].s5_theme = my_content.s5_theme
-      else
-        html = Maruku.new(text, {:math_enabled => false}).to_html
-        html.gsub(/\A<div class="maruku_wrapper_div">\n?(.*?)\n?<\/div>\Z/m, '\1')
-      end
-
+      html = Maruku.new(text, {:math_enabled => false}).to_html
+      html.gsub(/\A<div class="maruku_wrapper_div">\n?(.*?)\n?<\/div>\Z/m, '\1')
     end
   end
 
   class MarkdownMML < AbstractEngine
     def mask
       text = @content.as_utf8.delete("\r").to_utf8
-      # If the request is for S5, call Maruku accordingly
-      if @content.options[:mode] == :s5
-        my_content = Maruku.new(text,
-                           {:math_enabled => true,
-                            :html_math_generate_ids => true,
-                            :math_numbered => ['\\[','\\begin{equation}'],
-                            :content_only => true,
-                            :author => @content.options[:engine_opts][:author],
-                            :title => @content.options[:engine_opts][:title]})
-        @content.options[:renderer].s5_theme = my_content.s5_theme
-        my_content.to_s5
-      else
-        (t = Time.now; nil)        
-        html = Maruku.new(text,
-             {:math_enabled => true,
-              :html_math_generate_ids => true,
-              :math_numbered => ['\\[','\\begin{equation}']}).to_html
-        (ApplicationController.logger.info("Maruku took " + (Time.now-t).to_s + " seconds."); nil)
-        html.gsub(/\A<div class="maruku_wrapper_div">\n?(.*?)\n?<\/div>\Z/m, '\1')
-      end
+      (t = Time.now; nil)
+      html = Maruku.new(text,
+           {:math_enabled => true,
+            :html_math_generate_ids => true,
+            :math_numbered => ['\\[','\\begin{equation}']}).to_html
+      (ApplicationController.logger.info("Maruku took " + (Time.now-t).to_s + " seconds."); nil)
+      html.gsub(/\A<div class="maruku_wrapper_div">\n?(.*?)\n?<\/div>\Z/m, '\1')
     end
   end
 
   class MarkdownPNG < AbstractEngine
     def mask
       text = @content.as_utf8.delete("\r").to_utf8
-      # If the request is for S5, call Maruku accordingly
-      if @content.options[:mode] == :s5
-        my_content = Maruku.new(text,
-                           {:math_enabled => true,
-                            :math_numbered => ['\\[','\\begin{equation}'],
-                            :html_math_output_mathml => false,
-                            :html_math_output_png => true,
-                            :html_png_engine => 'blahtex',
-                            :html_png_dir => @content.web.files_path.join('pngs').to_s,
-                            :html_png_url => @content.options[:png_url],
-                            :content_only => true,
-                            :author => @content.options[:engine_opts][:author],
-                            :title => @content.options[:engine_opts][:title]})
-        @content.options[:renderer].s5_theme = my_content.s5_theme
-        my_content.to_s5
-      else
-        html = Maruku.new(text,
-             {:math_enabled => true,
-              :math_numbered => ['\\[','\\begin{equation}'],
-              :html_math_output_mathml => false,
-              :html_math_output_png => true,
-              :html_png_engine => 'blahtex',
-              :html_png_dir => @content.web.files_path.join('pngs').to_s,
-              :html_png_url => @content.options[:png_url]}).to_html
-        html.gsub(/\A<div class="maruku_wrapper_div">\n?(.*?)\n?<\/div>\Z/m, '\1')
-      end
+      html = Maruku.new(text,
+           {:math_enabled => true,
+            :math_numbered => ['\\[','\\begin{equation}'],
+            :html_math_output_mathml => false,
+            :html_math_output_png => true,
+            :html_png_engine => 'blahtex',
+            :html_png_dir => @content.web.files_path.join('pngs').to_s,
+            :html_png_url => @content.options[:png_url]}).to_html
+      html.gsub(/\A<div class="maruku_wrapper_div">\n?(.*?)\n?<\/div>\Z/m, '\1')
     end
   end
 

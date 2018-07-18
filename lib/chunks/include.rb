@@ -21,7 +21,7 @@ class Include < WikiChunk::WikiReference
   end
 
   private
-  
+
   def get_unmask_text_avoiding_recursion_loops(rendering_mode)
     if refpage
       return "<em>Recursive include detected: #{@content.page_name} " +
@@ -32,7 +32,6 @@ class Include < WikiChunk::WikiReference
           when :show then renderer.display_content
           when :publish then renderer.display_published
           when :export then renderer.display_content_for_export
-          when :s5 then renderer.display_s5
         else
           raise "Unsupported rendering mode #{@mode.inspect}"
         end
@@ -45,12 +44,12 @@ class Include < WikiChunk::WikiReference
       return "<em>Could not include #{@page_name}</em>\n"
     end
   end
-  
+
   # We track included pages in a thread-local variable.
   # This allows a multi-threaded Rails to handle multiple
   #   simultaneous requests (one request/thread), without
   #   getting confused.
-  
+
   def add_to_include_list
     Thread.current[:chunk_included_by] ?
       Thread.current[:chunk_included_by].push(@content.page_name) :
@@ -58,9 +57,9 @@ class Include < WikiChunk::WikiReference
   end
 
   def clear_include_list
-    Thread.current[:chunk_included_by] = []  
+    Thread.current[:chunk_included_by] = []
   end
-    
+
   def self_inclusion(refpage)
     if Thread.current[:chunk_included_by].include?(refpage.page.name)
       @content.delete_chunk(self)
