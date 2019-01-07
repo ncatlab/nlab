@@ -1,0 +1,10 @@
+\documentclass{article}
+
+\begin{document}
+
+\cite{$citation_key}
+
+\bibliographystyle{alpha}
+\bibliography{$bibfilename}
+
+\end{document}

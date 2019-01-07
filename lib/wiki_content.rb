@@ -147,7 +147,7 @@ class WikiContent < ActiveSupport::SafeBuffer
     if @options[:engine] == Engines::MarkdownPNG
       @options[:png_url] =
          @options[:mode] == :export ? 'files/pngs/' :
-           (@url_generator.url_for :controller => 'file', :web => @web.address, 
+           (@url_generator.url_for :controller => 'file', :web => @web.address,
              :action => 'file', :id => 'pngs', :only_path => true) + '/'
     end
 
@@ -163,7 +163,11 @@ class WikiContent < ActiveSupport::SafeBuffer
   def page_link(web_name, name, anchor_name, text=nil, link_type)
     web = Web.find_by_name(web_name) || Web.find_by_address(web_name) || @web
     @options[:link_type] = (link_type || :show)
-    @url_generator.make_link(@web, name, anchor_name, web, text, @options)
+
+    begin
+      @url_generator.make_link(@web, name, anchor_name, web, text, @options)
+    rescue => e
+    end
   end
 
   def build_chunks

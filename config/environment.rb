@@ -58,6 +58,8 @@ Rails::Initializer.run do |config|
   # cf. http://writeheavy.com/2011/07/31/when-its-ok-to-turn-of-rails-ip-spoof-checking.html
   config.action_controller.ip_spoofing_check = false
 
+  config.load_paths << "#{RAILS_ROOT}/app/api"
+
   File.umask(0026)
 end
 

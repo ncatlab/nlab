@@ -1,0 +1,9 @@
+\documentclass[tikz]{standalone}
+
+$tikz_libraries
+
+\begin{document}
+
+$tikz_diagram
+
+\end{document}

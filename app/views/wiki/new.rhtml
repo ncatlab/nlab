@@ -17,10 +17,13 @@
               <input name="see_if_human" id="see_if_human" style="tabindex: -1; autocomplete: off"/>
             </div>
 
-	    <textarea name="content" id="content" style="height: 45em; width: 70%"><%= h(flash[:content] ||
-                     params['content'] ?  params['content'].purify : '' ) %></textarea>
+             <% if !@failed_edit -%>
+	       <textarea name="content" id="content" style="height: 45em; width: 70%;"></textarea>
+             <% else -%>
+               <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= @submitted_edit %></textarea>
+             <%- end %>
 
-            <% if @web.name == "nLab" -%>
+            <% if [1, 23, 39].include?(@web.id) -%>
                 <div>
                     <p style="font-size: 0.85em; width: 70%;">
                       Please make some comments about the new page, such as a brief summary of its contents, how it relates to other pages (existing or future), and how it might be further developed. They will form the first comment of a thread at the <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" target="_blank">nForum</a> for discussing this page.

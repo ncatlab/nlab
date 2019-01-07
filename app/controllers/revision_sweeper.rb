@@ -3,25 +3,25 @@ require_dependency 'cache_sweeping_helper'
 class RevisionSweeper < ActionController::Caching::Sweeper
 
   include CacheSweepingHelper
-  
+
   observe Revision, Page
-  
+
   def before_save(record)
     if record.is_a?(Page)
-      expire_cached_page(record.web, record.name) 
+      expire_cached_page(record.web, record.name)
       expire_cached_revisions(record)
       expire_caches(record)
     end
   end
-  
+
   def after_save(record)
-    if record.is_a?(Page)
+    if record.is_a?(Page) && record.web.id != '1'
       expire_caches(record)
     end
   end
 
   def after_create(record)
-    if record.is_a?(Page)
+    if record.is_a?(Page) && record.web.id != '1'
        WikiReference.pages_that_reference(record.web, record.name).each do |page_name|
          expire_cached_page(record.web, page_name)
       end
@@ -33,16 +33,16 @@ class RevisionSweeper < ActionController::Caching::Sweeper
       expire_caches(record)
     end
   end
-  
+
   def self.expire_page(web, page_name)
     new.expire_cached_page(web, page_name)
   end
 
   private
-  
+
   def expire_caches(page)
     expire_cached_summary_pages(page.web)
-    pages_to_expire = ([page.name] + 
+    pages_to_expire = ([page.name] +
        WikiReference.pages_redirected_to(page.web, page.name) +
        WikiReference.pages_that_include(page.web, page.name)).uniq
     pages_to_expire.each { |page_name| expire_cached_page(page.web, page_name) }

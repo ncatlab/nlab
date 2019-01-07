@@ -43,7 +43,11 @@ function fixRunIn() {
 // add tombstone to proof, since gecko doesn't support :last-child properly
  $$('div.proof').each(function(element) {
      var el = element.childElements()[element.childElements().length-1];
-     var span = new Element('span').update('\u00a0\u00a0\u25ae');
+     var span = new Element('span').update('\u00a0\u00a0\u25ae')
+     if (el == null) {
+       console.log("Problem with rendering: " + element.toString())
+       return
+     }
      if (el.match('p')) {
        el.insert(span);
      } else {

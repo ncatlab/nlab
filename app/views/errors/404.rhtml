@@ -1,6 +1,12 @@
 <%# coding: utf-8 %>
-<%- 
+<%-
   @title = "Page not found"
   @show_footer = true
 -%>
-<p>Back to the <a href="/">Home Page</a>.</p>
+<% if !local_assigns[:error_message].nil? %>
+<p><%= error_message %></p>
+<% else %>
+<p>URL not recognised</p>
+<%- end %>
+
+<p><a href="/">nLab home page</a></p>

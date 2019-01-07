@@ -36,7 +36,13 @@ class Web < ActiveRecord::Base
 
   def add_page(name, content, time, author, renderer)
     page = page(name) || pages.build(:name => name)
-    page.revise(content, name, time, author, renderer)
+    page.save
+    begin
+      page.revise(content, name, time, author, renderer)
+    rescue StandardError => e
+      page.destroy
+      raise e
+    end
   end
 
   # @return [Array<String>] a collection of all the names of the authors that

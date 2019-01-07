@@ -17,7 +17,7 @@
           <input name="see_if_human" id="see_if_human" style="tabindex: -1; autocomplete: off"/>
         </div>
 	<div>
-        <textarea name="content" id="content" rows="24" cols="60"><%= h(@revision.content.purify) %></textarea>
+        <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= h(@revision.content.purify) %></textarea>
 		<div id="editFormButtons">
 	        <input type="submit" value="Update" accesskey="u" /> as
 		    <input type="text" name="author" id="authorName" value="<%= h(@author.purify) %>"

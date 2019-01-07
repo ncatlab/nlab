@@ -7,3 +7,5 @@ database.yml
 secret
 unicorn.rb
 environment_variables.rb
+.*.swp
+conf

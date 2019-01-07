@@ -13,7 +13,7 @@
     </p>
     <%= @renderer.display_diff if @renderer.display_diff %>
   <%- else -%>
-    <%= @renderer.display_content if @renderer.display_content %>
+    <%= @rendered_content.html_safe if @rendered_content %>
   <%- end -%>
 </div>
 
