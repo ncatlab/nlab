@@ -14,13 +14,14 @@
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="robots" content="<%= @robots_metatag_value %>" />
-  
- 
+
+
   <%= stylesheet_link_tag 'instiki', :media => 'all'  unless @inline_style %>
+  <%= stylesheet_link_tag 'mathematics', :media => 'all'  unless @inline_style %>
   <%= stylesheet_link_tag 'syntax', :media => 'all'  unless @inline_style %>
   <style type="text/css">
-    h1#pageName, div.info, .newWikiWord a, a.existingWikiWord, .newWikiWord a:hover, [actiontype="toggle"]:hover, #TextileHelp h3 { 
-      color: #<%= @web ? @web.color : "393" %>; 
+    h1#pageName, div.info, .newWikiWord a, a.existingWikiWord, .newWikiWord a:hover, [actiontype="toggle"]:hover, #TextileHelp h3 {
+      color: #<%= @web ? @web.color : "393" %>;
     }
     a:visited.existingWikiWord {
       color: #<%= darken(@web ? @web.color : "393") %>;
@@ -29,7 +30,7 @@
     <%= Rails.root.join('public', 'stylesheets', 'syntax.css').read if @inline_style %>
   </style>
   <%= "<style type='text/css'>#{@style_additions}</style>".html_safe if @style_additions %>
-  <style type="text/css"><!--/*--><![CDATA[/*><!--*/    
+  <style type="text/css"><!--/*--><![CDATA[/*><!--*/
     <%= @web && @web.additional_style ? @web.additional_style.html_safe : '' %>
   /*]]>*/--></style>
   <%= javascript_include_tag :defaults %>
@@ -114,7 +115,7 @@
   <div class="info"><%= escape_preserving_linefeeds flash[:info] %></div>
 <%- end -%>
 
-<%- if @error or flash[:error] -%> 
+<%- if @error or flash[:error] -%>
     <div class="errorExplanation"><%= escape_preserving_linefeeds(@error || flash[:error]) %></div>
 <%- end -%>
 

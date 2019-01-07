@@ -17,8 +17,11 @@
            </div>
 
 	   <div>
-		<textarea name="content" id="content" style="height: 45em; width: 70%;"><%= h(flash[:content] ||
-                         (params['content'] ?  params['content'] : @page.content).purify) %></textarea>
+             <% if !@failed_edit -%>
+	       <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= @page.content %></textarea>
+             <% else -%>
+               <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= @submitted_edit %></textarea>
+             <%- end %>
 <% if @page_name != 'HomePage' -%>
 	   <p>
 	      <%= check_box_tag :alter_title, value = "1", checked=false,
@@ -29,15 +32,11 @@
 <% else -%>
        <%= hidden_field_tag 'new_name', @page_name %>
 <% end%>
-            <% if (@web.name == "nLab") && (@page_name != "Sandbox") -%>
+            <% if ([1, 23, 39].include?(@web.id)) && (@page_name != "Sandbox") -%>
                 <div>
                     <p style="font-size: 0.8em; width: 70%;">
-                        For nontrivial edits, please tick the checkbox below and briefly describe your changes. Your comments will be added to the <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" target="_blank">nForum</a> discussion thread for this page, which can also be used for further discussion related to it. For trivial edits, such as correcting typos, please leave the checkbox unticked; feel free to ask for advice at the nForum if you are unsure.
+                        For non-trivial edits, please briefly describe your changes below. Your comments will be added to the <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" target="_blank">nForum</a> discussion thread for this page, which can also be used for further discussion related to it. For trivial edits, such as correcting typos, please leave the box below empty; feel free to ask for advice at the nForum if you are unsure.
                     </p>
-                </div>
-                <div>
-                    <input name="makeAnnouncement" id="makeAnnouncement" type="checkbox"></input>
-                    <label for="isTrivial">Indicate your changes on the nForum</label>
                 </div>
                 <div>
                     <textarea name="announcement" id="announcement" style="height: 10em; width: 70%"></textarea>

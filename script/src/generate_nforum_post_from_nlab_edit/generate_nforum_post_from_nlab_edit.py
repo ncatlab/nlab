@@ -55,13 +55,9 @@ nforum_announcer.log
 """
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-logging_stream_handler = logging.StreamHandler()
-logging_stream_handler.setLevel(logging.INFO)
 logging.Formatter.converter = time.gmtime
 logging_formatter = logging.Formatter(
     "%(asctime)s %(levelname)s %(name)s %(message)s")
-logging_stream_handler.setFormatter(logging_formatter)
-logger.addHandler(logging_stream_handler)
 log_directory = os.environ["NLAB_LOG_DIRECTORY"]
 logging_file_handler = logging.FileHandler(
     os.path.join(log_directory, "nforum_announcer.log"))
@@ -137,6 +133,18 @@ def execute_with_parameters(queries_with_parameters):
     finally:
         database_connection.close()
     return results
+
+class _NoSuchWebException(Exception):
+    pass
+
+def _address_of_web(web_id):
+    query_results = execute_single_with_parameters(
+        "SELECT address FROM webs WHERE id = %s",
+        [ web_id ])
+    try:
+        return query_results[0][0]
+    except IndexError:
+        raise _NoSuchWebException
 
 class NoNForumUserCorrespondingToNLabAuthorException(Exception):
     pass
@@ -315,11 +323,24 @@ def revision_number(nlab_page_id):
 class NoExistingDiscussionException(Exception):
     pass
 
+def _latest_changes_category_id(latest_changes_web_name):
+    category_name = "- " + latest_changes_web_name + ": Latest Changes"
+    query_results = execute_single_with_parameters(
+        "SELECT CategoryID FROM mathforge_nforum_Category " +
+        "WHERE Name = %s",
+        [category_name])
+    try:
+        return query_results[0][0]
+    except IndexError:
+        return 5
+
 """
 Finds the DiscussionID of the last used forum thread whose name is that of
 the nLab page. The search is case insensitive.
 """
-def latest_forum_discussion_id(nlab_page_name):
+def latest_forum_discussion_id(nlab_page_name, latest_changes_web_name):
+    latest_changes_category_id = _latest_changes_category_id(
+        latest_changes_web_name)
     query_results = execute_single_with_parameters(
         "SELECT DiscussionID FROM mathforge_nforum_Discussion " +
         "WHERE Name = %s " +
@@ -327,7 +348,7 @@ def latest_forum_discussion_id(nlab_page_name):
         "ORDER BY DateLastActive DESC " +
         "LIMIT 1",
         [nlab_page_name,
-         _ForumPostParameters._latest_changes_category_id])
+         latest_changes_category_id])
     try:
         return query_results[0][0]
     except IndexError:
@@ -336,14 +357,17 @@ def latest_forum_discussion_id(nlab_page_name):
 class _ForumPostParameters:
     _nlab_edit_announcer_user_id = 1691
     _nlab_edit_announcer_local_user_id = 693
-    _latest_changes_category_id = 5
 
     def __init__(
             self,
             nlab_page_name,
+            latest_changes_web_name,
+            web_id,
             user_id,
             local_id):
         self.nlab_page_name = nlab_page_name
+        self.latest_changes_web_name = latest_changes_web_name
+        self.web_id = web_id
         self.user_id = user_id
         self.local_id = local_id
 
@@ -354,13 +378,15 @@ class _ForumPostParameters:
     discussion.
     """
     def create_discussion_and_post_to_it(self, announcement):
+        latest_changes_category_id = _latest_changes_category_id(
+            self.latest_changes_web_name)
         query_with_parameters_one = (
             "INSERT INTO mathforge_nforum_Discussion (" +
             "AuthUserID, Name, DateCreated, CategoryID) " +
             "VALUES (%s, %s, NOW(), %s)",
             [self.user_id,
              self.nlab_page_name,
-             _ForumPostParameters._latest_changes_category_id])
+             latest_changes_category_id])
         query_with_parameters_two = (
             "SET @discussion_id = LAST_INSERT_ID()",
             [])
@@ -483,11 +509,18 @@ class _CreateForumPostParameters(_ForumPostParameters):
     def __init__(
             self,
             nlab_page_name,
+            latest_changes_web_name,
+            web_id,
             user_id,
             local_id,
             author,
             announcement):
-        super().__init__(nlab_page_name, user_id, local_id)
+        super().__init__(
+            nlab_page_name,
+            latest_changes_web_name,
+            web_id,
+            user_id,
+            local_id)
         self.author = author
         if announcement is not None:
             self.announcement = announcement.strip()
@@ -514,8 +547,11 @@ class _CreateForumPostParameters(_ForumPostParameters):
 
     def page_links(self):
         url_encoded_page_name = urllib.parse.quote_plus(self.nlab_page_name)
+        web_address = _address_of_web(self.web_id)
         version = (
-            '<a href="https://ncatlab.org/nlab/revision/' +
+            '<a href="https://ncatlab.org/' +
+            web_address +
+            '/revision/' +
             url_encoded_page_name +
             '/' +
             str(1) +
@@ -523,7 +559,9 @@ class _CreateForumPostParameters(_ForumPostParameters):
             str(1) +
             '</a>')
         current = (
-            '<a href="https://ncatlab.org/nlab/show/' +
+            '<a href="https://ncatlab.org/' +
+            web_address +
+            '/show/' +
             url_encoded_page_name +
             '">current</a>')
         return (version, current)
@@ -532,12 +570,19 @@ class _EditForumPostParameters(_ForumPostParameters):
     def __init__(
             self,
             nlab_page_name,
+            latest_changes_web_name,
+            web_id,
             user_id,
             local_id,
             author,
             announcement,
             page_id):
-        super().__init__(nlab_page_name, user_id, local_id)
+        super().__init__(
+            nlab_page_name,
+            latest_changes_web_name,
+            web_id,
+            user_id,
+            local_id)
         self.author = author
         if announcement is not None:
             self.announcement = announcement.strip()
@@ -553,13 +598,17 @@ class _EditForumPostParameters(_ForumPostParameters):
     """
     def post(self, found_nforum_user):
         try:
-            discussion_id = latest_forum_discussion_id(self.nlab_page_name)
+            discussion_id = latest_forum_discussion_id(
+                self.nlab_page_name,
+                self.latest_changes_web_name)
             self.post_to_existing_discussion(
                 discussion_id,
                 self.nforum_announcement(found_nforum_user))
         except NoExistingDiscussionException:
             forum_post_parameters = _ForumPostParameters(
                 self.nlab_page_name,
+                self.latest_changes_web_name,
+                self.web_id,
                 self.user_id,
                 self.local_id)
             forum_post_parameters.create_discussion_and_post_to_it(
@@ -567,7 +616,9 @@ class _EditForumPostParameters(_ForumPostParameters):
 
     def post_with_name_change(self, found_nforum_user, old_page_name):
         try:
-            discussion_id = latest_forum_discussion_id(old_page_name)
+            discussion_id = latest_forum_discussion_id(
+                old_page_name,
+                self.latest_changes_web_name)
             self.post_to_existing_discussion_with_name_change(
                 discussion_id,
                 self.nforum_announcement(found_nforum_user))
@@ -580,6 +631,8 @@ class _EditForumPostParameters(_ForumPostParameters):
         except NoExistingDiscussionException:
             forum_post_parameters = _ForumPostParameters(
                 self.nlab_page_name,
+                self.latest_changes_web_name,
+                self.web_id,
                 self.user_id,
                 self.local_id)
             forum_post_parameters.create_discussion_and_post_to_it(
@@ -605,9 +658,12 @@ class _EditForumPostParameters(_ForumPostParameters):
 
     def page_links(self):
         url_encoded_page_name = urllib.parse.quote_plus(self.nlab_page_name)
+        web_address = _address_of_web(self.web_id)
         revision_number_for_edit = revision_number(self.page_id)
         version = (
-            '<a href="https://ncatlab.org/nlab/revision/' +
+            '<a href="https://ncatlab.org/' +
+            web_address +
+            '/revision/' +
             url_encoded_page_name +
             '/' +
             str(revision_number_for_edit) +
@@ -615,12 +671,16 @@ class _EditForumPostParameters(_ForumPostParameters):
             str(revision_number_for_edit) +
             '</a>')
         current = (
-            '<a href="https://ncatlab.org/nlab/show/' +
+            '<a href="https://ncatlab.org/' +
+            web_address +
+            '/show/' +
             url_encoded_page_name +
             '">current</a>')
         if revision_number_for_edit > 1:
             diff = (
-                '<a href="https://ncatlab.org/nlab/revision/diff/' +
+                '<a href="https://ncatlab.org/' +
+                web_address +
+                '/revision/diff/' +
                 url_encoded_page_name +
                 '/' +
                 str(revision_number_for_edit) +
@@ -657,6 +717,14 @@ def argument_parser():
         "nlab_page_name",
         help = "Name of created nLab page")
     parser_create_page.add_argument(
+        "latest_changes_web_name",
+        help = (
+            "Name of web to which the created nLab page belongs, as " +
+            "displayed in the nForum latest changes category name"))
+    parser_create_page.add_argument(
+        "web_id",
+        help = "ID of web to which the created nLab page belongs")
+    parser_create_page.add_argument(
         "announcement",
         help = "Comments on the created nLab page")
     parser_create_page.add_argument(
@@ -667,6 +735,14 @@ def argument_parser():
         help = "Name of edited nLab page. If the edit involves a change " +
             "in the name of the page, this should be the new name of the " +
             "page")
+    parser_edit_page.add_argument(
+        "latest_changes_web_name",
+        help = (
+            "Name of web to which the edited nLab page belongs, as " +
+            "displayed in the nForum latest changes category name"))
+    parser_edit_page.add_argument(
+        "web_id",
+        help = "ID of web to which the edited nLab page belongs")
     parser_edit_page.add_argument(
         "announcement",
         help = "Comments on the edited nLab page")
@@ -692,6 +768,8 @@ def main():
     parser = argument_parser()
     arguments = parser.parse_args()
     nlab_page_name = arguments.nlab_page_name
+    latest_changes_web_name = arguments.latest_changes_web_name
+    web_id = arguments.web_id
     announcement = arguments.announcement
     author = arguments.author
     failure_message = None
@@ -705,6 +783,8 @@ def main():
     if arguments.subcommand == "create":
         forum_post_parameters = _CreateForumPostParameters(
             nlab_page_name,
+            latest_changes_web_name,
+            web_id,
             user_id,
             local_id,
             author,
@@ -717,7 +797,9 @@ def main():
                 "page with name: " +
                 nlab_page_name +
                 ". Author: " +
-                author)
+                author +
+                ". Web id: " +
+                str(web_id))
         except FailedToCarryOutQueryException:
             logger.warning(
                 "Due to a database error, could not make nForum discussion " +
@@ -725,6 +807,8 @@ def main():
                 nlab_page_name +
                 ". Author: " +
                 author +
+                ". Web id: " +
+                str(web_id) +
                 ". Announcement: " +
                 announcement)
             failure_message = "Failed to make nForum discussion"
@@ -735,6 +819,8 @@ def main():
                 nlab_page_name +
                 ". Author: " +
                 author +
+                ". Web id: " +
+                str(web_id) +
                 ". Announcement: " +
                 announcement +
                 ". Error: " +
@@ -745,6 +831,8 @@ def main():
             logger.info(
                 "Trivial edit made to " +
                 arguments.nlab_page_name +
+                " in web with id " +
+                str(web_id) +
                 " by " +
                 author +
                 " at " +
@@ -753,6 +841,8 @@ def main():
             return
         forum_post_parameters =_EditForumPostParameters(
             nlab_page_name,
+            latest_changes_web_name,
+            web_id,
             user_id,
             local_id,
             author,
@@ -769,7 +859,9 @@ def main():
                     "page with name: " +
                     nlab_page_name +
                     ". Author: " +
-                    author)
+                    author +
+                    ". Web id: " +
+                    str(web_id))
             else:
                 forum_post_parameters.post(found_nforum_user)
                 logger.info(
@@ -777,14 +869,18 @@ def main():
                     "page with name: " +
                     nlab_page_name +
                     ". Author: " +
-                    author)
+                    author +
+                    ". Web id: " +
+                    str(web_id))
         except FailedToCarryOutQueryException:
             log_message = (
                 "Due to a database error, could not make nForum post for " +
                 "newly edited nLab page with name: " +
                 nlab_page_name +
                 ". Author: " +
-                author)
+                author +
+                ". Web id: " +
+                str(web_id))
             if old_page_name:
                 log_message = log_message + (
                     ". Change of page name from " +
@@ -804,7 +900,9 @@ def main():
                 "newly edited nLab page with name: " +
                 nlab_page_name +
                 ". Author: " +
-                author)
+                author +
+                ". Web id: " +
+                str(web_id))
             if old_page_name:
                 log_message = log_message + (
                     ". Change of page name from " +

@@ -87,6 +87,7 @@ class WikiController < ApplicationController
   <script src="public/javascripts/page_helper.js" type="text/javascript"></script>
   <link href="public/stylesheets/instiki.css" media="all" rel="stylesheet" type="text/css" />
   <link href="public/stylesheets/syntax.css" media="all" rel="stylesheet" type="text/css" />
+  <link href="public/stylesheets/mathematics.css" media="all" rel="stylesheet" type="text/css" />
   <style type="text/css">
     h1#pageName, div.info, .newWikiWord a, a.existingWikiWord, .newWikiWord a:hover, [actiontype="toggle"]:hover, #TextileHelp h3 {
       color: ##{@web ? @web.color : "393"};
@@ -259,6 +260,20 @@ EOL
       redirect_to :web => @web_name, :action => 'locked', :id => @page_name
     else
       @page.lock(Time.now, @author)
+      if params["failed_edit"].nil? || params["failed_edit"].to_i != 1
+        @failed_edit = false
+        return
+      end
+      @failed_edit = true
+      submitted_edits_directory_path = File.join(
+        ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
+        @web.address)
+      page_content_file_name = @page_name.split.join("_")
+      page_content_file_name = page_content_file_name.gsub("/", "¤")
+      submitted_edits_page_content_file_path = File.join(
+        submitted_edits_directory_path,
+        page_content_file_name)
+      @submitted_edit = File.read(submitted_edits_page_content_file_path)
     end
   end
 
@@ -268,6 +283,20 @@ EOL
 
   def new
     redirect_to :web => @web_name, :action => 'edit', :id => @page_name unless @page.nil?
+    if params["failed_edit"].nil? || params["failed_edit"].to_i != 1
+      @failed_edit = false
+      return
+    end
+    @failed_edit = true
+    submitted_edits_directory_path = File.join(
+      ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
+      @web.address)
+    page_content_file_name = @page_name.split.join("_")
+    page_content_file_name = page_content_file_name.gsub("/", "¤")
+    submitted_edits_page_content_file_path = File.join(
+      submitted_edits_directory_path,
+      page_content_file_name)
+    @submitted_edit = File.read(submitted_edits_page_content_file_path)
     # to template
   end
 
@@ -320,7 +349,7 @@ EOL
         end
           redirect_to :web => @web_name, :action => 'published', :id => real_page, :status => 301
       else
-        render(:text => "Page '#{@page_name}' not found", :status => 404, :layout => 'error')
+        render :template => "/errors/404.rhmtl", :status => 404, :locals => { :error_message => "Page '#{@page_name}' not found" }
       end
      end
   end
@@ -358,43 +387,106 @@ EOL
       @page.unlock
     end
 
+    submitted_edits_directory_path = File.join(
+      ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
+      @web.address)
+    if !File.exist?(submitted_edits_directory_path)
+      Dir.mkdir(submitted_edits_directory_path)
+    end
+
     author_name = params['author'].purify.strip
     author_name = 'Anonymous' if (author_name.empty? || (author_name =~ /^\s*$/))
 
     begin
       the_content = params['content'].purify
-      prev_content = ''
       filter_spam(the_content)
       cookies['author'] = { :value => author_name.dup.as_bytes, :expires => Time.utc(2030) }
       if @page
         new_name = params['new_name'] ? params['new_name'].purify : @page_name
+        new_name = new_name.split.join(" ").strip
         new_name = @page_name if new_name.empty?
-        prev_content = @page.current_revision.content
+        if new_name != @page_name
+          submitted_edit_page_name = @page_name
+        else
+          submitted_edit_page_name = new_name
+        end
+
+        page_content_file_name = submitted_edit_page_name.split.join("_")
+        page_content_file_name = page_content_file_name.gsub("/", "¤")
+        submitted_edits_page_content_file_path = File.join(
+          submitted_edits_directory_path,
+          page_content_file_name)
+        File.write(submitted_edits_page_content_file_path, the_content)
+
+        if new_name.include?("¤")
+          raise Instiki::ValidationError.new("Cannot use the symbol ¤ in a page name")
+        end
+
         raise Instiki::ValidationError.new('A page named "' + new_name.escapeHTML + '" already exists.') if
             @page_name != new_name && @web.has_page?(new_name)
+        announcement = params[:announcement]
+        if !announcement.nil?
+            make_announcement = announcement.purify.present?
+        else
+            make_announcement = false
+        end
         if (@web.name == "nLab") && (@page_name != "Sandbox") &&
-            (new_name != @page_name) && !(params[:makeAnnouncement])
+            (new_name != @page_name) && !make_announcement
           raise Instiki::ValidationError.new(
             "A change of page name must be indicated on the nForum")
         end
-        wiki.revise_page(@web_name, @page_name, new_name, the_content, Time.now,
-            Author.new(author_name, remote_ip), PageRenderer.new)
+
+        begin
+          wiki.revise_page(
+            @web_name,
+            @page_name,
+            new_name,
+            the_content,
+            Time.now,
+            Author.new(author_name, remote_ip),
+            PageRenderer.new)
+        rescue StandardError => e
+          raise Instiki::ValidationError.new(e.to_s)
+        end
 
         old_name = @page_name
         @page_name = new_name
 
-        if (@web.name == "nLab") && (@page_name != "Sandbox")
-          announcement = params[:announcement].purify
-          make_announcement = params[:makeAnnouncement]
+        if old_name != @page_name
+          old_page_content_file_name = old_name.split.join("_")
+          old_page_content_file_name = old_page_content_file_name.gsub("/", "¤")
+          old_submitted_edits_page_content_file_path = File.join(
+            submitted_edits_directory_path,
+            old_page_content_file_name)
+          if File.exists?(old_submitted_edits_page_content_file_path)
+            File.delete(old_submitted_edits_page_content_file_path)
+          end
+        end
+
+        if ([1, 23, 39].include?(@web.id)) && (@page_name != "Sandbox")
+          announcement = params[:announcement]
+          if !announcement.nil?
+            announcement = announcement.purify
+          end
+          make_announcement = announcement.present?
           generate_nforum_post_from_nlab_edit_binary = File.join(
             Rails.root,
             "script/generate_nforum_post_from_nlab_edit")
+          if @web.id == 39
+            web_name = "HoTT"
+          elsif @web.id == 23
+            web_name = "CatLab"
+          else
+            web_name = @web.name
+          end
           if make_announcement
             if old_name != new_name
               system(
                 generate_nforum_post_from_nlab_edit_binary,
                 "edit",
                 new_name,
+                web_name,
+                @web.id.to_s,
                 announcement,
                 author_name,
                 @page.id.to_s,
@@ -405,6 +497,8 @@ EOL
                 generate_nforum_post_from_nlab_edit_binary,
                 "edit",
                 new_name,
+                web_name,
+                @web.id.to_s,
                 announcement,
                 author_name,
                 @page.id.to_s)
@@ -414,6 +508,8 @@ EOL
               generate_nforum_post_from_nlab_edit_binary,
               "edit",
               new_name,
+              web_name,
+              @web.id.to_s,
               announcement,
               author_name,
               @page.id.to_s,
@@ -421,18 +517,42 @@ EOL
           end
         end
       else
+        @page_name = @page_name.split.join(" ").strip
+        page_content_file_name = @page_name.split.join("_")
+        page_content_file_name = page_content_file_name.gsub("/", "¤")
+        submitted_edits_page_content_file_path = File.join(
+          submitted_edits_directory_path,
+          page_content_file_name)
+        File.write(submitted_edits_page_content_file_path, the_content)
+        if @page_name.include?("¤")
+          raise Instiki::ValidationError.new(
+            "Cannot use the symbol ¤ in a page name")
+        end
+        if the_content.blank?
+          raise Instiki::ValidationError.new(
+            "Some content must be added to a page before it can be created")
+        end
         wiki.write_page(@web_name, @page_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
 
-        if @web.name == "nLab"
+        if [1, 23, 39].include?(@web.id)
           announcement = params[:announcement].purify
           generate_nforum_post_from_nlab_edit_binary = File.join(
             Rails.root,
             "script/generate_nforum_post_from_nlab_edit")
+          if @web.id == 39
+            web_name = "HoTT"
+          elsif @web.id == 23
+            web_name = "CatLab"
+          else
+            web_name = @web.name
+          end
           system(
             generate_nforum_post_from_nlab_edit_binary,
             "create",
             @page_name,
+            web_name,
+            @web.id.to_s,
             announcement,
             author_name)
         end
@@ -441,10 +561,7 @@ EOL
     rescue Instiki::ValidationError => e
       flash[:error] = e.to_s
       logger.error e
-      param_hash = {:web => @web_name, :id => @page_name}
-      # Work around Rails bug: flash will not display if query string is longer than 10192 bytes
-      param_hash.update( :content => the_content ) if the_content &&
-         CGI::escape(the_content).length < 10183 && the_content != prev_content
+      param_hash = {:web => @web_name, :id => @page_name, :failed_edit => 1}
       if @page
         @page.unlock
         redirect_to param_hash.update( :action => 'edit' )
@@ -459,8 +576,23 @@ EOL
       begin
         @is_author = nlab_author?()
         @link_to_nforum_discussion = link_to_nforum_discussion()
-        @renderer = PageRenderer.new(@page.current_revision)
         @show_diff = (params[:mode] == 'diff')
+        if @show_diff
+          @renderer = PageRenderer.new(@page.current_revision)
+        else
+          page_content_directory = File.join(
+            ENV["NLAB_PAGE_CONTENT_DIRECTORY"],
+            web_address(@page.web_id))
+          page_content_file_name = @page.name.split.join("_")
+          page_content_file_name = page_content_file_name.gsub("/", "¤")
+          page_content_file_path = File.join(page_content_directory, page_content_file_name)
+          if File.file?(page_content_file_path)
+            @rendered_content = File.read(page_content_file_path)
+          else
+            renderer = PageRenderer.new(@page.current_revision)
+            @rendered_content = renderer.display_content
+          end
+        end
         render :action => 'page'
       # TODO this rescue should differentiate between errors due to rendering and errors in
       # the application itself (for application errors, it's better not to rescue the error at all)
@@ -498,13 +630,12 @@ EOL
             flash[:info] = "Redirected from \"#{@page_name}\"."
             redirect_to :web => @web_name, :action => 'show', :id => page_, :status => 301
           else
-            flash[:info] = "Page \"#{@page_name}\" does not exist.\n" +
-                           "Please create it now, or hit the \"back\" button in your browser."
-          redirect_to :web => @web_name, :action => 'new', :id => @page_name
+            @error_message = "No page with name: '" + @page_name + "'"
+            render :template => "/errors/404.rhtml", :status => 404, :locals => { :error_message => @error_message}
           end
         end
       else
-        render :text => 'Page name is not specified', :status => 404, :layout => 'error'
+        render :template => "/errors/404.rhtml", :status => 404, :locals => { :error_message => "Page name not specified" }
       end
     end
   end
@@ -734,5 +865,9 @@ EOL
     is_nlab_author = %x(
       "#{author_contributions_binary}" is_author "#{@page.name}")
     is_nlab_author.strip! == "True" unless is_nlab_author.nil?
+  end
+
+  def web_address(web_id)
+    return Web.find(web_id).address
   end
 end

@@ -36,7 +36,15 @@ function generateThmNumbers() {
   $$("a.maruku-ref").each(function(x) {
     var thm_id = x.getAttribute("href").substr(1);
     var thm_parent = document.getElementById(thm_id);
+    if (thm_parent == null) {
+      console.log("Problem with reference for: " + x.toString())
+      return x.text
+    }
     var thm_label = thm_parent.select(".theorem_label").first();
+    if (thm_label == null) {
+      console.log("Problem with reference for: " + x.toString())
+      return x.text
+    }
     var thm_number = thm_label.getAttribute("theoremNumber");
     x.update(thm_number);
   });

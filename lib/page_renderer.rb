@@ -166,6 +166,7 @@ class PageRenderer
     redirects.each do |redirected_page_name|
       references.build :referenced_name => redirected_page_name,
           :link_type => WikiReference::REDIRECTED_PAGE
+
     end
 
     # ugly hack: store these in a thread-local variable, so that the cache-sweeper has access to it.

@@ -80,6 +80,11 @@ border-collapse:collapse;
 
 td {
 border:thin solid #888;
+padding:3px;
+}
+
+th {
+padding:3px;
 }
 
 li {
@@ -498,6 +503,8 @@ span.theorem_label {font-style:normal; font-weight:bold;}
 }
 [actiontype="toggle"]:hover {text-shadow: #ccc 2px 2px 5px;}
 .maruku_toc ul { list-style: none; }
+[actiontype="toggle"]:hover {text-shadow: #ccc 2px 2px 5px;}
+.nlab_toc ul { list-style: none; }
 
 /* The STIX Two fonts are licensed under the SIL Open Font License, Version 1.1, http://scripts.sil.org/OFL */
 math  {font-family: STIX Two Math;}

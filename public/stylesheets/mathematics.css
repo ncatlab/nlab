@@ -1,0 +1,11 @@
+@font-face {
+  font-family: Stix Mathematics;
+  src: url("/fonts/STIXMath-Regular.otf") format("opentype");
+}
+
+span.mathematics {
+  /* Avoid line breaks in the middle of mathematics */
+  /* display: inline-block; */
+  font-style: italic;
+  font-family: DejaVu Math TeX Gyre; sans-serif; Stix Mathematics;
+}

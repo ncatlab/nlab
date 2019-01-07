@@ -10,7 +10,7 @@ class Page < ActiveRecord::Base
     read_attribute(:name).as_utf8
   end
 
-  def revise(content, name, time, author, renderer)
+  def revise(content, name, time, author, old_renderer, is_create = false)
     revisions_size = new_record? ? 0 : rev_ids.size
     if (revisions_size > 0) and content == current_revision.content and name == self.name
       raise Instiki::ValidationError.new(
@@ -20,10 +20,22 @@ class Page < ActiveRecord::Base
     self.name = name
     author = Author.new(author.to_s) unless author.is_a?(Author)
 
-    # Try to render content to make sure that markup engine can take it,
-    renderer.revision = Revision.new(
+    revision = Revision.new(
        :page => self, :content => content, :author => author, :revised_at => time)
-    renderer.display_content(update_references = true)
+
+    renderer_path = File.join(
+      Rails.root,
+      "script/src/renderer/renderer.py")
+
+    response, error_message, status = Open3.capture3(
+      renderer_path,
+      self.id.to_s,
+      "-c",
+      stdin_data: revision.content)
+
+    if !status.success?
+      raise Instiki::ValidationError.new(error_message)
+    end
 
     # A user may change a page, look at it and make some more changes - several times.
     # Not to record every such iteration as a new revision, if the previous revision was done
@@ -119,20 +131,34 @@ class Page < ActiveRecord::Base
     name.as_utf8
   end
 
+  class RenderingError < StandardError
+  end
+
   private
 
-    def continous_revision?(time, author)
-      (current_revision.author == author) && (revised_at + 30.minutes > time)
-    end
+  def expire_cache(web_address, page_name)
+    cache_directory = File.join(
+      ENV["NLAB_CACHE_DIRECTORY"],
+      web_address,
+      "show")
+    cached_content_path = File.join(
+      cache_directory,
+      CGI.escape(page_name) + ".cache")
+    File.delete(cached_content_path) if File.exist?(cached_content_path)
+  end
 
-    # Forward method calls to the current revision, so the page responds to all revision calls
-    def method_missing(method_id, *args, &block)
-      method_name = method_id.to_s
-      # Perform a hand-off to AR::Base#method_missing
-      if @attributes.include?(method_name) or md = /(=|\?|_before_type_cast)$/.match(method_name)
-        super(method_id, *args, &block)
-      else
-        current_revision.send(method_id)
-      end
+  def continous_revision?(time, author)
+    (current_revision.author == author) && (revised_at + 30.minutes > time)
+  end
+
+  # Forward method calls to the current revision, so the page responds to all revision calls
+  def method_missing(method_id, *args, &block)
+    method_name = method_id.to_s
+    # Perform a hand-off to AR::Base#method_missing
+    if @attributes.include?(method_name) or md = /(=|\?|_before_type_cast)$/.match(method_name)
+      super(method_id, *args, &block)
+    else
+      current_revision.send(method_id)
     end
+  end
 end
