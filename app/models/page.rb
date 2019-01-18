@@ -1,3 +1,5 @@
+require "open3"
+
 class Page < ActiveRecord::Base
   belongs_to :web
   has_many :revisions, :order => 'id', :dependent => :destroy
@@ -23,9 +25,7 @@ class Page < ActiveRecord::Base
     revision = Revision.new(
        :page => self, :content => content, :author => author, :revised_at => time)
 
-    renderer_path = File.join(
-      Rails.root,
-      "script/src/renderer/renderer.py")
+    renderer_path = ENV["NLAB_PAGE_RENDERER_PATH"]
 
     response, error_message, status = Open3.capture3(
       renderer_path,
