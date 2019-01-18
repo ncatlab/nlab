@@ -1,5 +1,7 @@
 \documentclass[tikz]{standalone}
 
+\usepackage{amsmath, amssymb, amsthm}
+
 $tikz_libraries
 
 \begin{document}

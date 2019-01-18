@@ -238,7 +238,7 @@ Renders the page content, handling redirects, includes, links to nLab
 pages, category links, table of contents, etc.
 """
 def render(page_id, page_content):
-    page_content = centre_block.handle_centring(page_content)
+    page_content = centre_block.handle_initial_centring(page_content)
     page_content = tikz_diagram_block.handle_commutative_diagrams(page_content)
     pages_to_re_render_and_expire = []
     pages_to_render_to_include = []
@@ -403,6 +403,7 @@ def post_maruku_rendering(
         page_content,
         web_address,
         page_content_file_name):
+    page_content = centre_block.handle_post_centring(page_content)
     logger.info(
         "Beginning rendering theorem environments for page with id: " +
         str(page_id))

@@ -9,3 +9,4 @@ unicorn.rb
 environment_variables.rb
 .*.swp
 conf
+__pycache__

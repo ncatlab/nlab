@@ -114,7 +114,8 @@ def create_svg(diagram_source_directory, diagram_id):
         raise SvgRenderingException(completed_svg_process.stderr)
     with open(svg_path, "r") as svg_file:
         svg_diagram_lines = svg_file.read().splitlines()
-    return "\n".join(svg_diagram_lines[1:])
+    svg_diagram = "\n".join(svg_diagram_lines[1:])
+    return svg_diagram.replace("glyph", diagram_id + "-glyph")
 
 def remove_diagram_files(diagram_source_directory, diagram_id):
     diagram_id_path = os.path.join(diagram_source_directory, diagram_id + "*")
