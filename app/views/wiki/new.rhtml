@@ -30,7 +30,11 @@
                     </p>
                 </div>
                 <div>
-                    <textarea name="announcement" id="announcement" style="height: 10em; width: 70%"></textarea>
+                    <% if !@failed_edit -%>
+                      <textarea name="announcement" id="announcement" style="height: 10em; width: 70%"></textarea>
+                    <% else -%>
+                      <textarea name="announcement" id="announcement" style="height: 10em; width: 70%"><%= @submitted_announcement %></textarea>
+                    <%- end %>
                 </div>
             <% end%>
 		<div id="editFormButtons">
