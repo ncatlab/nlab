@@ -10,7 +10,7 @@ class WikiController < ApplicationController
   before_filter :load_page
   before_filter :dnsbl_check, :only => [:edit, :new, :save, :export_html, :export_markup]
   caches_action :show, :published, :tex, :print, :list, :recently_revised, :file_list, :source,
-        :history, :revision, :atom_with_content, :atom_with_headlines, :atom_with_changes, :if => Proc.new { |c| c.send(:do_caching?) }
+	:history, :revision, :atom_with_content, :atom_with_headlines, :atom_with_changes, :if => Proc.new { |c| c.send(:do_caching?) }
   caches_action :authors, :cache_path => Proc.new { |c| c.params }
   cache_sweeper :revision_sweeper
 
@@ -65,11 +65,11 @@ class WikiController < ApplicationController
     sort_order = params['sort_order'] || 'file_name'
     case sort_order
       when 'file_name'
-        @alt_sort_order = 'created_at'
-        @alt_sort_name = 'date'
+	@alt_sort_order = 'created_at'
+	@alt_sort_name = 'date'
       else
-        @alt_sort_order = 'file_name'
-        @alt_sort_name = 'filename'
+	@alt_sort_order = 'file_name'
+	@alt_sort_name = 'filename'
     end
     @file_list = @web.file_list(sort_order)
   end
@@ -113,13 +113,13 @@ class WikiController < ApplicationController
   <h1 id="pageName">
   #{xhtml_enabled? ? %{<span id="svg_logo"><svg version="1.1" width="100%" height="100%" viewBox='0 -1 180 198' xmlns='http://www.w3.org/2000/svg'>
       <path id="svg_logo_path" fill="##{@web ? @web.color : "393"}" stroke-width='0.5' stroke='#000' d='
-        M170,60c4,11-1,20-12,25c-9,4-25,3-20,15c5,5,15,0,24,1c11,1,21,11,14,21c-10,15-35,6-48-1c-5-3-27-23-32-10c-1,13,15,10,22,16
-        c11,4,24,14,34,20c12,10,7,25-9,23c-11-1-22-9-30-16c-5-5-13-18-21-9c-2,6,2,11,5,14c9,9,22,14,22,31c-2,8-12,8-18,4c-4-3-9-8-11-13
-        c-3-6-5-18-12-18c-14-1-5,28-18,30c-9,2-13-9-12-16c1-14,12-24,21-31c5-4,17-13,10-20c-9-10-19,12-23,16c-7,7-17,16-31,15
-        c-9-1-18-9-11-17c5-7,14-4,23-6c6-1,15-8,8-15c-5-6-57,2-42-24c7-12,51,4,61,6c6,1,17,4,18-4c2-11-12-7-21-8c-21-2-49-14-49-34
-        c0-5,3-11,8-11C31,42,34,65,42,67c6,1,9-3,8-9C49,49,38,40,40,25c1-5,4-15,13-14c10,2,11,18,13,29c1,8,0,24,7,28c15,0,5-22,4-30
-        C74,23,78,7,87,1c8-4,14,1,16,9c2,11-8,21-2,30c8,2,11-6,14-12c9-14,36-18,30,5c-3,9-12,19-21,24c-6,4-22,10-23,19c-2,14,15,2,18-2
-        c9-9,20-18,33-22C159,52,166,54,170,60' />
+	M170,60c4,11-1,20-12,25c-9,4-25,3-20,15c5,5,15,0,24,1c11,1,21,11,14,21c-10,15-35,6-48-1c-5-3-27-23-32-10c-1,13,15,10,22,16
+	c11,4,24,14,34,20c12,10,7,25-9,23c-11-1-22-9-30-16c-5-5-13-18-21-9c-2,6,2,11,5,14c9,9,22,14,22,31c-2,8-12,8-18,4c-4-3-9-8-11-13
+	c-3-6-5-18-12-18c-14-1-5,28-18,30c-9,2-13-9-12-16c1-14,12-24,21-31c5-4,17-13,10-20c-9-10-19,12-23,16c-7,7-17,16-31,15
+	c-9-1-18-9-11-17c5-7,14-4,23-6c6-1,15-8,8-15c-5-6-57,2-42-24c7-12,51,4,61,6c6,1,17,4,18-4c2-11-12-7-21-8c-21-2-49-14-49-34
+	c0-5,3-11,8-11C31,42,34,65,42,67c6,1,9-3,8-9C49,49,38,40,40,25c1-5,4-15,13-14c10,2,11,18,13,29c1,8,0,24,7,28c15,0,5-22,4-30
+	C74,23,78,7,87,1c8-4,14,1,16,9c2,11-8,21-2,30c8,2,11-6,14-12c9-14,36-18,30,5c-3,9-12,19-21,24c-6,4-22,10-23,19c-2,14,15,2,18-2
+	c9-9,20-18,33-22C159,52,166,54,170,60' />
     </svg></span>} : ''}
   <span class="webName">#{@web.name}</span><br />
   #{page.plain_name}
@@ -194,7 +194,7 @@ EOL
       render_atom(hide_description = false)
     else
       render :text => 'Atom feed with content for this web is blocked for security reasons. ' +
-        'The web is password-protected and not published', :status => 403, :layout => 'error'
+	'The web is password-protected and not published', :status => 403, :layout => 'error'
     end
   end
 
@@ -207,7 +207,7 @@ EOL
       render_atom_changes(hide_description = false)
     else
       render :text => 'Atom feed with content for this web is blocked for security reasons. ' +
-        'The web is password-protected and not published', :status => 403, :layout => 'error'
+	'The web is password-protected and not published', :status => 403, :layout => 'error'
     end
   end
 
@@ -274,6 +274,17 @@ EOL
         submitted_edits_directory_path,
         page_content_file_name)
       @submitted_edit = File.read(submitted_edits_page_content_file_path)
+      submitted_announcements_directory_path = File.join(
+        ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
+        @web.address)
+      submitted_announcement_file_path = File.join(
+        submitted_announcements_directory_path,
+        page_content_file_name)
+      if File.file?(submitted_announcement_file_path)
+        @submitted_announcement = File.read(submitted_announcement_file_path)
+      else
+        @submitted_announcement = ""
+      end
     end
   end
 
@@ -297,6 +308,18 @@ EOL
       submitted_edits_directory_path,
       page_content_file_name)
     @submitted_edit = File.read(submitted_edits_page_content_file_path)
+
+    submitted_announcements_directory_path = File.join(
+      ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
+      @web.address)
+    submitted_announcement_file_path = File.join(
+      submitted_announcements_directory_path,
+      page_content_file_name)
+    if File.file?(submitted_announcement_file_path)
+      @submitted_announcement = File.read(submitted_announcement_file_path)
+    else
+      @submitted_announcement = ""
+    end
     # to template
   end
 
@@ -430,6 +453,21 @@ EOL
         else
             make_announcement = false
         end
+
+        submitted_announcements_directory_path = File.join(
+          ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
+          @web.address)
+
+        if make_announcement
+          if !File.exist?(submitted_announcements_directory_path)
+            Dir.mkdir(submitted_announcements_directory_path)
+          end
+          submitted_announcement_file_path = File.join(
+            submitted_announcements_directory_path,
+            page_content_file_name)
+          File.write(submitted_announcement_file_path, announcement)
+        end
+
         if (@web.name == "nLab") && (@page_name != "Sandbox") &&
             (new_name != @page_name) && !make_announcement
           raise Instiki::ValidationError.new(
@@ -460,6 +498,12 @@ EOL
             old_page_content_file_name)
           if File.exists?(old_submitted_edits_page_content_file_path)
             File.delete(old_submitted_edits_page_content_file_path)
+          end
+          old_submitted_announcement_file_path = File.join(
+            submitted_announcements_directory_path,
+            old_page_content_file_name)
+          if File.exists?(old_submitted_announcement_file_path)
+            File.delete(old_submitted_announcement_file_path)
           end
         end
 
@@ -524,6 +568,23 @@ EOL
           submitted_edits_directory_path,
           page_content_file_name)
         File.write(submitted_edits_page_content_file_path, the_content)
+
+        if [1, 23, 39].include?(@web.id)
+          announcement = params[:announcement].purify
+          if announcement
+            submitted_announcements_directory_path = File.join(
+              ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
+              @web.address)
+            if !File.exist?(submitted_announcements_directory_path)
+              Dir.mkdir(submitted_announcements_directory_path)
+            end
+            submitted_announcement_file_path = File.join(
+              submitted_announcements_directory_path,
+              page_content_file_name)
+            File.write(submitted_announcement_file_path, announcement)
+          end
+        end
+
         if @page_name.include?("¤")
           raise Instiki::ValidationError.new(
             "Cannot use the symbol ¤ in a page name")
