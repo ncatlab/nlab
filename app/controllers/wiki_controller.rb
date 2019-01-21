@@ -458,14 +458,17 @@ EOL
           ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
           @web.address)
 
+
+        if !File.exist?(submitted_announcements_directory_path)
+          Dir.mkdir(submitted_announcements_directory_path)
+        end
+        submitted_announcement_file_path = File.join(
+          submitted_announcements_directory_path,
+          page_content_file_name)
         if make_announcement
-          if !File.exist?(submitted_announcements_directory_path)
-            Dir.mkdir(submitted_announcements_directory_path)
-          end
-          submitted_announcement_file_path = File.join(
-            submitted_announcements_directory_path,
-            page_content_file_name)
           File.write(submitted_announcement_file_path, announcement)
+        else
+          File.write(submitted_announcement_file_path, "")
         end
 
         if (@web.name == "nLab") && (@page_name != "Sandbox") &&
@@ -570,18 +573,20 @@ EOL
         File.write(submitted_edits_page_content_file_path, the_content)
 
         if [1, 23, 39].include?(@web.id)
+          submitted_announcements_directory_path = File.join(
+            ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
+            @web.address)
+          if !File.exist?(submitted_announcements_directory_path)
+            Dir.mkdir(submitted_announcements_directory_path)
+          end
+          submitted_announcement_file_path = File.join(
+            submitted_announcements_directory_path,
+            page_content_file_name)
           announcement = params[:announcement].purify
           if announcement
-            submitted_announcements_directory_path = File.join(
-              ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
-              @web.address)
-            if !File.exist?(submitted_announcements_directory_path)
-              Dir.mkdir(submitted_announcements_directory_path)
-            end
-            submitted_announcement_file_path = File.join(
-              submitted_announcements_directory_path,
-              page_content_file_name)
             File.write(submitted_announcement_file_path, announcement)
+          else
+            File.write(submitted_announcement_file_path, "")
           end
         end
 
