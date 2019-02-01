@@ -26,6 +26,7 @@ import tex_parser
 import theorem_environment_blocks
 import tikz_diagram_block
 import time
+import xypic_diagram_block
 
 """
 Initialises logging. Logs to
@@ -239,7 +240,8 @@ pages, category links, table of contents, etc.
 """
 def render(page_id, page_content):
     page_content = centre_block.handle_initial_centring(page_content)
-    page_content = tikz_diagram_block.handle_commutative_diagrams(page_content)
+    page_content = tikz_diagram_block.handle_tikz_diagrams(page_content)
+    page_content = xypic_diagram_block.handle_xypic_diagrams(page_content)
     pages_to_re_render_and_expire = []
     pages_to_render_to_include = []
     references_before_rendering = _references_before_rendering(page_id)
@@ -344,6 +346,8 @@ def initial_rendering(page_id, page_content):
         error_message = str(invalid_tex_exception)
     except tikz_diagram_block.TikzDiagramException as tikz_diagram_exception:
         error_message = str(tikz_diagram_exception)
+    except xypic_diagram_block.XyPicDiagramException as xypic_diagram_exception:
+        error_message = str(xypic_diagram_exception)
     except Exception as exception:
         error_message = "An unexpected error occurred when rendering the page"
         error = exception

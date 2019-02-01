@@ -1,6 +1,7 @@
 #!/usr/bin/python3.7
 
 import argparse
+import enum
 import errno
 import find_block
 import glob
@@ -15,7 +16,7 @@ import time
 """
 Initialises logging. Logs to
 
-tikz_diagrams.log
+diagrams.log
 """
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -24,7 +25,7 @@ logging_formatter = logging.Formatter(
     "%(asctime)s %(levelname)s %(name)s %(message)s")
 log_directory = os.environ["NLAB_LOG_DIRECTORY"]
 logging_file_handler = logging.FileHandler(
-    os.path.join(log_directory, "tikz_diagrams.log"))
+    os.path.join(log_directory, "diagrams.log"))
 logging_file_handler.setFormatter(logging_formatter)
 logger.addHandler(logging_file_handler)
 
@@ -36,8 +37,12 @@ class SvgRenderingException(Exception):
     def __init__(self, message):
         super().__init__(message)
 
+class DiagramType(enum.Enum):
+    TIKZ = "tikz"
+    XYPIC = "xypic"
+
 def create_diagram_source_directory_if_needed():
-    diagram_source_directory = os.environ["NLAB_TIKZ_DIAGRAM_SOURCE_DIRECTORY"]
+    diagram_source_directory = os.environ["NLAB_DIAGRAM_SOURCE_DIRECTORY"]
     try:
         os.mkdir(diagram_source_directory)
     except OSError as osError:
@@ -75,24 +80,42 @@ def extract_error(output):
             break
     return "\n".join(error_description)
 
-def create_pdf(
-        diagram_source_directory,
-        diagram_id,
-        tikz_diagram,
-        is_commutative_diagram):
+def tikz_tex_source(diagram, is_commutative_diagram):
     tikz_diagram_template_path = os.environ["NLAB_TIKZ_DIAGRAM_TEMPLATE"]
     with open(tikz_diagram_template_path, "r") as tikz_diagram_template_file:
         tikz_diagram_template = tikz_diagram_template_file.read()
     if not is_commutative_diagram:
         libraries, tikz_diagram_without_tikz_libraries = extract_tikz_libraries(
-            tikz_diagram)
-        tex_source = string.Template(tikz_diagram_template).substitute(
+            diagram)
+        return string.Template(tikz_diagram_template).substitute(
             tikz_libraries = libraries,
             tikz_diagram = tikz_diagram_without_tikz_libraries)
     else:
-        tex_source = string.Template(tikz_diagram_template).substitute(
+        return string.Template(tikz_diagram_template).substitute(
             tikz_libraries = "\\usetikzlibrary{cd}",
-            tikz_diagram = tikz_diagram)
+            tikz_diagram = diagram)
+
+def xypic_tex_source(diagram):
+    xypic_diagram_template_path = os.environ["NLAB_XYPIC_DIAGRAM_TEMPLATE"]
+    with open(xypic_diagram_template_path, "r") as xypic_diagram_template_file:
+        xypic_diagram_template = xypic_diagram_template_file.read()
+        return string.Template(xypic_diagram_template).substitute(
+            xypic_diagram = diagram)
+
+def create_pdf(
+        diagram_source_directory,
+        diagram_id,
+        diagram,
+        diagram_type,
+	is_commutative_diagram = True):
+    if diagram_type == DiagramType.TIKZ:
+        tex_source = tikz_tex_source(diagram, is_commutative_diagram)
+    elif diagram_type == DiagramType.XYPIC:
+        tex_source = xypic_tex_source(diagram)
+    else:
+        raise ValueError(
+            "Following diagram type not handled: " +
+            diagram_type.value)
     tex_path = os.path.join(diagram_source_directory, diagram_id + ".tex")
     with open(tex_path, "w") as tex_source_file:
         tex_source_file.write(tex_source)
@@ -128,8 +151,15 @@ Sets up the command line argument parsing
 def argument_parser():
     parser = argparse.ArgumentParser(
         description = (
-            "Creates SVG source from tikz diagram code passed into stdin"))
-    parser.add_argument(
+            "Creates SVG source from diagram code passed into stdin"))
+    subparsers = parser.add_subparsers(dest = "subcommand")
+    parser_tikz = subparsers.add_parser(
+        "tikz",
+        help = "Tikz diagrams")
+    parser_xypic = subparsers.add_parser(
+        "xypic",
+        help = "XYPic diagrams")
+    parser_tikz.add_argument(
         "-c",
         "--commutative_diagram",
         action = "store_true",
@@ -139,22 +169,30 @@ def argument_parser():
 def main():
     parser = argument_parser()
     arguments = parser.parse_args()
-    is_commutative_diagram = arguments.commutative_diagram
-    tikz_diagram = sys.stdin.read().strip()
+    diagram_type = DiagramType(arguments.subcommand)
+    diagram = sys.stdin.read().strip()
     diagram_source_directory = create_diagram_source_directory_if_needed()
     diagram_id = str(random.randint(10**8, (10**9) - 1))
     try:
-       create_pdf(
-           diagram_source_directory,
-           diagram_id,
-           tikz_diagram,
-           is_commutative_diagram)
-       svg_diagram = create_svg(diagram_source_directory, diagram_id)
+        if diagram_type == DiagramType.TIKZ:
+            create_pdf(
+                diagram_source_directory,
+                diagram_id,
+                diagram,
+                diagram_type,
+                arguments.commutative_diagram)
+        else:
+            create_pdf(
+                diagram_source_directory,
+                diagram_id,
+                diagram,
+                diagram_type)
+        svg_diagram = create_svg(diagram_source_directory, diagram_id)
     except PdfRenderingException as pdfRenderingException:
         message = (
             "An error occurred when running pdflatex on the following " +
             "diagram. \n" +
-            tikz_diagram +
+            diagram +
             "\nThe error was: " +
             str(pdfRenderingException))
         logger.warning(message)
@@ -163,17 +201,18 @@ def main():
         message = (
             "An error occurred when creating an SVG from a PDF for the " +
             "following diagram. \n" +
-            tikz_diagram)
+            diagram)
         logger.warning(
             message +
             "\nThe error was: " +
             str(svgRenderingException))
         sys.exit(message)
     except Exception as exception:
+        raise exception
         message = (
             "An unexpected error occurred when creating an SVG from a PDF " +
             "for the following diagram. \n" +
-            tikz_diagram)
+            diagram)
         logger.warning(
             message +
             "\nThe error was: " +
@@ -183,7 +222,7 @@ def main():
         remove_diagram_files(diagram_source_directory, diagram_id)
     logger.info(
         "Successfully created an SVG for the following diagram. \n" +
-        tikz_diagram)
+        diagram)
     print(svg_diagram)
 
 if __name__ == "__main__":
