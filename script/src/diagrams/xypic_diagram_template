@@ -1,0 +1,9 @@
+\documentclass[12pt]{standalone}
+
+\usepackage[all]{xy}
+
+\begin{document}
+
+$xypic_diagram
+
+\end{document}
