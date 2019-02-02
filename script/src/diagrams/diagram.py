@@ -29,6 +29,10 @@ logging_file_handler = logging.FileHandler(
 logging_file_handler.setFormatter(logging_formatter)
 logger.addHandler(logging_file_handler)
 
+class DocumentParametersException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
 class PdfRenderingException(Exception):
     def __init__(self, message):
         super().__init__(message)
@@ -95,11 +99,56 @@ def tikz_tex_source(diagram, is_commutative_diagram):
             tikz_libraries = "\\usetikzlibrary{cd}",
             tikz_diagram = diagram)
 
+def parse_document_parameters(document_parameters):
+    parsed_parameters = { "document_header_parameters": [ "12pt" ] }
+    for parameter in document_parameters.split(","):
+        split_at_equals = parameter.split("=")
+        if len(split_at_equals) != 2:
+            raise DocumentParametersException(
+                "The following does not have the expected format: " +
+                parameter)
+        key = split_at_equals[0].strip()
+        value = split_at_equals[1].strip()
+        if key == "font":
+            parsed_parameters["font_size"] = value
+        elif key == "border":
+            parsed_parameters["document_header_parameters"].append(parameter)
+        else:
+            raise DocumentParametersException(
+                "The key " +
+                key +
+                " of the following parameter is not recognised: " +
+                parameter)
+    return parsed_parameters
+
+def extract_document_parameters(diagram):
+    split_at_first_curly_brace = diagram.split("{", 1)
+    document_parameters = {
+        "font_size": "",
+        "document_header_parameters": ["12pt"] }
+    document_parameters_block = find_block.Block(
+        "[",
+        "]",
+        lambda within_square_brackets: document_parameters.update(
+            parse_document_parameters(within_square_brackets)),
+        False)
+    document_parameters_processor = find_block.Processor([
+        document_parameters_block])
+    processed_preamble = document_parameters_processor.process(
+        split_at_first_curly_brace[0])
+    return (
+        document_parameters,
+        processed_preamble + "{" + split_at_first_curly_brace[1])
+
 def xypic_tex_source(diagram):
+    document_parameters, diagram = extract_document_parameters(diagram)
     xypic_diagram_template_path = os.environ["NLAB_XYPIC_DIAGRAM_TEMPLATE"]
     with open(xypic_diagram_template_path, "r") as xypic_diagram_template_file:
         xypic_diagram_template = xypic_diagram_template_file.read()
         return string.Template(xypic_diagram_template).substitute(
+            document_parameters = ", ".join(
+                document_parameters["document_header_parameters"]),
+            font_size = document_parameters["font_size"],
             xypic_diagram = diagram)
 
 def create_pdf(
@@ -207,8 +256,15 @@ def main():
             "\nThe error was: " +
             str(svgRenderingException))
         sys.exit(message)
+    except DocumentParametersException as documentParametersException:
+        message = (
+            "An error occurred when rendering the following diagram. \n" +
+            diagram +
+            "\n " +
+            str(documentParametersException))
+        logger.warning(message)
+        sys.exit(message)
     except Exception as exception:
-        raise exception
         message = (
             "An unexpected error occurred when creating an SVG from a PDF " +
             "for the following diagram. \n" +

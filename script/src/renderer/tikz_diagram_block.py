@@ -7,6 +7,7 @@ For creating SVG code from a tikz diagram
 import find_block
 import os
 import subprocess
+import nowiki_block
 
 class TikzDiagramException(Exception):
     def __init__(self, message):
@@ -66,7 +67,9 @@ def define_tikz_commutative_diagram():
         True)
 
 def handle_tikz_diagrams(content):
-    processor = find_block.Processor(
-        [ define_tikz(), define_tikz_commutative_diagram() ])
+    processor = find_block.Processor([
+        define_tikz(),
+        define_tikz_commutative_diagram(),
+        nowiki_block.define(True) ])
     return processor.process(content)
 
