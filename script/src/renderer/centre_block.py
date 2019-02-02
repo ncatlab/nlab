@@ -5,6 +5,7 @@ For centring of some content.
 """
 
 import find_block
+import nowiki_block
 
 def initial_centre_processor(content):
     return (
@@ -33,8 +34,11 @@ def define_centre():
         True)
 
 def handle_initial_centring(content):
-    return find_block.Processor([define_center(), define_centre()]).process(
-        content)
+    processor = find_block.Processor([
+        define_center(),
+        define_centre(),
+        nowiki_block.define(True)])
+    return processor.process(content)
 
 def handle_post_centring(content):
     centre_paragraph_block = find_block.Block(

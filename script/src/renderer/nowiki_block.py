@@ -6,14 +6,14 @@ as it otherwise should be.
 """
 import find_block
 
-def nowiki_processor(nowiki_content):
-    if "[[!include" in nowiki_content:
+def nowiki_processor(nowiki_content, retain_nowiki_block):
+    if retain_nowiki_block or ("[[!include" in nowiki_content):
         return "<nowiki>" + nowiki_content + "</nowiki>"
     return nowiki_content
 
-def define():
+def define(retain_nowiki_block = False):
     return find_block.Block(
         "<nowiki>",
         "</nowiki>",
-        nowiki_processor,
+        lambda content: nowiki_processor(content, retain_nowiki_block),
         True)

@@ -1,8 +1,12 @@
-\documentclass[12pt]{standalone}
+\documentclass[$document_parameters]{standalone}
 
-\usepackage[all]{xy}
+\usepackage[all, 2cell]{xy}
+
+\UseTwocells
 
 \begin{document}
+
+$font_size
 
 $xypic_diagram
 
