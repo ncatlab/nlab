@@ -75,6 +75,15 @@ def _address_of_web(web_id):
     except IndexError:
         raise _NoSuchWebException
 
+def _published(web_id):
+    query_results = _execute_single_with_parameters(
+        "SELECT published FROM webs WHERE id = %s",
+        [ web_id ])
+    try:
+        return True if query_results[0][0] == 1 else False
+    except IndexError:
+        raise _NoSuchWebException
+
 def _existing_redirect(page_name, web_id):
     query_results = _execute_single_with_parameters(
         "SELECT wiki_references.id FROM wiki_references " +
@@ -387,10 +396,11 @@ def link_processor(
         else:
             page_name_for_href = urllib.parse.quote_plus(
                 page_name_without_reference)
+        show_or_published = "/published/" if _published(web_id) else "/show/"
         return ("<a class='existingWikiWord' " +
             "href='/" +
             web_address +
-            "/show/" +
+            show_or_published +
             page_name_for_href +
             "'>" +
             link_text +
