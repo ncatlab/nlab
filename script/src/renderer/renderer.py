@@ -16,6 +16,7 @@ import re
 import redirects_block
 import reference_block
 import reference_numbering
+import script_block
 import svg_header_block
 import subprocess
 import sys
@@ -270,7 +271,8 @@ def render(page_id, page_content):
         nowiki_block.define(),
         reference_block.define(),
         tex_block.define_single(page_id),
-        tex_block.define_double(page_id)]
+        tex_block.define_double(page_id),
+        script_block.define()]
     processor = find_block.Processor(blocks)
     processed_content = processor.process(page_content)
     processed_content = _surround_tables_with_blank_lines(processed_content)
@@ -348,6 +350,9 @@ def initial_rendering(page_id, page_content):
         error_message = str(tikz_diagram_exception)
     except xypic_diagram_block.XyPicDiagramException as xypic_diagram_exception:
         error_message = str(xypic_diagram_exception)
+    except script_block.ScriptNotPermittedException:
+        error_message = (
+            "Use of <script>...</script> blocks is not permitted")
     except Exception as exception:
         error_message = "An unexpected error occurred when rendering the page"
         error = exception
