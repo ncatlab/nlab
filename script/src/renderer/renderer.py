@@ -235,11 +235,90 @@ def _write_to_file_for_maruku(page_id, content_for_rendering):
         page_content_file.write(content_for_rendering)
     return page_content_directory, page_content_file_name
 
+def _check_for_scripting(content_for_rendering):
+    event_attributes = [
+        "onafterprint",
+        "onbeforeprint",
+        "onbeforeunload",
+        "onerror",
+        "onhashchange",
+        "onload",
+        "onmessage",
+        "onoffline",
+        "ononline",
+        "onpagehide",
+        "onpageshow",
+        "onpopstate",
+        "onresize",
+        "onstorage",
+        "onunload",
+        "onblur",
+        "onchange",
+        "oncontextmenu",
+        "onfocus",
+        "oninput",
+        "oninvalid",
+        "onreset",
+        "onsearch",
+        "onselect",
+        "onsubmit",
+        "onkeydown",
+        "onkeypress",
+        "onkeyup",
+        "onclick",
+        "ondblclick",
+        "onmousedown",
+        "onmousemove",
+        "onmouseout",
+        "onmouseover",
+        "onmouseup",
+        "onmousewheel",
+        "onwheel",
+        "ondrag",
+        "ondragend",
+        "ondragenter",
+        "ondragleave",
+        "ondragover",
+        "ondragstart",
+        "ondrop",
+        "onscroll",
+        "oncopy",
+        "oncut",
+        "onpaste",
+        "onabort",
+        "oncanplay",
+        "oncanplaythrough",
+        "oncuechange",
+        "ondurationchange",
+        "onemptied",
+        "onended",
+        "onerror",
+        "onloadeddata",
+        "onloadedmetadata",
+        "onloadstart",
+        "onpause",
+        "onplay",
+        "onplaying",
+        "onprogress",
+        "onratechange",
+        "onseeked",
+        "onseeking",
+        "onstalled",
+        "onsuspend",
+        "ontimeupdate",
+        "onvolumechange",
+        "onwaiting",
+        "ontoggle" ]
+    if any(event_attribute in content_for_rendering for \
+            event_attribute in event_attributes):
+        raise script_block.ScriptNotPermittedException
+
 """
 Renders the page content, handling redirects, includes, links to nLab
 pages, category links, table of contents, etc.
 """
 def render(page_id, page_content):
+    _check_for_scripting(page_content)
     page_content = centre_block.handle_initial_centring(page_content)
     page_content = tikz_diagram_block.handle_tikz_diagrams(page_content)
     page_content = xypic_diagram_block.handle_xypic_diagrams(page_content)
@@ -272,7 +351,8 @@ def render(page_id, page_content):
         reference_block.define(),
         tex_block.define_single(page_id),
         tex_block.define_double(page_id),
-        script_block.define()]
+        script_block.define_script_tags(),
+        script_block.define_javascript_prefix() ]
     processor = find_block.Processor(blocks)
     processed_content = processor.process(page_content)
     processed_content = _surround_tables_with_blank_lines(processed_content)
@@ -352,7 +432,7 @@ def initial_rendering(page_id, page_content):
         error_message = str(xypic_diagram_exception)
     except script_block.ScriptNotPermittedException:
         error_message = (
-            "Use of <script>...</script> blocks is not permitted")
+            "Scripting is not permitted")
     except Exception as exception:
         error_message = "An unexpected error occurred when rendering the page"
         error = exception

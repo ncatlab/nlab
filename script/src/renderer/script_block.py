@@ -12,9 +12,16 @@ class ScriptNotPermittedException(Exception):
 def script_block_processor(script):
     raise ScriptNotPermittedException()
 
-def define():
+def define_script_tags():
     return find_block.Block(
         "<script",
         "/script>",
+        script_block_processor,
+        False)
+
+def define_javascript_prefix():
+    return find_block.Block(
+        "javascript:",
+        None,
         script_block_processor,
         False)

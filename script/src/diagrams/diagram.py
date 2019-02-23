@@ -29,6 +29,36 @@ logging_file_handler = logging.FileHandler(
 logging_file_handler.setFormatter(logging_formatter)
 logger.addHandler(logging_file_handler)
 
+_blacklist = [
+   "\\def",
+   "\\loop",
+   "\\new",
+   "\\file",
+   "\\open",
+   "\\catcode",
+   "\\usepackage",
+   "\\if",
+   "\\read",
+   "\\repeat",
+   "\\closein",
+   "\\write",
+   "\\input",
+   "\\terminal",
+   "\\let",
+   "\\or",
+   "\\xdef",
+   "\\edef",
+   "\\global",
+   "\\gdef",
+   "\\globaldefs",
+   "\\dump",
+   "\\pausing",
+   "\\show",
+   "\\error",
+   "\\escape",
+   "\\include",
+   "\\immediate" ]
+
 class DocumentParametersException(Exception):
     def __init__(self, message):
         super().__init__(message)
@@ -38,6 +68,10 @@ class PdfRenderingException(Exception):
         super().__init__(message)
 
 class SvgRenderingException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
+class BlacklistedException(Exception):
     def __init__(self, message):
         super().__init__(message)
 
@@ -83,6 +117,21 @@ def extract_error(output):
                 error_description.append("Line: " + identifier)
             break
     return "\n".join(error_description)
+
+"""
+The option
+
+openin_any = p
+
+should be set in texmf.cnf as well
+"""
+def check_blacklist(diagram):
+    for blacklisted in _blacklist:
+        if blacklisted in diagram:
+            raise BlacklistedException(
+                "It is not permitted to use " +
+                blacklisted +
+                " in LaTeX diagram code")
 
 def tikz_tex_source(diagram, is_commutative_diagram):
     tikz_diagram_template_path = os.environ["NLAB_TIKZ_DIAGRAM_TEMPLATE"]
@@ -157,6 +206,7 @@ def create_pdf(
         diagram,
         diagram_type,
 	is_commutative_diagram = True):
+    check_blacklist(diagram)
     if diagram_type == DiagramType.TIKZ:
         tex_source = tikz_tex_source(diagram, is_commutative_diagram)
     elif diagram_type == DiagramType.XYPIC:
@@ -165,13 +215,18 @@ def create_pdf(
         raise ValueError(
             "Following diagram type not handled: " +
             diagram_type.value)
-    tex_path = os.path.join(diagram_source_directory, diagram_id + ".tex")
+    tex_file_name = diagram_id + ".tex"
+    tex_path = os.path.join(diagram_source_directory, tex_file_name)
     with open(tex_path, "w") as tex_source_file:
         tex_source_file.write(tex_source)
-    completed_pdf_process = subprocess.run(
-         [ "pdflatex", tex_path ],
-         cwd = diagram_source_directory,
-         capture_output = True)
+    try:
+        completed_pdf_process = subprocess.run(
+            [ "pdflatex", tex_file_name ],
+            cwd = diagram_source_directory,
+            capture_output = True,
+            timeout = 5)
+    except subprocess.TimeoutExpired:
+        raise PdfRenderingException("Timed out")
     if completed_pdf_process.returncode != 0:
         raise PdfRenderingException(
             extract_error(completed_pdf_process.stdout.decode()))
@@ -264,6 +319,13 @@ def main():
             str(documentParametersException))
         logger.warning(message)
         sys.exit(message)
+    except BlacklistedException as blacklistedException:
+        error_message = str(blacklistedException)
+        logger.error(
+            error_message +
+            ". Diagram: " +
+            diagram)
+        sys.exit(error_message)
     except Exception as exception:
         message = (
             "An unexpected error occurred when creating an SVG from a PDF " +
