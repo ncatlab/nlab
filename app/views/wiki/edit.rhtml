@@ -18,7 +18,7 @@
 
 	   <div>
              <% if !@failed_edit -%>
-	       <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= @page.content %></textarea>
+	       <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= @page.content ? @page.content : "" %></textarea>
              <% else -%>
                <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= @submitted_edit %></textarea>
              <%- end %>

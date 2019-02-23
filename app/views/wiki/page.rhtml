@@ -2,7 +2,6 @@
 <%-
   @title = @page.plain_name
   @title += ' (changes)' if @show_diff
-  @show_footer = true
 -%>
 
 <div id="revision">
@@ -18,10 +17,10 @@
 </div>
 
 <div class="revisedby">
-  <p>
-  <%= @page.revisions? ? "Last revised" : "Created" %> on <%= format_date(@page.revised_at) %>.
-  See the <a href="https://ncatlab.org/<%= @web.address %>/history/<%= @page.name %>" style="color: #005c19">history</a> of this page for a list of all contributions to it.
-  </p>
+    <p>
+    <%= @page.revisions? ? "Last revised" : "Created" %> on <%= @page.revisions? ? format_date(@page.revised_at) : format_date(@page.created_at) %>.
+    See the <a href="https://ncatlab.org/<%= @web.address %>/history/<%= @page.name %>" style="color: #005c19">history</a> of this page for a list of all contributions to it.
+    </p>
 </div>
 
 <div class="navigation navfoot">
