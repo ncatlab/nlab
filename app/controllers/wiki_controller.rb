@@ -383,6 +383,7 @@ EOL
     else
       get_page_and_revision
       @show_diff = (params[:mode] == 'diff')
+      @link_to_nforum_discussion = link_to_nforum_discussion()
       @renderer = PageRenderer.new(@revision)
     end
   end
