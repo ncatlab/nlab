@@ -558,7 +558,7 @@ EOL
               new_name,
               web_name,
               @web.id.to_s,
-              announcement,
+              "",
               author_name,
               @page.id.to_s,
               "--is_trivial")

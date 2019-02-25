@@ -12,7 +12,7 @@ class Page < ActiveRecord::Base
     read_attribute(:name).as_utf8
   end
 
-  def revise(content, name, time, author, old_renderer, is_create = false)
+  def revise(content, name, time, author, is_create = false)
     revisions_size = new_record? ? 0 : rev_ids.size
     if (revisions_size > 0) and content == current_revision.content and name == self.name
       raise Instiki::ValidationError.new(
@@ -50,13 +50,13 @@ class Page < ActiveRecord::Base
     self
   end
 
-  def rollback(revision_number, time, author_ip, renderer)
+  def rollback(revision_number, time, author_ip)
     roll_back_revision = self.revisions[revision_number]
     if roll_back_revision.nil?
       raise Instiki::ValidationError.new("Revision #{revision_number} not found")
     end
     author = Author.new(roll_back_revision.author.name, author_ip)
-    revise(roll_back_revision.content, self.name, time, author, renderer)
+    revise(roll_back_revision.content, self.name, time, author)
   end
 
   def revisions?

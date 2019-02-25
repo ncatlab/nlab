@@ -38,7 +38,7 @@ class Web < ActiveRecord::Base
     page = page(name) || pages.build(:name => name)
     page.save
     begin
-      page.revise(content, name, time, author, renderer)
+      page.revise(content, name, time, author)
     rescue StandardError => e
       page.destroy
       raise e
