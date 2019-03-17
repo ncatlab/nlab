@@ -1,7 +1,7 @@
 body {
 background-color:#FFF;
 color:#333;
-font-family:"Noto Sans", Roboto, sans-serif;
+font-family:"Noto Sans", Roboto, "Lucida Grande", "San Francisco", sans-serif;
 font-size:1em;
 line-height:1.3em;
 }
@@ -32,7 +32,7 @@ color:#666;
 
 h1,h2,h3,h4,h5,h6 {
 color:#333;
-font-family:georgia, verdana, sans-serif;
+font-family:"Noto Serif", "PT Serif", Miller, serif;
 }
 
 h1 {
@@ -153,13 +153,13 @@ text-decoration:none;
 }
 
 div.help {
-font-family:verdana, arial, helvetica, sans-serif;
+font-family:"Noto Sans", Roboto, "Lucida Grande", "San Francisco", sans-serif;
 font-size:75%;
 }
 
 div.inputBox {
 background-color:#EEE;
-font-family:verdana, arial, helvetica, sans-serif;
+font-family:"Noto Sans", Roboto, "Lucida Grande", "San Francisco", sans-serif;
 font-size:80%;
 margin-bottom:1.5em;
 padding:0.3em;
@@ -182,7 +182,7 @@ padding:1em;
 }
 
 ol.setup {
-font-family:georgia, verdana, sans-serif;
+font-family:"Noto Serif", "PT Serif", Miller, serif;
 font-size:110%;
 margin-top:1em;
 padding-left:1.5em;
@@ -445,7 +445,7 @@ span.keyboard {
  background: #CCC;
  color: #000;
  border: outset 2px;
- font-family:verdana, arial, sans-serif;
+ font-family:"Noto Sans", Roboto, "Lucida Grande", "San Francisco", sans-serif;
  font-size: .7em;
  margin-left:5px;
  padding:1px 2px;
