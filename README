@@ -1,11 +1,4 @@
 
-= nLab wiki
-
-The nLab code is a fork of Instiki.  The rest of this file from the next heading is the original README from Instiki, which may be more or less applicable.
-
-The current maintainer is Richard Williamson. Before that, until July 2018, Adeel Khan Yusufzai maintained the nLab. Before that, Andrew Stacey was the main person. 
-The exact timeline of changeovers can probably be extracted from discussion at the nForum, if needed.
-
 = Instiki
 
 Instiki is a wiki clone so pretty and easy to set up, you'll wonder if it’s really a wiki. Runs on Rails and focuses on portability and stability. Supports file uploads, PDF export, RSS, multiple users and password protection. Some use Instiki as a CMS (Content Management System) because of its ability to export static pages.
