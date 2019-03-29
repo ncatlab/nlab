@@ -8,13 +8,13 @@ require 'resolv'
 class WikiController < ApplicationController
 
   before_filter :load_page
-  before_filter :dnsbl_check, :only => [:edit, :new, :save, :export_html, :export_markup]
+  before_filter :dnsbl_check, :only => [:edit, :new, :save]
   caches_action :show, :published, :tex, :print, :list, :recently_revised, :file_list, :source,
 	:history, :revision, :atom_with_content, :atom_with_headlines, :atom_with_changes, :if => Proc.new { |c| c.send(:do_caching?) }
   caches_action :authors, :cache_path => Proc.new { |c| c.params }
   cache_sweeper :revision_sweeper
 
-  layout 'default', :except => [:atom_with_content, :atom_with_headlines, :atom_with_changes, :atom, :source, :tex, :export_html]
+  layout 'default', :except => [:atom_with_content, :atom_with_headlines, :atom_with_changes, :atom, :source, :tex]
 
   def index
     if @web_name
@@ -73,91 +73,6 @@ class WikiController < ApplicationController
     end
     @file_list = @web.file_list(sort_order)
   end
-
-  def export_html
-    export_pages_as_zip(html_ext) do |page|
-      renderer = PageRenderer.new(page.current_revision)
-      rendered_page = <<-EOL
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg-flat.dtd" >
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <title>#{page.plain_name} in #{@web.name}</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-  <script src="public/javascripts/page_helper.js" type="text/javascript"></script>
-  <link href="public/stylesheets/instiki.css" media="all" rel="stylesheet" type="text/css" />
-  <link href="public/stylesheets/syntax.css" media="all" rel="stylesheet" type="text/css" />
-  <link href="public/stylesheets/mathematics.css" media="all" rel="stylesheet" type="text/css" />
-  <style type="text/css">
-    h1#pageName, div.info, .newWikiWord a, a.existingWikiWord, .newWikiWord a:hover, [actiontype="toggle"]:hover, #TextileHelp h3 {
-      color: ##{@web ? @web.color : "393"};
-    }
-    a:visited.existingWikiWord {
-      color: ##{darken(@web ? @web.color : "393")};
-    }
-  </style>
-
-  <style type="text/css"><!--/*--><![CDATA[/*><!--*/
-    #{@web ? @web.additional_style : ''}
-  /*]]>*/--></style>
-  <script src="public/javascripts/prototype.js" type="text/javascript"></script>
-  <script src="public/javascripts/effects.js" type="text/javascript"></script>
-  <script src="public/javascripts/dragdrop.js" type="text/javascript"></script>
-  <script src="public/javascripts/controls.js" type="text/javascript"></script>
-  <script src="public/javascripts/application.js" type="text/javascript"></script>
-
-</head>
-<body>
- <div id="Container">
-  <div id="Content">
-  <h1 id="pageName">
-  #{xhtml_enabled? ? %{<span id="svg_logo"><svg version="1.1" width="100%" height="100%" viewBox='0 -1 180 198' xmlns='http://www.w3.org/2000/svg'>
-      <path id="svg_logo_path" fill="##{@web ? @web.color : "393"}" stroke-width='0.5' stroke='#000' d='
-	M170,60c4,11-1,20-12,25c-9,4-25,3-20,15c5,5,15,0,24,1c11,1,21,11,14,21c-10,15-35,6-48-1c-5-3-27-23-32-10c-1,13,15,10,22,16
-	c11,4,24,14,34,20c12,10,7,25-9,23c-11-1-22-9-30-16c-5-5-13-18-21-9c-2,6,2,11,5,14c9,9,22,14,22,31c-2,8-12,8-18,4c-4-3-9-8-11-13
-	c-3-6-5-18-12-18c-14-1-5,28-18,30c-9,2-13-9-12-16c1-14,12-24,21-31c5-4,17-13,10-20c-9-10-19,12-23,16c-7,7-17,16-31,15
-	c-9-1-18-9-11-17c5-7,14-4,23-6c6-1,15-8,8-15c-5-6-57,2-42-24c7-12,51,4,61,6c6,1,17,4,18-4c2-11-12-7-21-8c-21-2-49-14-49-34
-	c0-5,3-11,8-11C31,42,34,65,42,67c6,1,9-3,8-9C49,49,38,40,40,25c1-5,4-15,13-14c10,2,11,18,13,29c1,8,0,24,7,28c15,0,5-22,4-30
-	C74,23,78,7,87,1c8-4,14,1,16,9c2,11-8,21-2,30c8,2,11-6,14-12c9-14,36-18,30,5c-3,9-12,19-21,24c-6,4-22,10-23,19c-2,14,15,2,18-2
-	c9-9,20-18,33-22C159,52,166,54,170,60' />
-    </svg></span>} : ''}
-  <span class="webName">#{@web.name}</span><br />
-  #{page.plain_name}
-  </h1>
-#{renderer.display_content_for_export}
-  <div class="byline">
-  #{page.revisions? ? "Revised" : "Created" } on #{ page.revised_at.strftime('%B %d, %Y %H:%M:%S') }
-  by
-  #{ UrlGenerator.new(self).make_link(@web, page.author.name, nil, @web, nil, { :mode => :export }) }
-  </div>
-  </div>
- </div>
-</body>
-</html>
-EOL
-      rendered_page
-    end
-  end
-
-  def export_markup
-    export_pages_as_zip(@web.markup) { |page| page.content }
-  end
-
-#  def export_pdf
-#    file_name = "#{@web.address}-tex-#{@web.revised_at.strftime('%Y-%m-%d-%H-%M-%S')}"
-#    file_path = File.join(@wiki.storage_path, file_name)
-#
-#    export_web_to_tex "#{file_path}.tex"  unless FileTest.exists? "#{file_path}.tex"
-#    convert_tex_to_pdf "#{file_path}.tex"
-#    send_file "#{file_path}.pdf"
-#  end
-
-#  def export_tex
-#    file_name = "#{@web.address}-tex-#{@web.revised_at.strftime('%Y-%m-%d-%H-%M-%S')}.tex"
-#    file_path = File.join(@wiki.storage_path, file_name)
-#    export_web_to_tex(file_path) unless FileTest.exists?(file_path)
-#    send_file file_path
-#  end
 
   def feeds
     @rss_with_content_allowed = rss_with_content_allowed?
