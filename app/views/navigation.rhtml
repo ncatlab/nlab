@@ -11,6 +11,7 @@ end
 
 <div class="navigation">
     <span class="skipNav"><a href='#navEnd'>Skip the Navigation Links</a> | </span>
+    <span style="display:inline-block; width: 0.3em;"></span>
 <%- if not @web.published? then -%>
     <%= list_item 'Home Page', {:action => 'show', :id => 'HomePage'}, 'Home page', 'H' %> |
     <%= list_item 'All Pages', {:action => "all_pages"}, 'List of all pages', 'A' %> |
@@ -32,6 +33,7 @@ end
     <% form_tag({ :controller => 'wiki', :action => 'search', :web => @web.address},
                  {'id' => 'navigationSearchForm', 'method' => 'get', 'accept-charset' => 'utf-8' }) do %>
       <fieldset class="search"><input type="text" id="searchField" name="query" value="Search"
+             style="display:inline-block; float: left;"
              onfocus="this.value == 'Search' ? this.value = '' : true"
              onblur="this.value == '' ? this.value = 'Search' : true" /></fieldset>
     <% end %>
