@@ -15,7 +15,7 @@ h3 {
     margin-top: 50px;
 }
 p, li {
-    line-height: 2em;
+    line-height: 1.6em;
     font-size: 18px;
 }
 .query {
@@ -35,13 +35,19 @@ a {
     color: #222;
 }
 a:hover {
-    color: #555;
+    color: #2c66d8;
     background: none;
+    text-decoration: underline;
 }
 a:hover.existingWikiWord {
-    color: #555;
+    color: #2c66d8;
     background: none;
 }
+a:visited:hover.existingWikiWord {
+    color: #2c66d8;
+    background: none;
+}
+
 img, svg {
     margin: 40px auto;
     display: block;
@@ -70,8 +76,12 @@ h1#pageName {
     margin: 0 10px;
     font-family: Sans-Serif;
     font-weight: lighter;
-   ;
 }
+.navigation a:hover {
+    color: #555!important;
+	background:none;
+}
+
 .navigation.navfoot {
     margin: 50px 0;
 }
@@ -104,14 +114,16 @@ div.rightHandSide {
     color: #226622;
 }
 .maruku_toc li a:hover {
-    color: #555;
+    color: #2c66d8;
 }
 .maruku_toc li a:visited{
     color: #164416;
 }
-.maruku_toc ul {
-    margin-top: 20px;
+
+.maruku_toc li a:visited:hover{
+    color: #2c66d8;
 }
+
 h1#contents {
     font-size: 1.5em;
 }
@@ -149,4 +161,7 @@ td, th {
     h1#pageName {
         margin-top: 100px;
    }
+}
+a[href="#navEnd"] {
+	display: none;
 }
