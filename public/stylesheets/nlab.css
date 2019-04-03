@@ -162,6 +162,28 @@ td, th {
         margin-top: 100px;
    }
 }
+
 a[href="#navEnd"] {
 	display: none;
+}
+p, li {
+    line-height: 1.4em;
+    font-size: 18px;
+}
+
+.navigation span.views {
+	font-family: Sans-Serif;
+	margin-left: 30px;
+}
+
+.navigation a {
+	font-weight: normal;
+}
+
+a.existingWikiWord {
+    color: #009600;
+}
+
+a.existingWikiWord:visited {
+    color: #00b121;
 }
