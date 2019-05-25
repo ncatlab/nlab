@@ -25,24 +25,19 @@
 
 <div class="navigation navfoot">
 
-  <%= raw navigation_menu_for_page.join(' | ') %>
+  <%= raw navigation_menu_for_page.join('') %>
   <%- if @web.name == "nLab" %>
-  | <a href="https://ncatlab.org/nlab/show/<%= h @page.name %>/cite" style="color: black">Cite</a>
+  <a href="https://ncatlab.org/nlab/show/<%= h @page.name %>/cite" style="color: black">Cite</a>
   <%- end %>
-  <span class="views">
-    | Views:
-    <%= link_to('Print',
+  <%= link_to('Print',
             { :web => @web.address, :action => 'print', :id => @page.name },
             { :accesskey => 'p', :id => 'view_print', :rel => 'nofollow' }) %>
   <%- if @web.markup == :markdownMML or @web.markup == :markdown or @web.markup == :markdownPNG -%>
-    |
     <%= link_to 'TeX', {:web => @web.address, :action => 'tex', :id => @page.name},
             {:id => 'view_tex', :rel => 'nofollow' } %>
   <%- end -%>
-    |
     <%= link_to 'Source', {:web => @web.address, :action => 'source', :id => @page.name},
             {:id => 'view_source', :rel => 'nofollow' } %>
-  </span>
 
   <%= render :partial => 'inbound_links' %>
 </div>

@@ -5,6 +5,7 @@ import category_block
 import errno
 import centre_block
 import find_block
+import image_from_file_block
 import include_block
 import json
 import link_block
@@ -27,6 +28,7 @@ import tex_parser
 import theorem_environment_blocks
 import tikz_diagram_block
 import time
+import vertical_space_block
 import xypic_diagram_block
 
 """
@@ -79,6 +81,14 @@ class Flag:
         self.is_set = truth_value
 
 class RenderingException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
+class ContainsXMLException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
+class XMLDetectionException(Exception):
     def __init__(self, message):
         super().__init__(message)
 
@@ -313,12 +323,45 @@ def _check_for_scripting(content_for_rendering):
             event_attribute in event_attributes):
         raise script_block.ScriptNotPermittedException
 
+def _check_for_xml(page_id, content):
+    path_to_xml_detector_api = os.environ["XML_DETECTOR_API_PATH"]
+    completed_process = subprocess.run(
+        [ path_to_xml_detector_api ],
+        input = content,
+        text = True,
+        capture_output = True)
+    if completed_process.returncode != 0:
+        error_message = completed_process.stderr
+        if error_message.startswith("The following tag is not permitted"):
+            raise ContainsXMLException(error_message)
+        logger.warning(
+            "An error occurred when checking for XML in page with ID: " +
+            str(page_id) +
+            ". The error was: " +
+            error_message)
+        raise XMLDetectionException(
+            "An unexpected error occurred when checking for presence of XML " +
+            "tags")
+
+def log_edit(page_id, web_address, page_content):
+    edit_log_directory_path = os.environ["EDIT_LOG_DIRECTORY_PATH"]
+    edit_log_name = (
+        time.strftime("%Y-%m-%d--%H:%M:%S", time.gmtime()) +
+        "--" +
+        web_address +
+        "--" +
+        str(page_id))
+    log_edit_path = os.path.join(edit_log_directory_path, edit_log_name)
+    with open(log_edit_path, "w") as log_edit_file:
+        log_edit_file.write(page_content)
+
 """
 Renders the page content, handling redirects, includes, links to nLab
 pages, category links, table of contents, etc.
 """
 def render(page_id, page_content):
     _check_for_scripting(page_content)
+    #_check_for_xml(page_id, page_content)
     page_content = centre_block.handle_initial_centring(page_content)
     page_content = tikz_diagram_block.handle_tikz_diagrams(page_content)
     page_content = xypic_diagram_block.handle_xypic_diagrams(page_content)
@@ -352,7 +395,9 @@ def render(page_id, page_content):
         tex_block.define_single(page_id),
         tex_block.define_double(page_id),
         script_block.define_script_tags(),
-        script_block.define_javascript_prefix() ]
+        script_block.define_javascript_prefix(),
+        image_from_file_block.define(),
+        vertical_space_block.define_linebreak() ]
     processor = find_block.Processor(blocks)
     processed_content = processor.process(page_content)
     processed_content = _surround_tables_with_blank_lines(processed_content)
@@ -373,7 +418,7 @@ def render(page_id, page_content):
     pages_to_re_render_and_expire = list(set(pages_to_re_render_and_expire))
     if pages_to_render_to_include:
         pages_to_re_render_and_expire.append(page_id)
-    return processed_content,  pages_to_re_render_and_expire
+    return processed_content, pages_to_re_render_and_expire
 
 def initial_rendering(page_id, page_content):
     error_message = None
@@ -433,6 +478,12 @@ def initial_rendering(page_id, page_content):
     except script_block.ScriptNotPermittedException:
         error_message = (
             "Scripting is not permitted")
+    except image_from_file_block.ImageFromFileException as \
+            image_from_file_exception:
+        error_message = str(image_from_file_exception)
+    except (ContainsXMLException, XMLDetectionException) as \
+            xml_detection_exception:
+        error_message = str(xml_detection_exception)
     except Exception as exception:
         error_message = "An unexpected error occurred when rendering the page"
         error = exception
@@ -770,6 +821,14 @@ def main():
     # the content, without a new line.
     page_content = str(page_content) + "\n"
     web_address = _web_address_of_page(page_id)
+    try:
+        log_edit(page_id, web_address, page_content)
+    except Exception as exception:
+        logger.warning(
+            "Failed to log edit for page with id " +
+            str(page_id) +
+            ". Error: " +
+            str(exception))
     page_content_file_name = _page_content_file_name(page_id)
     try:
         initially_processed_content, pages_to_re_render_and_expire = \

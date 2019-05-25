@@ -1,22 +1,46 @@
 body {
-    font-family: 'Computer Modern Serif', Serif !important;
+    font-family: "DejaVu Serif", "Cambria", Serif !important;
 }
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Computer Modern Serif', Serif !important;
+    font-family: "DejaVu Serif", "Cambria", Serif !important;
     font-weight: normal;
 }
+h1 {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
 h2 {
-    margin-top: 65px;
+    margin-top: 35px;
     font-size: 1.8em;
 }
 h3 {
     font-weight: bold;
     font-style: italic;
-    margin-top: 50px;
+    margin-top: 30px;
 }
-p, li {
-    line-height: 1.6em;
+h4 {
+    font-weight: bold;
+    font-size: 1.3em;
+}
+p {
+    line-height: 1.3em;
     font-size: 18px;
+    text-align: justify;
+}
+li {
+    line-height: 1.3em;
+    font-size: 19px;
+    text-align: justify;
+}
+li p {
+    line-height: 1.3em;
+    margin-top: 0em;
+    margin-bottom: 0em;
+}
+.revisedby p {
+    font-size: 1.2em;
+    margin-bottom: 0em;
 }
 .query {
     border-radius: 3px;
@@ -31,8 +55,8 @@ span.theorem_label {
     font-style: italic;
 }
 a {
-    text-decoration: none;
-    color: #222;
+    text-decoration: underline;
+    color: #2222AA;
 }
 a:hover {
     color: #2c66d8;
@@ -54,12 +78,12 @@ img, svg {
 }
 h1#pageName {
     font-size: 2.8em;
-    margin-bottom: 50px;
-    margin-top: 50px;
     color: #000;
+    margin-top : 10px;
+    margin-bottom: 20px;
 }
 .maruku-equation {
-    font-size: 1.3em;
+    font-size: 19px;
 }
 .navigation:not(.navfoot) {
     position: absolute;
@@ -71,9 +95,8 @@ h1#pageName {
 }
 .navigation a {
     color: #888!important;
-    font-weight: normal;
     font-size: 13px;
-    margin: 0 10px;
+    margin: 0 20px 0 0;
     font-family: Sans-Serif;
     font-weight: lighter;
 }
@@ -81,9 +104,17 @@ h1#pageName {
     color: #555!important;
 	background:none;
 }
-
 .navigation.navfoot {
-    margin: 50px 0;
+    margin: 20px 0px;
+}
+a.navlinkbackintime {
+    margin: 0 0 0 0;
+}
+span.backintime {
+    color: #888!important;
+    font-size: 13px;
+    font-family: Sans-Serif;
+    margin: 0 20px 0 0;
 }
 #pageName > span {
     position: absolute;
@@ -101,13 +132,12 @@ h1#pageName {
     font-family: Sans-Serif;
     font-weight: lighter;
 }
-div.rightHandSide {
-    border-radius: 3px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-right: 0;
-    border-top: 0;
-}
+
 .maruku_toc li{
+    line-height: 1.3em;
+    font-size: 19px;
+}
+.maruku_toc li p{
     line-height: 1.3em;
 }
 .maruku_toc li a{
@@ -124,8 +154,34 @@ div.rightHandSide {
     color: #2c66d8;
 }
 
+div.rightHandSide {
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 0;
+    border-top: 0;
+    font-size: 14px;
+}
+.rightHandSide p {
+    font-size: 14px;
+}
+.rightHandSide li {
+    font-size: 14px;
+}
+.rightHandSide h3 {
+    margin-top: 20px;
+    font-size: 16px;
+}
+.rightHandSide h4 {
+    font-size: 15px;
+}
+.rightHandSide h2 {
+    font-size: 15px !important;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
 h1#contents {
-    font-size: 1.5em;
+    font-size: 1.8em;
 }
 input[type=text]#searchField {
     width: 100%;
@@ -148,11 +204,11 @@ td, th {
     text-align: left;
     padding: 8px;
 }
-.rightHandSide h3 {
-    margin-top: 20px;
-}
-.rightHandSide h2 {
-    margin-top: 20px;
+blockquote p {
+    font-size:14px;
+    font-style: normal;
+    margin-right: 3em;
+    margin-left: 3em;
 }
 @media only screen and (max-width: 960px) {
     .navigation:not(.navfoot) {
@@ -165,10 +221,6 @@ td, th {
 
 a[href="#navEnd"] {
 	display: none;
-}
-p, li {
-    line-height: 1.4em;
-    font-size: 18px;
 }
 
 .navigation span.views {
@@ -186,4 +238,44 @@ a.existingWikiWord {
 
 a.existingWikiWord:visited {
     color: #00b121;
+}
+
+math {
+    font-family: "DejaVu Math TeX Gyre", "Cambria Math", "STIX Two Math" !important;
+    font-size: 19px;
+}
+
+mtext {
+    font-family: "DejaVu Serif", "Cambria", "STIX Two Text" !important;
+    font-size: 19px;
+}
+
+@font-face {
+    font-family: STIX Two Text;
+    src: local('STIX Two Text'), local('STIX2Text-Regular'),
+         url('../fonts/STIX2Text-Regular.woff2'), url('../fonts/STIX2Text-Regular.woff');
+}
+@font-face {
+    font-family: STIX Two Text;
+    src: local('STIX Two Text Bold'), local('STIX2Text-Bold'),
+         url('../fonts/STIX2Text-Bold.woff2'), url('../fonts/STIX2Text-Bold.woff');
+    font-weight: bold;
+}
+@font-face {
+    font-family: STIX Two Text;
+    src: local('STIX Two Text Italic'), local('STIX2Text-Italic'),
+         url('../fonts/STIX2Text-Italic.woff2'), url('../fonts/STIX2Text-Italic.woff');
+    font-style: italic;
+}
+@font-face {
+    font-family: STIX Two Text;
+    src: local('STIX Two Text Bold Italic'), local('STIX2Text-BoldItalic'),
+         url('../fonts/STIX2Text-BoldItalic.woff2'), url('../fonts/STIX2Text-BoldItalic.woff');
+    font-weight: bold;
+    font-style: italic;
+}
+@font-face {
+    font-family: STIX Two Math;
+    src: local('STIX Two Math'), local('STIX2Math'),
+         url('../fonts/STIX2Math.woff2'), url('../fonts/STIX2Math.woff');
 }

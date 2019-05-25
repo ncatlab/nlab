@@ -38,29 +38,29 @@ class AuthorController < ApplicationController
   private
 
   def nlab_author?(possible_author)
-    author_contributions_binary = File.join(
+    author_contributions_path = File.join(
       Rails.root,
-      "script/author_contributions")
+      "script/src/author_contributions/author_contributions.py")
     is_nlab_author = %x(
-      "#{author_contributions_binary}" is_author "#{possible_author}")
+      "#{author_contributions_path}" is_author "#{possible_author}")
     is_nlab_author.strip! == "True" unless is_nlab_author.nil?
   end
 
   def pages_contributed_to(nlab_author)
-    author_contributions_binary = File.join(
+    author_contributions_path = File.join(
       Rails.root,
-      "script/author_contributions")
+      "script/src/author_contributions/author_contributions.py")
     pages = %x(
-      "#{author_contributions_binary}" pages "#{nlab_author}")
+      "#{author_contributions_path}" pages "#{nlab_author}")
     JSON.parse(pages)
   end
 
   def last_pages_contributed_to(nlab_author)
-    author_contributions_binary = File.join(
+    author_contributions_path = File.join(
       Rails.root,
-      "script/author_contributions")
+      "script/src/author_contributions/author_contributions.py")
     pages = %x(
-      "#{author_contributions_binary}" recent "#{nlab_author}")
+      "#{author_contributions_path}" recent "#{nlab_author}")
     JSON.parse(pages)
   end
 end

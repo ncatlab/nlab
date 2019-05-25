@@ -46,20 +46,20 @@ class AllPagesController < ApplicationController
   private
 
   def all_pages_in_web(web_id)
-    all_pages_binary = File.join(
+    all_pages_path = File.join(
       Rails.root,
-      "script/all_pages")
+      "script/src/all_pages/all_pages.py")
     pages = %x(
-      "#{all_pages_binary}" "#{web_id}")
+      "#{all_pages_path}" "#{web_id}")
     JSON.parse(pages)
   end
 
   def all_pages_in_category(web_id, category_name)
-    all_pages_binary = File.join(
+    all_pages_path = File.join(
       Rails.root,
-      "script/all_pages")
+      "script/src/all_pages/all_pages.py")
     pages = %x(
-      "#{all_pages_binary}" "#{web_id}" --category "#{category_name}")
+      "#{all_pages_path}" "#{web_id}" --category "#{category_name}")
     JSON.parse(pages)
   end
 
@@ -74,29 +74,29 @@ class AllPagesController < ApplicationController
   end
 
   def nlab_author?(possible_author)
-    author_contributions_binary = File.join(
+    author_contributions_path = File.join(
       Rails.root,
-      "script/author_contributions")
+      "script/src/author_contributions/author_contributions.py")
     is_nlab_author = %x(
-      "#{author_contributions_binary}" is_author "#{possible_author}")
+      "#{author_contributions_path}" is_author "#{possible_author}")
     is_nlab_author.strip! == "True" unless is_nlab_author.nil?
   end
 
   def nlab_category?(web_id, possible_category)
-    page_categories_binary = File.join(
+    page_categories_path = File.join(
       Rails.root,
-      "script/page_categories")
+      "script/src/page_categories/page_categories.py")
     is_nlab_category = %x(
-      "#{page_categories_binary}" is_category "#{web_id}" "#{possible_category}")
+      "#{page_categories_path}" is_category "#{web_id}" "#{possible_category}")
     is_nlab_category.strip! == "True" unless is_nlab_category.nil?
   end
 
   def has_categories?(web_id)
-    page_categories_binary = File.join(
+    page_categories_path = File.join(
       Rails.root,
-      "script/page_categories")
+      "script/src/page_categories/page_categories.py")
     has_categories = %x(
-      "#{page_categories_binary}" has_categories "#{web_id}")
+      "#{page_categories_path}" has_categories "#{web_id}")
     has_categories.strip! == "True" unless has_categories.nil?
   end
 end

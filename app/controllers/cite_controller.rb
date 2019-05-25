@@ -34,24 +34,24 @@ class CiteController < ApplicationController
   end
 
   def bib_entry(page_name, revision_number, revision_id, current, unicode)
-    bib_entry_binary = File.join(
+    bib_entry_path = File.join(
       Rails.root,
-      "script/bib_entry")
+      "script/src/bib_entry/bib_entry.py")
     if unicode
       if current
         bib_entry = %x(
-          "#{bib_entry_binary}" "#{page_name}" "#{revision_number}" "#{revision_id}" --current --unicode_permitted)
+          "#{bib_entry_path}" "#{page_name}" "#{revision_number}" "#{revision_id}" --current --unicode_permitted)
       else
         bib_entry = %x(
-          "#{bib_entry_binary}" "#{page_name}" "#{revision_number}" "#{revision_id}" --unicode_permitted)
+          "#{bib_entry_path}" "#{page_name}" "#{revision_number}" "#{revision_id}" --unicode_permitted)
       end
     else
       if current
         bib_entry = %x(
-          "#{bib_entry_binary}" "#{page_name}" "#{revision_number}" "#{revision_id}" --current)
+          "#{bib_entry_path}" "#{page_name}" "#{revision_number}" "#{revision_id}" --current)
       else
         bib_entry = %x(
-          "#{bib_entry_binary}" "#{page_name}" "#{revision_number}" "#{revision_id}")
+          "#{bib_entry_path}" "#{page_name}" "#{revision_number}" "#{revision_id}")
       end
     end
     return bib_entry

@@ -19,11 +19,11 @@ class PageCategoriesController < ApplicationController
   private
 
   def all_categories_in_web(web_id)
-    page_categories_binary = File.join(
+    page_categories_path = File.join(
       Rails.root,
-      "script/page_categories")
+      "script/src/page_categories/page_categories.py")
     pages = %x(
-      "#{page_categories_binary}" all_categories "#{web_id}")
+      "#{page_categories_path}" all_categories "#{web_id}")
     JSON.parse(pages)
   end
 
@@ -38,11 +38,11 @@ class PageCategoriesController < ApplicationController
   end
 
   def nlab_author?(possible_author)
-    author_contributions_binary = File.join(
+    author_contributions_path = File.join(
       Rails.root,
-      "script/author_contributions")
+      "script/src/author_contributions/author_contributions.py")
     is_nlab_author = %x(
-      "#{author_contributions_binary}" is_author "#{possible_author}")
+      "#{author_contributions_path}" is_author "#{possible_author}")
     is_nlab_author.strip! == "True" unless is_nlab_author.nil?
   end
 end

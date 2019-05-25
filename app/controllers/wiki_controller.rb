@@ -432,9 +432,9 @@ class WikiController < ApplicationController
             announcement = announcement.purify
           end
           make_announcement = announcement.present?
-          generate_nforum_post_from_nlab_edit_binary = File.join(
+          generate_nforum_post_from_nlab_edit_path = File.join(
             Rails.root,
-            "script/generate_nforum_post_from_nlab_edit")
+            "script/src/generate_nforum_post_from_nlab_edit/generate_nforum_post_from_nlab_edit.py")
           if @web.id == 39
             web_name = "HoTT"
           elsif @web.id == 23
@@ -445,7 +445,7 @@ class WikiController < ApplicationController
           if make_announcement
             if old_name != new_name
               system(
-                generate_nforum_post_from_nlab_edit_binary,
+                generate_nforum_post_from_nlab_edit_path,
                 "edit",
                 new_name,
                 web_name,
@@ -457,7 +457,7 @@ class WikiController < ApplicationController
                 old_name)
             else
               system(
-                generate_nforum_post_from_nlab_edit_binary,
+                generate_nforum_post_from_nlab_edit_path,
                 "edit",
                 new_name,
                 web_name,
@@ -468,7 +468,7 @@ class WikiController < ApplicationController
             end
           else
             system(
-              generate_nforum_post_from_nlab_edit_binary,
+              generate_nforum_post_from_nlab_edit_path,
               "edit",
               new_name,
               web_name,
@@ -519,9 +519,9 @@ class WikiController < ApplicationController
 
         if [1, 23, 39].include?(@web.id)
           announcement = params[:announcement].purify
-          generate_nforum_post_from_nlab_edit_binary = File.join(
+          generate_nforum_post_from_nlab_edit_path = File.join(
             Rails.root,
-            "script/generate_nforum_post_from_nlab_edit")
+            "script/src/generate_nforum_post_from_nlab_edit/generate_nforum_post_from_nlab_edit.py")
           if @web.id == 39
             web_name = "HoTT"
           elsif @web.id == 23
@@ -530,7 +530,7 @@ class WikiController < ApplicationController
             web_name = @web.name
           end
           system(
-            generate_nforum_post_from_nlab_edit_binary,
+            generate_nforum_post_from_nlab_edit_path,
             "create",
             @page_name,
             web_name,
@@ -829,11 +829,11 @@ class WikiController < ApplicationController
     if @page == nil
       return
     end
-    detect_nforum_discussion_binary = File.join(
+    detect_nforum_discussion_path = File.join(
       Rails.root,
-      "script/detect_nforum_discussion")
+      "script/src/detect_nforum_discussion/detect_nforum_discussion.py")
     link = %x(
-      "#{detect_nforum_discussion_binary}" "#{@page.name}")
+      "#{detect_nforum_discussion_path}" "#{@page.name}")
     link.strip! unless link.nil?
     if !(link.nil?) && !(link == "")
       return link
@@ -841,11 +841,11 @@ class WikiController < ApplicationController
   end
 
   def nlab_author?()
-    author_contributions_binary = File.join(
+    author_contributions_path = File.join(
       Rails.root,
-      "script/author_contributions")
+      "script/src/author_contributions/author_contributions.py")
     is_nlab_author = %x(
-      "#{author_contributions_binary}" is_author "#{@page.name}")
+      "#{author_contributions_path}" is_author "#{@page.name}")
     is_nlab_author.strip! == "True" unless is_nlab_author.nil?
   end
 

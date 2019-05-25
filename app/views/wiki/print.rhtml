@@ -1,14 +1,8 @@
 <%# coding: utf-8 %>
-<%- 
+<%-
   @title = @page.plain_name
   @hide_navigation = true
   @style_additions = ".newWikiWord { background-color: white; font-style: italic; }"
 -%>
 
 <%= @renderer.display_content %>
-
-<div class="revisedby">
-  <%= @page.revisions? ? "Revised" : "Created" %> on <%= format_date(@page.revised_at) %> 
-  by
-  <%= author_link(@page, { :mode => (@link_mode || :show) }) %>
-</div>
