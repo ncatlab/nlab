@@ -1,0 +1,189 @@
+body {
+    font-family: 'Computer Modern Serif', Serif !important;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Computer Modern Serif', Serif !important;
+    font-weight: normal;
+}
+h2 {
+    margin-top: 65px;
+    font-size: 1.8em;
+}
+h3 {
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 50px;
+}
+p, li {
+    line-height: 1.6em;
+    font-size: 18px;
+}
+.query {
+    border-radius: 3px;
+    padding: 0 40px;
+    border-width: 1px;
+    margin: 40px 0;
+}
+strong {
+    font-style: italic;
+}
+span.theorem_label {
+    font-style: italic;
+}
+a {
+    text-decoration: none;
+    color: #222;
+}
+a:hover {
+    color: #2c66d8;
+    background: none;
+    text-decoration: underline;
+}
+a:hover.existingWikiWord {
+    color: #2c66d8;
+    background: none;
+}
+a:visited:hover.existingWikiWord {
+    color: #2c66d8;
+    background: none;
+}
+
+img, svg {
+    margin: 40px auto;
+    display: block;
+}
+h1#pageName {
+    font-size: 2.8em;
+    margin-bottom: 50px;
+    margin-top: 50px;
+    color: #000;
+}
+.maruku-equation {
+    font-size: 1.3em;
+}
+.navigation:not(.navfoot) {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    padding: 15px;
+    color: #888;
+    font-size: 0;
+}
+.navigation a {
+    color: #888!important;
+    font-weight: normal;
+    font-size: 13px;
+    margin: 0 10px;
+    font-family: Sans-Serif;
+    font-weight: lighter;
+}
+.navigation a:hover {
+    color: #555!important;
+	background:none;
+}
+
+.navigation.navfoot {
+    margin: 50px 0;
+}
+#pageName > span {
+    position: absolute;
+    font-size: .45em;
+    top: 10px;
+    left: 20px;
+}
+#pageName > span > svg {
+    margin: 0;
+}
+#pageName > span.webName {
+    left: 70px;
+    top: 17px;
+    color: #555;
+    font-family: Sans-Serif;
+    font-weight: lighter;
+}
+div.rightHandSide {
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 0;
+    border-top: 0;
+}
+.maruku_toc li{
+    line-height: 1.3em;
+}
+.maruku_toc li a{
+    color: #226622;
+}
+.maruku_toc li a:hover {
+    color: #2c66d8;
+}
+.maruku_toc li a:visited{
+    color: #164416;
+}
+
+.maruku_toc li a:visited:hover{
+    color: #2c66d8;
+}
+
+h1#contents {
+    font-size: 1.5em;
+}
+input[type=text]#searchField {
+    width: 100%;
+    padding: 5px 10px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 13px;
+    margin-bottom: -5px;
+    margin-left: 10px;
+    color: #555;
+}
+table {
+    border: 0;
+    margin: auto;
+}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+.rightHandSide h3 {
+    margin-top: 20px;
+}
+.rightHandSide h2 {
+    margin-top: 20px;
+}
+@media only screen and (max-width: 960px) {
+    .navigation:not(.navfoot) {
+        top: 60px;
+   }
+    h1#pageName {
+        margin-top: 100px;
+   }
+}
+
+a[href="#navEnd"] {
+	display: none;
+}
+p, li {
+    line-height: 1.4em;
+    font-size: 18px;
+}
+
+.navigation span.views {
+	font-family: Sans-Serif;
+	margin-left: 30px;
+}
+
+.navigation a {
+	font-weight: normal;
+}
+
+a.existingWikiWord {
+    color: #009600;
+}
+
+a.existingWikiWord:visited {
+    color: #00b121;
+}
