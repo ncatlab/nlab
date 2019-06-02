@@ -350,6 +350,10 @@ class WikiController < ApplicationController
           submitted_edit_page_name = new_name
         end
 
+        if new_name.include?("¤")
+          raise Instiki::ValidationError.new("Cannot use the symbol ¤ in a page name")
+        end
+
         page_content_file_name = submitted_edit_page_name.split.join("_")
         page_content_file_name = page_content_file_name.gsub("/", "¤")
         submitted_edits_page_content_file_path = File.join(
@@ -357,8 +361,30 @@ class WikiController < ApplicationController
           page_content_file_name)
         File.write(submitted_edits_page_content_file_path, the_content)
 
-        if new_name.include?("¤")
-          raise Instiki::ValidationError.new("Cannot use the symbol ¤ in a page name")
+        if @page_name != "Sandbox"
+          spam_detector_path = ENV["NLAB_SPAM_DETECTOR_PATH"]
+          if new_name != @page_name
+            response, error_message, status = Open3.capture3(
+              spam_detector_path,
+              @page.id.to_s,
+              author_name,
+              "-t",
+              new_name,
+              stdin_data: the_content)
+          else
+            response, error_message, status = Open3.capture3(
+              spam_detector_path,
+              @page.id.to_s,
+              author_name,
+              stdin_data: the_content)
+          end
+
+          if !status.success?
+            raise Instiki::ValidationError.new(error_message)
+          elsif response.strip == "Blocked"
+            raise Instiki::ValidationError.new(
+              "Edit blocked by spam detector")
+          end
         end
 
         raise Instiki::ValidationError.new('A page named "' + new_name.escapeHTML + '" already exists.') if
