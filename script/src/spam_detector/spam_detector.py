@@ -79,7 +79,7 @@ def _has_nforum_user(nlab_author):
         if len(query_results) == 1:
             return True
         names_joined_with_underscore = names[0] + "_" + names[1]
-        query_results = execute_single_with_parameters(
+        query_results = _execute_single_with_parameters(
             "SELECT UserID FROM mathforge_user " +
             "WHERE Name = %s",
             [names_joined_with_underscore])
@@ -203,7 +203,9 @@ def main():
             ". Difference ratio: " +
             str(spamDetectionException.difference_ratio) +
             ". Threshold: " +
-            str(spamDetectionException.threshold))
+            str(spamDetectionException.threshold) +
+            ". Blocked content: " +
+            new_page_content)
         log_message = "Blocked" + log_message
         print("Blocked")
     logger.info(log_message)
