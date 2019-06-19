@@ -101,24 +101,37 @@ def _has_nforum_user(nlab_author):
                     return True
     return False
 
+def _number_of_pages_edited_up_to_limit(author, limit):
+    query_results = _execute_single_with_parameters(
+        "SELECT COUNT(DISTINCT page_id) FROM revisions " +
+        "WHERE author = %s",
+        [ author ])
+    number_of_pages_edited = query_results[0][0]
+    if number_of_pages_edited > limit:
+        return limit
+    return number_of_pages_edited
+
 def detect_spam(
          current_content,
          new_content,
          is_title_change,
+         author,
          has_nforum_user):
     sequence_matcher = difflib.SequenceMatcher(
         None,
         current_content,
         new_content)
     difference_ratio = sequence_matcher.quick_ratio()
-    if not has_nforum_user and is_title_change:
+    if (not has_nforum_user) and is_title_change:
         threshold = 0.9
     elif not has_nforum_user:
         threshold = 0.8
     elif is_title_change:
-        threshold = 0.5
+        threshold = 0.5 - (
+            0.5 * (_number_of_pages_edited_up_to_limit(author, 250) / 250))
     else:
-        threshold = 0.2
+        threshold = 0.2 - (
+            0.2 * (_number_of_pages_edited_up_to_limit(author, 250) / 250))
     if difference_ratio < threshold:
         raise SpamDetectionException(difference_ratio, threshold)
     return difference_ratio, threshold
@@ -190,6 +203,7 @@ def main():
             current_page_content,
             new_page_content,
             is_title_change,
+            author,
             has_nforum_user)
         log_message += (
             ". Difference ratio: " +
@@ -208,6 +222,14 @@ def main():
             new_page_content)
         log_message = "Blocked" + log_message
         print("Blocked")
+    except Exception as exception:
+        log_message = (
+            "An unexpected error occurred when trying to approve " +
+            log_message +
+            ". Error: " +
+            str(exception))
+        logger.warning(log_message)
+        sys.exit("An unexpected error occurred")
     logger.info(log_message)
 
 if __name__=="__main__":
