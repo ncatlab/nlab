@@ -1,5 +1,7 @@
 \documentclass[$document_parameters]{standalone}
 
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+
 \usepackage[all, 2cell]{xy}
 
 \UseTwocells

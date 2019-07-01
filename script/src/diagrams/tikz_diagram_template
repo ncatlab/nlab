@@ -1,6 +1,6 @@
 \documentclass[tikz]{standalone}
 
-\usepackage{amsmath, amssymb, amsthm}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
 
 $tikz_libraries
 
