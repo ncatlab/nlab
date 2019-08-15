@@ -201,6 +201,7 @@ def number_equations(page_content, web_address, page_content_file_name):
         page_content_directory,
         "equation_references")
     try:
+        os.mkdir(page_content_directory)
         os.mkdir(equation_references_directory)
     except OSError as osError:
         if osError.errno != errno.EEXIST:
