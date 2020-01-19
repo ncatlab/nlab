@@ -220,7 +220,7 @@ def _process_references(page_content):
         reference_block.define()])
     return references_processor.process(page_content)
 
-def _write_to_file_for_maruku(page_id, content_for_rendering):
+def _write_to_file_for_maruku(page_id, content_for_rendering, is_initial=False):
     root_page_content_directory = os.environ["NLAB_PAGE_CONTENT_DIRECTORY"]
     maruku_root_page_content_directory = os.path.join(
         root_page_content_directory,
@@ -236,6 +236,8 @@ def _write_to_file_for_maruku(page_id, content_for_rendering):
             if osError.errno != errno.EEXIST:
                 raise osError
     page_name = _name_of_page(page_id)
+    if is_initial:
+        page_name = page_name + "--initial"
     page_content_file_name = \
         "_".join(page_name.split()).replace("/", "¤") + ".md"
     page_content_path = os.path.join(
@@ -831,6 +833,7 @@ def main():
             str(exception))
     page_content_file_name = _page_content_file_name(page_id)
     try:
+        _write_to_file_for_maruku(page_id, page_content, True)
         initially_processed_content, pages_to_re_render_and_expire = \
             initial_rendering(page_id, page_content)
         maruku_processed_content = maruku_rendering(
