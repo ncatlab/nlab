@@ -1,6 +1,7 @@
 #!/usr/bin/python3.7
 
 import enum
+import external_link_block
 import find_block
 import json
 import os
@@ -215,14 +216,9 @@ def image_from_file_processor(description):
         caption = description_json["caption"]
     except KeyError:
         caption = None
-    try:
-        _check_has_only_permitted_characters(caption, "caption")
-    except _HasCharacterWhichIsNotPermittedException as \
-            caption_has_character_which_is_not_permitted_exception:
-        raise ImageFromFileException(
-            str(caption_has_character_which_is_not_permitted_exception) +
-            ". Block: " +
-           description)
+    if caption:
+        caption = find_block.Processor([external_link_block.define()]).process(
+            caption)
     image_html = (
         "<img src=\"/" +
         web_address +
