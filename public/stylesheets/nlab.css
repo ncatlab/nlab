@@ -27,6 +27,10 @@ h5 {
     font-weight: bold;
     font-size: 1.15em;
 }
+h6 {
+    font-weight: bold;
+    font-size: 1.075em;
+}
 p {
     line-height: 1.3em;
     font-size: 18px;

@@ -63,7 +63,7 @@ def _split_header(header_line):
         header_size = int(after_header_beginning[0])
     except ValueError:
         raise _NotAHeaderException()
-    if header_size > 5 or header_size < 2:
+    if header_size > 6 or header_size < 2:
         raise _NotAHeaderException()
     split_at_id = after_header_beginning.split("id='", 1)
     if len(split_at_id) > 1:
@@ -166,7 +166,7 @@ def _find_header_which_needs_rendering_processor(
             header_depth +=1
         else:
             break
-    if header_depth <= 5:
+    if header_depth <= 6:
         need_to_render_for_toc_flag.set_to(True)
     return "\n##" + header
 

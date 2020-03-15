@@ -46,7 +46,9 @@ def define_maruku_double_quotation_marks(placeholder, table_of_contents_flag):
 _tex_section_levels = {
     "section": 2,
     "subsection": 3,
-    "subsubsection": 4
+    "subsubsection": 4,
+    "subsubsubsection": 5,
+    "subsubsubsubsection": 6
 }
 
 def _section_html(tex_section_name, tex_section_title):
