@@ -95,6 +95,31 @@ def _table_of_contents(page_content, placeholder):
         stripped_line = line.strip()
         if not "<h" in stripped_line:
             continue
+        lowercase_stripped_line = stripped_line.lower()
+        if "h6" in stripped_line and ((
+                "id=\"proposition" in lowercase_stripped_line) or (
+                "id=\"proof" in lowercase_stripped_line) or (
+                "id=\"remark" in lowercase_stripped_line) or (
+                "id=\"lemma" in lowercase_stripped_line) or (
+                "id=\"note" in lowercase_stripped_line) or (
+                "id=\"corollary" in lowercase_stripped_line) or (
+                "id=\"definition" in lowercase_stripped_line) or (
+                "id=\"example" in lowercase_stripped_line)):
+            continue
+        if "h6" in stripped_line and ((
+                ">Proposition<" in stripped_line) or (
+                ">Proof<" in stripped_line) or (
+                ">Remark<" in stripped_line) or (
+                ">Lemma<" in stripped_line) or (
+                ">Note<" in stripped_line) or (
+                ">Corollary<" in stripped_line) or (
+                ">Definition<" in stripped_line) or (
+                ">Example<" in stripped_line) or (
+                ">Conjecture<" in stripped_line) or (
+                ">Scholium<" in stripped_line) or (
+                ">Terminology<" in stripped_line) or (
+                ">Notation<" in stripped_line)):
+            continue
         try:
             header_size, href, header = _split_header(stripped_line)
         except _NotAHeaderException:
