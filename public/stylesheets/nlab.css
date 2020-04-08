@@ -81,7 +81,7 @@ a:visited:hover.existingWikiWord {
 }
 
 img, svg {
-    margin: 40px auto;
+    margin: 40px auto 10px;
     display: block;
 }
 h1#pageName {
