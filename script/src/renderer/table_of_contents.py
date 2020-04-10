@@ -109,6 +109,7 @@ def _table_of_contents(page_content, placeholder):
         if "h6" in stripped_line and ((
                 ">Proposition<" in stripped_line) or (
                 ">Proof<" in stripped_line) or (
+                ">Theorem<" in stripped_line) or (
                 ">Remark<" in stripped_line) or (
                 ">Lemma<" in stripped_line) or (
                 ">Note<" in stripped_line) or (

@@ -19,7 +19,7 @@ _theorem_environments = {
     "notn": ("Notation", "num_defn"),
     "notation": ("Notation", "num_defn"),
     "terminology": ("Terminology", "num_defn"),
-    "scholium": ("Scholium", "num_cor"),
+    "scholium": ("Scholium", "num_remark"),
     "conjecture": ("Conjecture", "num_prop"),
     "conj": ("Conjecture", "num_prop"),
     "example": ("Example", "num_remark"),
