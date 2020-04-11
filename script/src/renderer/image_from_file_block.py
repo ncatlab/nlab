@@ -246,10 +246,6 @@ def image_from_file_processor(description):
            str(alt) +
            "\"")
     style = None
-    if float_type:
-       style = (
-           "float: " +
-           float_type.value)
     if margin:
         if style:
             style = (
@@ -269,9 +265,26 @@ def image_from_file_processor(description):
             caption +
             "</figcaption>\n" +
             "</figure>")
+    div_beginning = "<div "
+    if float_type:
+       if float_type == Float.RIGHT:
+           div_beginning = (
+               div_beginning +
+               "class=\"float_right_image\" ")
+       else:
+           if style:
+               style = (
+                   style +
+                   "; float: " +
+                   float_type.value)
+           else:
+               style = (
+                   "float: " +
+                   float_type.value)
     if style:
         image_html = (
-            "<div style='" +
+            div_beginning +
+            "style='" +
             style +
             "'>\n  " +
             image_html +
