@@ -242,7 +242,13 @@ def create_svg(diagram_source_directory, diagram_id):
     with open(svg_path, "r") as svg_file:
         svg_diagram_lines = svg_file.read().splitlines()
     svg_diagram = "\n".join(svg_diagram_lines[1:])
-    return svg_diagram.replace("glyph", diagram_id + "-glyph")
+    svg_diagram = svg_diagram.replace("glyph", diagram_id + "-glyph")
+    svg_diagram = svg_diagram.replace(
+        "id=\"clip",
+        "id=\"" + diagram_id + "-clip")
+    return svg_diagram.replace(
+        "#clip",
+        "#" + diagram_id + "-clip")
 
 def remove_diagram_files(diagram_source_directory, diagram_id):
     diagram_id_path = os.path.join(diagram_source_directory, diagram_id + "*")
