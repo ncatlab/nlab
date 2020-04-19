@@ -21,3 +21,4 @@ gem "mysql2"
 gem "activerecord-mysql2-adapter"
 gem "will_paginate", "~> 2.3.15"
 gem "diff-lcs", "~> 1.1.2"
+gem 'test-unit'
