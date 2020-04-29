@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 gem "sqlite3", :require => "sqlite3"
 gem "itextomml", :git => "https://github.com/adeel/itextomml.git"
 gem "rack", "1.4.5"
@@ -6,8 +6,8 @@ gem "unicorn"
 gem "rubyzip", '~> 0.9.9'
 gem "RedCloth", ">=4.0.0"
 gem "erubis"
-gem "nokogiri", '~>1.7.0'
-gem "rake", '~>10.4.0'
+gem "nokogiri", '~>1.8.0'
+gem "rake", '~>12.3.2'
 gem "rdoc"
 gem "json", "~> 2.5.1"
 gem "abstract", "~> 1.0.0"
