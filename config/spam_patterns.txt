@@ -112,3 +112,10 @@ alychidesign
 updating our do-follow
 GSA-Website
 GSA Website
+papersowl
+PapersOwl
+diamondlinks
+buyqualityplr
+^(?!Tangora)Tango
+^(?!tangora)tango
+Techsteq
