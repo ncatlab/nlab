@@ -11,7 +11,7 @@ The nLab is currently not well suited to developing locally. This will change wi
 Joining in
 ==========
 
-All help is very welcome! Just send an email to Richard Williamson (richard (at) rwilliamson-mathematics.info) or Urs Schreiber (urs.schreiber (at) gmail.com) to express your interest, and we'll take it from there.
+All help is very welcome! Just get in touch on the [nForum](https://nforum.ncatlab.org/) to express your interest, and we'll take it from there.
 
 License
 =======
