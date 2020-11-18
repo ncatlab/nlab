@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'fileutils'
 require 'maruku'
 require 'maruku/ext/math'
@@ -150,16 +151,21 @@ class WikiController < ApplicationController
     render(:layout => 'tex')
   end
 
-
   def search
-    @query = params['query'] ? params['query'].purify : ''
-    @title_results = @web.select { |page| page.name =~ /#{@query}/i }.sort
-    @results = @web.select { |page| page.content =~ /#{@query}/i }.sort
-    all_pages_found = (@results + @title_results).uniq
-    if all_pages_found.size == 1
-      redirect_to_page(all_pages_found.first.name)
-    end
-  end
+     @query = params['query'] ? params['query'].purify : ''
+     @title_results = @web.select { |page| page.name =~ /#{@query}/i }.sort
+     if !@title_results.empty? && @title_results.include?(@query)
+       @exact_match = [@query]
+     else
+       @exact_match = []
+     end
+     @results = @web.select { |page| page.content =~ /#{@query}/i}.sort
+     all_pages_found = (@results + @title_results).uniq
+     if all_pages_found.size == 1
+       redirect_to_page(all_pages_found.first.name)
+     end
+   end
+
 
   # Within a single page --------------------------------------------------------
 
@@ -270,7 +276,17 @@ class WikiController < ApplicationController
     @page ||= wiki.read_page(@web_name, @page_name)
     @link_mode ||= :publish
     if @page
-       @renderer = PageRenderer.new(@page.current_revision)
+       page_content_directory = File.join(
+         ENV["NLAB_PAGE_CONTENT_DIRECTORY"],
+         web_address(@page.web_id))
+       page_content_file_name = @page.name.split.join("_")
+       page_content_file_name = page_content_file_name.gsub("/", "¤")
+       page_content_file_path = File.join(page_content_directory, page_content_file_name)
+       if File.file?(page_content_file_path)
+         @rendered_content = File.read(page_content_file_path)
+       else
+         @renderer = PageRenderer.new(@page.current_revision)
+       end
 
     else
       real_pages = WikiReference.pages_that_redirect_for(@web, @page_name)
@@ -481,6 +497,9 @@ class WikiController < ApplicationController
                 @page.id.to_s,
                 "--old_page_name",
                 old_name)
+              #   "--ip_address",
+              #   remote_ip
+              # )
             else
               system(
                 generate_nforum_post_from_nlab_edit_path,
@@ -491,6 +510,9 @@ class WikiController < ApplicationController
                 announcement,
                 author_name,
                 @page.id.to_s)
+              #   "--ip_address",
+              #   remote_ip
+              # )
             end
           else
             system(
@@ -503,6 +525,9 @@ class WikiController < ApplicationController
               author_name,
               @page.id.to_s,
               "--is_trivial")
+            #   "--ip_address",
+            #   remote_ip
+            # )
           end
         end
       else
@@ -563,6 +588,9 @@ class WikiController < ApplicationController
             @web.id.to_s,
             announcement,
             author_name)
+          #   "--ip_address",
+          #   remote_ip
+          # )
         end
       end
       redirect_to_page @page_name

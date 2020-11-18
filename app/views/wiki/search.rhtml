@@ -1,6 +1,18 @@
 <%# coding: utf-8 %>
 <%- @title = "Search results for \"#{h @query}\"".html_safe -%>
 
+<%- unless @exact_match.empty? -%>
+<h2>Exact match:</h2>
+<ul>
+    <%- for page in @exact_match -%>
+      <li>
+        <%= link_to page.plain_name, :web => @web.address, :action => 'show', :id => page.name %>
+      </li>
+    <%- end -%>
+  </ul>
+<%- end -%>
+
+
 <%- unless @title_results.empty? -%>
 <h2><%= @title_results.length %> page(s) containing search string in the page name:</h2>
   <ul>

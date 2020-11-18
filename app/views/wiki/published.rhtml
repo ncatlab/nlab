@@ -6,7 +6,11 @@
   @inline_style = false
 -%>
 
-<%= @renderer.display_published %>
+<%- if @rendered_content -%>
+  <%= @rendered_content.html_safe %>
+<%- else -%>
+  <%= @renderer.display_published %>
+<%- end -%>
 
 <div class="revisedby">
   <%= @page.revisions? ? "Revised" : "Created" %> on <%= format_date(@page.revised_at) %>
