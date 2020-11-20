@@ -23,6 +23,7 @@ _theorem_environments = {
     "conjecture": ("Conjecture", "num_prop"),
     "conj": ("Conjecture", "num_prop"),
     "example": ("Example", "num_remark"),
+    "exercise": ("Exercise", "num_remark"),
     "proof": ("Proof", "proof")
 }
 
