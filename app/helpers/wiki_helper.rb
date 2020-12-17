@@ -2,6 +2,7 @@ module WikiHelper
 
   def navigation_menu_for_revision
     menu = []
+    menu << nforum_discussion
     menu << forward
     menu << back_for_revision if @revision_number > 1
     menu << current_revision
