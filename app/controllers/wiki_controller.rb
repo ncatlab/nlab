@@ -181,6 +181,7 @@ class WikiController < ApplicationController
       redirect_to :web => @web_name, :action => 'locked', :id => @page_name
     else
       @page.lock(Time.now, @author)
+      @link_to_nforum_discussion = link_to_nforum_discussion()
       if params["failed_edit"].nil? || params["failed_edit"].to_i != 1
         @failed_edit = false
         return

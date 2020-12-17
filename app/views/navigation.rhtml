@@ -25,10 +25,9 @@ end
   <%- else -%>
     <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" title="Discuss this page on the nForum. It does not yet have a dedicated thread; feel free to create one, giving it the same name as the title of this page" style="color:black">Discuss this page</a> |
   <%- end -%>
-  <%- if (@web.name == "nLab") && (@page != nil) && (@page.name != "HomePage") && @is_author -%>
+  <%- if ([1, 23, 39].include?(@web.id)) && (@page != nil) && (@page.name != "HomePage") && @is_author -%>
     <a href="https://ncatlab.org/nlab/author/<%= u @page.name =%>" title="Overview of nLab pages which <%= @page.name =%> has edited" style="color: black">Pages contributed to</a> |
   <%- end -%>
-    <%= list_item 'Feeds', {:action => 'feeds'}, 'Subscribe to changes by Atom' %> |
 <% end -%>
     <% form_tag({ :controller => 'wiki', :action => 'search', :web => @web.address},
                  {'id' => 'navigationSearchForm', 'method' => 'get', 'accept-charset' => 'utf-8' }) do %>
@@ -40,7 +39,6 @@ end
 <%- else -%>
     <%= list_item 'Home Page', {:action => 'published', :id => 'HomePage'}, 'Home page', 'H' %> |
     <%= list_item 'All Pages', {:action => "all_pages"}, 'List of all pages', 'A' %> |
-    <%= list_item 'Feeds', {:action => 'feeds'}, 'Subscribe to changes by Atom' %>
 <% end-%>
   <span id='navEnd'></span>
 </div>

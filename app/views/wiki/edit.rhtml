@@ -35,7 +35,13 @@
             <% if ([1, 23, 39].include?(@web.id)) && (@page_name != "Sandbox") -%>
                 <div>
                     <p style="font-size: 0.8em; width: 70%;">
-                        For non-trivial edits, please briefly describe your changes below. Your comments will be added to the <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" target="_blank">nForum</a> discussion thread for this page, which can also be used for further discussion related to it. For trivial edits, such as correcting typos, please leave the box below empty; feel free to ask for advice at the nForum if you are unsure.
+                        For non-trivial edits, please briefly describe your changes below.
+<%- if !(@link_to_nforum_discussion.nil?) && !(@link_to_nforum_discussion == "")  -%>
+Your comments will be added to the <a href="<%= @link_to_nforum_discussion -%>">nForum discussion thread</a> for this page, which can also be used for further discussion related to this page.
+<%- else -%>
+A discussion thread for this page does not yet exist at the <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0">nForum</a>, but will be created upon submission of your changes, and your comments will be added to it. This discussion thread can also be used for further discussion related to this page.
+<%- end -%>
+For trivial edits, such as correcting typos, please leave the box below empty; feel free to ask for advice at the nForum if you are unsure.
                     </p>
                 </div>
                 <div>

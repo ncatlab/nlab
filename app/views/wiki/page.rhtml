@@ -32,10 +32,6 @@
   <%= link_to('Print',
             { :web => @web.address, :action => 'print', :id => @page.name },
             { :accesskey => 'p', :id => 'view_print', :rel => 'nofollow' }) %>
-  <%- if @web.markup == :markdownMML or @web.markup == :markdown or @web.markup == :markdownPNG -%>
-    <%= link_to 'TeX', {:web => @web.address, :action => 'tex', :id => @page.name},
-            {:id => 'view_tex', :rel => 'nofollow' } %>
-  <%- end -%>
     <%= link_to 'Source', {:web => @web.address, :action => 'source', :id => @page.name},
             {:id => 'view_source', :rel => 'nofollow' } %>
 
