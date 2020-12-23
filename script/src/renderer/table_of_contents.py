@@ -105,7 +105,9 @@ def _table_of_contents(page_content, placeholder):
                 "id=\"corollary" in lowercase_stripped_line) or (
                 "id=\"definition" in lowercase_stripped_line) or (
                 "id=\"example" in lowercase_stripped_line) or (
-                "id=\"exercise" in lowercase_stripped_line)):
+                "id=\"exercise" in lowercase_stripped_line) or (
+                "id=\"statement" in lowercase_stripped_line) or (
+                "id=\"assumption" in lowercase_stripped_line)):
             continue
         if "h6" in stripped_line and ((
                 ">Proposition<" in stripped_line) or (
@@ -121,7 +123,9 @@ def _table_of_contents(page_content, placeholder):
                 ">Scholium<" in stripped_line) or (
                 ">Terminology<" in stripped_line) or (
                 ">Notation<" in stripped_line) or (
-                ">Exercise<" in stripped_line)):
+                ">Exercise<" in stripped_line) or (
+                ">Statement<" in stripped_line) or (
+                ">Assumption<" in stripped_line)):
             continue
         try:
             header_size, href, header = _split_header(stripped_line)

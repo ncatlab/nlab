@@ -24,6 +24,9 @@ _theorem_environments = {
     "conj": ("Conjecture", "num_prop"),
     "example": ("Example", "num_remark"),
     "exercise": ("Exercise", "num_remark"),
+    "statement": ("Statement", "num_theorem"),
+    "assumption": ("Assumption", "num_theorem"),
+    "assum": ("Assumption", "num_theorem"),
     "proof": ("Proof", "proof")
 }
 
