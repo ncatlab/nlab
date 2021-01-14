@@ -1,8 +1,8 @@
 \documentclass[$document_parameters]{standalone}
 
-\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{amsmath, amssymb, amsthm, mathtools, xcolor}
 
-\usepackage[all, 2cell]{xy}
+\usepackage[all, color, 2cell]{xy}
 
 \UseTwocells
 
