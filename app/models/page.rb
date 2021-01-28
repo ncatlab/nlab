@@ -143,7 +143,7 @@ class Page < ActiveRecord::Base
       "show")
     cached_content_path = File.join(
       cache_directory,
-      CGI.escape(page_name) + ".cache")
+      "\"" + CGI.escape(page_name) + ".cache" + "\"")
     File.delete(cached_content_path) if File.exist?(cached_content_path)
   end
 
