@@ -1,7 +1,9 @@
 #!/usr/bin/python3.7
 
 import argparse
+import bibitem_block
 import category_block
+import citation_block
 import errno
 import centre_block
 import find_block
@@ -399,7 +401,9 @@ def render(page_id, page_content):
         script_block.define_script_tags(),
         script_block.define_javascript_prefix(),
         image_from_file_block.define(),
-        vertical_space_block.define_linebreak() ]
+        vertical_space_block.define_linebreak(),
+        bibitem_block.define(_web_address_of_page(page_id)),
+        citation_block.define() ]
     processor = find_block.Processor(blocks)
     processed_content = processor.process(page_content)
     processed_content = _surround_tables_with_blank_lines(processed_content)

@@ -215,6 +215,9 @@ class WikiController < ApplicationController
   end
 
   def new
+    if !params["is_reference"].nil?
+      @is_reference = true
+    end
     redirect_to :web => @web_name, :action => 'edit', :id => @page_name unless @page.nil?
     if params["failed_edit"].nil? || params["failed_edit"].to_i != 1
       @failed_edit = false
@@ -336,6 +339,46 @@ class WikiController < ApplicationController
     # Check for spam
     if !(params["see_if_human"].blank?)
       flash[:error] = "Cannot save page due to activation of spam filter"
+      return
+    end
+
+    if !params["is_reference"].nil?
+      bibliography_entry = params["content"].purify
+
+      submitted_edits_directory_path = File.join(
+        ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
+        @web.address)
+      if !File.exist?(submitted_edits_directory_path)
+        Dir.mkdir(submitted_edits_directory_path)
+      end
+
+      reference_name = @page_name.split.join("_")
+      reference_file_name = reference_name.gsub("/", "¤")
+      submitted_edits_reference_file_path = File.join(
+        submitted_edits_directory_path,
+        reference_file_name)
+      File.write(submitted_edits_reference_file_path, bibliography_entry)
+
+      save_reference_path = ENV["NLAB_SAVE_REFERENCE_PATH"]
+      filter_spam(bibliography_entry)
+      response, error_message, status = Open3.capture3(
+        save_reference_path,
+        @author.purify,
+        stdin_data: bibliography_entry)
+      if !status.success?
+        flash[:error] = error_message
+        param_hash = {
+          :web => @web_name,
+          :id => @page_name,
+          :is_reference => 1,
+          :failed_edit => 1}
+        redirect_to param_hash.update( :action => 'new' )
+        return
+      end
+      citation_key = response.strip
+      redirect_to :web => @web_name, :controller => 'reference',
+        :action => 'show',
+        :citation_key => citation_key
       return
     end
 
