@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>"Bibliography"</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<link href="/stylesheets/instiki.css" media="all" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/nlab.css" media="all" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/dreampulse/computer-modern-web-font/master/fonts.css"/>
+
+<style type="text/css">
+  h1#pageName, div.info, .newWikiWord a, a.existingWikiWord, .newWikiWord a:hover, [actiontype="toggle"]:hover, #TextileHelp h3 {
+    color: #226622;
+  }
+  a:visited.existingWikiWord {
+    color: #164416;
+  }
+</style>
+</head>
+
+<body>
+<div id="Container">
+<div id="Content">
+  <h1 id="pageName">
+    <span style="float: left; margin: 0.5em 0.25em -0.25em 0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1.872em" height="1.8em" viewBox="0 0 190 181">
+        <path fill="#226622" d="M72.8 145c-1.6 17.3-15.7 10-23.6 20.2-5.6 7.3 4.8 15 11.4 15 11.5-.2 19-13.4 26.4-20.3 3.3-3 8.2-4 11.2-7.2a14 14 0 0 0 2.9-11.1c-1.4-9.6-12.4-18.6-16.9-27.2-5-9.6-10.7-27.4-24.1-27.7-17.4-.3-.4 26 4.7 30.7 2.4 2.3 5.4 4.1 7.3 6.9 1.6 2.3 2.1 5.8-1 7.2-5.9 2.6-12.4-6.3-15.5-10-8.8-10.6-15.5-23-26.2-31.8-5.2-4.3-11.8-8-18-3.7-7.3 4.9-4.2 12.9.2 18.5a81 81 0 0 0 30.7 23c3.3 1.5 12.8 5.6 10 10.7-2.5 5.2-11.7 3-15.6 1.1-8.4-3.8-24.3-21.3-34.4-13.7-3.5 2.6-2.3 7.6-1.2 11.1 2.8 9 12.2 17.2 20.9 20.5 17.3 6.7 34.3-8 50.8-12.1z"/>
+        <path fill="#a41e32" d="M145.9 121.3c-.2-7.5 0-19.6-4.5-26-5.4-7.5-12.9-1-14.1 5.8-1.4 7.8 2.7 14.1 4.8 21.3 3.4 12 5.8 29-.8 40.1-3.6-6.7-5.2-13-7-20.4-2.1-8.2-12.8-13.2-15.1-1.9-2 9.7 9 21.2 12 30.1 1.2 4 2 8.8 6.4 10.3 6.9 2.3 13.3-4.7 17.7-8.8 12.2-11.5 36.6-20.7 43.4-36.4 6.7-15.7-13.7-14-21.3-7.2-9.1 8-11.9 20.5-23.6 25.1 7.5-23.7 31.8-37.6 38.4-61.4 2-7.3-.8-29.6-13-19.8-14.5 11.6-6.6 37.6-23.3 49.2z"/>
+        <path fill="#193c78" d="M86.3 47.5c0-13-10.2-27.6-5.8-40.4 2.8-8.4 14.1-10.1 17-1 3.8 11.6-.3 26.3-1.8 38 11.7-.7 10.5-16 14.8-24.3 2.1-4.2 5.7-9.1 11-6.7 6 2.7 7.4 9.2 6.6 15.1-2.2 14-12.2 18.8-22.4 27-3.4 2.7-8 6.6-5.9 11.6 2 4.4 7 4.5 10.7 2.8 7.4-3.3 13.4-16.5 21.7-16 14.6.7 12 21.9.9 26.2-5 1.9-10.2 2.3-15.2 3.9-5.8 1.8-9.4 8.7-15.7 8.9-6.1.1-9-6.9-14.3-9-14.4-6-33.3-2-44.7-14.7-3.7-4.2-9.6-12-4.9-17.4 9.3-10.7 28 7.2 35.7 12 2 1.1 11 6.9 11.4 1.1.4-5.2-10-8.2-13.5-10-11.1-5.2-30-15.3-35-27.3-2.5-6 2.8-13.8 9.4-13.6 6.9.2 13.4 7 17.5 12C70.9 34 75 43.8 86.3 47.4z"/>
+      </svg>
+    </span>
+    <span class="webName"><%= @web.name %></span><br />
+    Bibliography
+  </h1>
+
+<%= render(:file => 'navigation') unless @web.nil? || @hide_navigation %>
+
+<div class="inputFieldWithPrompt">
+  <p>
+    <label for="reference_search">Search for reference:</label>
+  </p>
+  <p>
+    <input type="text" id="reference_search" name="reference_search" size="60" style="font-size: 1em" oninput="show_matches()"/>
+  </p>
+  <p>
+    At least four characters must be used. Regular expessions can be used. For example, \bcharac will search for titles (or authors) containing a word beginning 'charac'.
+  </p>
+</div>
+
+<div>
+  <ul id="search_results" style="list-style-type: none; margin-left: 0em; padding-left: 0em">
+  </ul>
+</div>
+
+</div>
+</div>
+
+<script>
+  var all_references = <%= @all_references %>
+  var reference_search_input = document.getElementById("reference_search")
+  var search_results = document.getElementById("search_results")
+
+  reference_search_input.addEventListener("keypress", function(event) {
+    if (event.keyCode === 13) {
+      show_matches()
+    }
+  })
+
+  var search_expression = "<%= @search_expression %>"
+  if (search_expression) {
+    reference_search_input.value = search_expression
+    show_matches()
+  }
+
+  function show_matches() {
+    var search_text = reference_search_input.value
+    window.history.pushState(
+      search_text,
+      "",
+      "?search=" + encodeURIComponent(search_text))
+    var search_matches = []
+    if (((search_text.indexOf('|') == -1) && search_text.length < 4) ||
+        (search_text.length - search_text.lastIndexOf('|') < 5)) {
+      search_results.innerHTML = ""
+      return
+    } else if (!isNaN(search_text)) {
+      search_matches = all_references.filter(
+        function(reference) {
+          return reference["year"] === search_text
+        }
+      )
+    } else {
+      try {
+          var search_expression = new RegExp(search_text, "i")
+      } catch (error) {
+          if (error instanceof SyntaxError) {
+              return
+          }
+          throw error
+      }
+      search_matches = all_references.filter(
+        function(reference) {
+          return search_expression.test(reference["title"]) ||
+              search_expression.test(reference["author"])
+        }
+      )
+    }
+    search_results.innerHTML = ""
+    search_matches.forEach((match) => {
+      var search_result = document.createElement("li")
+      var citation_key = match["citation_key"]
+      var author = match["author"]
+      var title = match["title"]
+      var year = match["year"]
+      search_result.innerHTML = `${author}, ${title} (${year}) [<a class="existingWikiWord" href="/<%= @web_name %>/reference/show/${citation_key}">${citation_key}</a>]`
+      search_result.id = match["citation_key"]
+      search_results.appendChild(search_result)
+    })
+  }
+</script>
+</body>
+</html>
