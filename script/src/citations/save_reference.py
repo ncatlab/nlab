@@ -60,6 +60,10 @@ class CitationKeyAlreadyUsedException(Exception):
     def __init__(self, message):
         super().__init__(message)
 
+class RequiredFieldException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
 class UnexpectedBibtexFieldException(Exception):
     def __init__(self, message):
         super().__init__(message)
@@ -120,6 +124,13 @@ class ZentralblattBibtexField(enum.Enum):
     def is_custom_field(self):
         return True
 
+class LinkField(enum.Enum):
+    ARXIV = "arxiv"
+    DOI = "doi"
+
+    def is_custom_field(self):
+        return False
+
 def store(bibtex_json, made_by):
     bibtex_json["custom"] = json.dumps(bibtex_json["custom"])
     parameters = list(bibtex_json.values())
@@ -147,6 +158,16 @@ def store(bibtex_json, made_by):
         else:
             raise database_error
 
+def _extract_surname(author):
+    author = author.strip()
+    author_parts = author.split('{')
+    if (len(author_parts) != 2) or ('}' not in author_parts[1]):
+        raise AuthorFormatException(
+            "An author must be given in the form:\n\nfirst names/initials " +
+            "{surname}\n\nThis is not the case for: " +
+            author)
+    return author_parts[1].split('}')[0]
+
 def citation_key(authors, year):
     key = ""
     author_parts = authors.split("and")
@@ -159,7 +180,7 @@ def citation_key(authors, year):
                     "\n\n[[nLab page name for author | author name in " +
                     "bibliographic format]]\n\n The author's name " +
                     "in bibliographic format is usually:\n\n" +
-                    "surname, first names/initials.\n\nThis is not the case " +
+                    "first names/initials {surname}.\n\nThis is not the case " +
                     "for: " +
                     author)
             nlab_link_parts = author[:-2].split('|')
@@ -169,11 +190,12 @@ def citation_key(authors, year):
                     "\n\n[[nLab page name for author | author name in " +
                     "bibliographic format]]\n\n The author's name " +
                     "in bibliographic format is usually:\n\n" +
-                    "surname, first names/initials.\n\nThis is not the case " +
+                    "first names/initials {surname}.\n\nThis is not the case " +
                     "for: " +
                     author)
             author = nlab_link_parts[1]
-        key += "".join(author.split(",")[0].split())
+        surname = _extract_surname(author)
+        key += "".join(surname.split())
     key += str(year)
     return key
 
@@ -184,14 +206,17 @@ def parse_line(line):
         bibtex_field = BibtexField(field)
     except ValueError:
         try:
-            bibtex_field = ZentralblattBibtexField(field)
-        except:
-            raise UnexpectedBibtexFieldException(
-                "Unexpected bibtex field '" +
-                field +
-                "'")
+            bibtex_field = LinkField(field)
+        except ValueError:
+            try:
+                bibtex_field = ZentralblattBibtexField(field)
+            except ValueError:
+                raise UnexpectedBibtexFieldException(
+                    "Unexpected bibtex field '" +
+                    field +
+                    "'")
     bibtex_value = \
-        line_parts[1].strip()[:-1].lstrip("{").rstrip("}").rstrip(".")
+        line_parts[1].strip()[:-1].replace("{", "", 1).replace("}", "", 1)
     return bibtex_field, bibtex_value
 
 def parse(bibtex_entry):
@@ -208,6 +233,8 @@ def parse(bibtex_entry):
             first_line_parts[1].split(",")[0].strip()
     for line in bibtex_entry_lines[1:-1]:
         bibtex_field, bibtex_value = parse_line(line)
+        if bibtex_field != BibtexField.AUTHOR:
+            bibtex_value = bibtex_value.lstrip("{").rstrip("}").rstrip(".")
         if bibtex_field.is_custom_field():
             bibtex_json["custom"][bibtex_field.name.lower()] = bibtex_value
         else:
@@ -219,8 +246,25 @@ def parse(bibtex_entry):
         if bibtex_field.is_custom_field():
             bibtex_json["custom"][bibtex_field.name.lower()] = bibtex_value
         else:
-            bib, made_btex_json[bibtex_field.name.lower()] = bibtex_value
+            bibtex_json[bibtex_field.name.lower()] = bibtex_value
     return bibtex_json
+
+def _validate(document_type, required_fields, bibtex_json):
+    for required_field in required_fields:
+        try:
+            bibtex_json[required_field]
+        except KeyError:
+            raise RequiredFieldException(
+                "The following field must be present for a reference of " +
+                document_type +
+                " type: " +
+                required_field)
+
+def _validate_article(bibtex_json):
+    _validate(
+        "article",
+        ["author", "year", "journal", "pages", "title", "volume"],
+        bibtex_json)
 
 def add(bibtex_entry, made_by):
     try:
@@ -231,31 +275,19 @@ def add(bibtex_entry, made_by):
             " when adding the following BibTex entry: " +
             bibtex_entry)
         sys.exit(str(unexpectedBibtexFieldException))
+    if bibtex_json["document_type"] == "article":
+        _validate_article(bibtex_json)
     logger.info(
         "Successfully constructed the JSON " +
         json.dumps(bibtex_json) +
         " from the following BibTex entry: " +
         bibtex_entry)
+    bibtex_json["citation_key"] = citation_key(
+        bibtex_json["author"],
+        bibtex_json["year"])
     bibtex_json["author"] = \
         bibtex_json["author"].replace("{", "").replace("}", "")
-    try:
-        bibtex_json["citation_key"] = citation_key(
-            bibtex_json["author"],
-            bibtex_json["year"])
-    except AuthorFormatException as authorFormatException:
-        logger.warning(
-            str(authorFormatException) +
-            ". BibTex entry: " +
-            bibtex_entry)
-        sys.exit(str(authorFormatException))
-    try:
-        store(bibtex_json, made_by)
-    except CitationKeyAlreadyUsedException as citationKeyAlreadyUsedException:
-        logger.warning(
-            str(citationKeyAlreadyUsedException) +
-            ". BibTex entry: " +
-            bibtex_entry)
-        sys.exit(str(citationKeyAlreadyUsedException))
+    store(bibtex_json, made_by)
     return bibtex_json["citation_key"]
 
 """
@@ -279,6 +311,15 @@ def main():
     bibtex_entry = sys.stdin.read()
     try:
         print(add(bibtex_entry, made_by))
+    except (
+            AuthorFormatException,
+            RequiredFieldException,
+            CitationKeyAlreadyUsedException) as exception:
+        logger.warning(
+            str(exception) +
+            ". BibTex entry: " +
+            bibtex_entry)
+        sys.exit(str(exception))
     except Exception as exception:
         logger.error(
             "An unexpected error occurred when adding a BibTex entry. " +
