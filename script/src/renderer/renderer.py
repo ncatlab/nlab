@@ -402,7 +402,7 @@ def render(page_id, page_content):
         script_block.define_javascript_prefix(),
         image_from_file_block.define(),
         vertical_space_block.define_linebreak(),
-        bibitem_block.define(_web_address_of_page(page_id)),
+        bibitem_block.define(_web_address_of_page(page_id), page_id),
         citation_block.define() ]
     processor = find_block.Processor(blocks)
     processed_content = processor.process(page_content)

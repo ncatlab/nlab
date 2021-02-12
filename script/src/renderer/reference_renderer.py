@@ -101,9 +101,12 @@ def render(citation_key):
         raise ReferenceNotFoundException(citation_key)
     reference_type = reference[2]
     if reference_type == "article":
-        return mistletoe_nlab_renderer.render(_render_article(reference))
+        rendered_reference = mistletoe_nlab_renderer.render(
+            _render_article(reference))
     else:
         raise UnsupportedReferenceTypeException(reference_type)
+    reference_id = reference[0]
+    return rendered_reference, reference_id
 
 def _made_at(citation_key):
     timestamp = _execute_single_with_parameters(
@@ -132,7 +135,7 @@ def main():
     rendered_reference_json = dict()
     try:
         rendered_reference_json["reference"] = \
-            render(citation_key)
+            render(citation_key)[0]
         rendered_reference_json["made_at"] = _made_at(citation_key)
         print(json.dumps(rendered_reference_json, indent=2))
     except (ReferenceNotFoundException,
