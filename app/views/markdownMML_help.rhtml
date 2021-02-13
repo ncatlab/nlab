@@ -1,4 +1,13 @@
 <%# coding: utf-8 %>
-<h3>Markdown+itex2MML formatting tips (<a target="_new" href="http://daringfireball.net/projects/markdown/syntax">basics</a>, <a target="_new" href="http://michelf.com/projects/php-markdown/extra/">extended syntax</a>, <a target="_new" href="http://golem.ph.utexas.edu/~distler/maruku/proposal.html">metadata</a>, <a target="_new" href="http://golem.ph.utexas.edu/instiki/show/Theorems">theorems</a>)</h3>
-<p>For a complete list of LaTeX commands supported here, see the <a href="http://golem.ph.utexas.edu/~distler/blog/itex2MMLcommands.html">itex2MML Commands Summary</a>.</p>
-<%= render(:file => "markdown_table") -%>
+<h3 style="font-size: 1.1em; font-style: normal; text-align: center">Syntax tips</h3>
+
+<ol style="margin-left: 0em; padding-left: 0em">
+  <li style="font-size: 0.8em">The basic syntax is <a href="https://www.markdownguide.org/cheat-sheet/">extended Markdown</a>. </li>
+  <li style="font-size: 0.8em">Links to other nLab pages should be made by surrounding the name of the page in double square brackets: [[ name of page ]]. To link to an nLab page but show a different link text, do the following: [[ name of page | link text to show ]].</li>
+  <li style="font-size: 0.8em">LaTeX can be used inside single dollar signs (inline) or double dollar signs or \[ and  \], as usual. </li>
+  <li style="font-size: 0.8em">To create a table of contents, add \tableofcontents on its own line.</li>
+  <li style="font-size: 0.8em">For a theorem or proof, use \begin{theorem} \end{theorem} as you would in LaTeX. Labelling and referencing is exactly as in LaTeX, with use of \label and \ref. The full list of supported environments can be found in the <a class="existingWikiWord" href="https://ncatlab.org/nlab/show/HowTo#DefinitionTheoremProofEnvironments">HowTo</a>. </li>
+  <li style="font-size: 0.8em">Tikz can be used for figures almost exactly in LaTeX. Similarly, tikz-cd and xymatrix can be used for commutative diagrams. See the <a class="existingWikiWord" href="https://ncatlab.org/nlab/show/HowTo#diagrams">HowTo</a>.</li>
+  <li style="font-size: 0.8em">As an alternative to the Markdown syntax for sections (headings), one can use the usual LaTeX syntax \section, \subsection, etc.</li>
+  <li style="font-size: 0.8em">For further help, see the <a href="https://ncatlab.org/nlab/show/HowTo">HowTo</a>, or you are very welcome to ask at the <a href="https://nforum.ncatlab.org/">nForum</a>.</li>
+</ol>
