@@ -16,6 +16,6 @@ All help is very welcome! Just get in touch on the [nForum](https://nforum.ncatl
 License
 =======
 
-The original Instiki is licensed under the [same license as Ruby](https://www.ruby-lang.org/en/about/license.txt). All code which is written by Richard Williamson, for example all code under script/src, is made available without any restriction whatsoever, except that this unrestricted availability is not permitted to be superseded: anybody using the code is free to use, license, or refer to the code however they wish, except that it is not permitted to supersede the unrestricted availability of the original code referred to herewith.
+The original Instiki is licensed under the [same license as Ruby](https://www.ruby-lang.org/en/about/license.txt). All code which is written by Richard Williamson, for example all code under script/src, is made available without any restriction whatsoever, except that this unrestricted availability is not permitted to be superseded: anybody is free to use, license, or refer to the code however they wish, except that it is not permitted to supersede the unrestricted availability of the original code referred to herewith.
 
 
