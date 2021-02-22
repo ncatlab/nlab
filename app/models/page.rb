@@ -27,14 +27,20 @@ class Page < ActiveRecord::Base
 
     renderer_path = ENV["NLAB_PAGE_RENDERER_PATH"]
 
-    response, error_message, status = Open3.capture3(
+    # Check that the actual page can be rendererd
+    response, status = Open3.capture2(
       renderer_path,
       self.id.to_s,
+      "-o",
       "-c",
       stdin_data: revision.content)
 
     if !status.success?
-      raise Instiki::ValidationError.new(error_message)
+      raise Instiki::ValidationError.new(response)
+    end
+
+    if !status.success?
+      raise Instiki::ValidationError.new(response)
     end
 
     # A user may change a page, look at it and make some more changes - several times.
@@ -47,6 +53,18 @@ class Page < ActiveRecord::Base
       revisions.build(:content => content, :author => author, :revised_at => time)
     end
     save
+
+    # Asynchronously render all pages affected by the rendering of the current
+    # page
+    Open3.popen2e(
+      renderer_path,
+      self.id.to_s,
+      "-c") do | stdin, stdout_and_stderr, wait_thread |
+      stdin.puts(revision.content)
+      stdin.close
+      stdout_and_stderr.close
+    end
+
     self
   end
 

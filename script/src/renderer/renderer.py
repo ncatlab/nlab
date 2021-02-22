@@ -363,7 +363,7 @@ def log_edit(page_id, web_address, page_content):
 Renders the page content, handling redirects, includes, links to nLab
 pages, category links, table of contents, etc.
 """
-def render(page_id, page_content):
+def render(page_id, page_content, only_this=False):
     _check_for_scripting(page_content)
     #_check_for_xml(page_id, page_content)
     page_content = centre_block.handle_initial_centring(page_content)
@@ -407,18 +407,20 @@ def render(page_id, page_content):
     processor = find_block.Processor(blocks)
     processed_content = processor.process(page_content)
     processed_content = _surround_tables_with_blank_lines(processed_content)
-    references_before_rendering = _remove_references_not_from_rendering_web(
-        references_before_rendering,
-        rendering_web_id)
+    if not only_this:
+        references_before_rendering = _remove_references_not_from_rendering_web(
+            references_before_rendering,
+            rendering_web_id)
     if references_before_rendering:
         logger.info(
             "On page with ID " +
             str(page_id) +
             " the following references no longer exist: " +
             str(references_before_rendering))
-    _delete_references_which_no_longer_exist(
-        references_before_rendering,
-        pages_to_re_render_and_expire)
+    if not only_this:
+        _delete_references_which_no_longer_exist(
+            references_before_rendering,
+            pages_to_re_render_and_expire)
     pages_to_re_render_and_expire.extend(pages_to_render_to_include)
     pages_to_re_render_and_expire.extend(_pages_included_in(page_name))
     pages_to_re_render_and_expire = list(set(pages_to_re_render_and_expire))
@@ -426,13 +428,14 @@ def render(page_id, page_content):
         pages_to_re_render_and_expire.append(page_id)
     return processed_content, pages_to_re_render_and_expire
 
-def initial_rendering(page_id, page_content):
+def initial_rendering(page_id, page_content, only_this=False):
     error_message = None
     error = None
     try:
         processed_content, pages_to_re_render_and_expire = render(
             page_id,
-            page_content)
+            page_content,
+            only_this)
     except find_block.MoreThanOneMatchException:
         error_message = "Page contains a block with more than one match"
     except redirects_block.RedirectCannotBeEmptyException:
@@ -796,6 +799,12 @@ def argument_parser():
             "If is a re-rendering of a page coming from the job queue, is " +
             "the ID of the job"))
     parser.add_argument(
+        "-o",
+        "--only_this",
+        action = "store_true",
+        help = "Only render the page specified, not any pages linked to from " +
+            "it or into which it is included")
+    parser.add_argument(
         "-c",
         "--page_content",
         action = "store_true",
@@ -806,6 +815,7 @@ def main():
     parser = argument_parser()
     arguments = parser.parse_args()
     page_id = arguments.page_id
+    only_this = arguments.only_this
     read_page_content_from_stdin = arguments.page_content
     if read_page_content_from_stdin:
         page_content = sys.stdin.read()
@@ -839,7 +849,7 @@ def main():
     try:
         _write_to_file_for_maruku(page_id, page_content, True)
         initially_processed_content, pages_to_re_render_and_expire = \
-            initial_rendering(page_id, page_content)
+            initial_rendering(page_id, page_content, only_this)
         maruku_processed_content = maruku_rendering(
             page_id,
             initially_processed_content)
@@ -872,7 +882,8 @@ def main():
         _indicate_success_of_re_rendering(
             queue_job_id,
             "completed_successfully")
-    re_render(page_id, pages_to_re_render_and_expire)
+    if not only_this:
+        re_render(page_id, pages_to_re_render_and_expire)
 
 if __name__ == "__main__":
     main()
