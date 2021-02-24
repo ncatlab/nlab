@@ -28,7 +28,7 @@ class Page < ActiveRecord::Base
     renderer_path = ENV["NLAB_PAGE_RENDERER_PATH"]
 
     # Check that the actual page can be rendererd
-    response, status = Open3.capture2(
+    response, error_message, status = Open3.capture3(
       renderer_path,
       self.id.to_s,
       "-o",
@@ -36,11 +36,7 @@ class Page < ActiveRecord::Base
       stdin_data: revision.content)
 
     if !status.success?
-      raise Instiki::ValidationError.new(response)
-    end
-
-    if !status.success?
-      raise Instiki::ValidationError.new(response)
+      raise Instiki::ValidationError.new(error_message)
     end
 
     # A user may change a page, look at it and make some more changes - several times.
