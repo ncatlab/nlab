@@ -105,7 +105,8 @@ a NoDiscussionIDException is raised.
 def nforum_discussion_id(nlab_page_name):
     query_results = execute_single_with_parameters(
         "SELECT DiscussionID FROM mathforge_nforum_Discussion " +
-        "WHERE Name = %s " +
+        "WHERE Name = BINARY %s " +
+        "AND CategoryID = 5 " +
         "ORDER BY DateLastActive DESC LIMIT 1",
         [nlab_page_name])
     try:
