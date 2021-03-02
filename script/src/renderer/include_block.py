@@ -144,13 +144,16 @@ def include_processor(
         references_before_rendering,
         pages_to_include,
         original_page_name_to_include,
-        rendering_web_id):
+        rendering_web_id,
+        only_this):
     original_page_name_to_include = original_page_name_to_include.strip()
     page_name_to_include, web_id_of_page_to_include = _page_name_to_include(
         original_page_name_to_include,
         rendering_web_id)
     if not page_name_to_include:
         raise IncludeCannotBeEmptyException()
+    if only_this:
+        return "[[!include " + page_name_to_include + "]]"
     if not _include_reference_already_present(
             references_before_rendering,
             original_page_name_to_include,
@@ -182,7 +185,8 @@ def define(
         page_id,
         rendering_web_id,
         references_before_rendering,
-        pages_to_include):
+        pages_to_include,
+        only_this):
     return find_block.Block(
         "[[!include ",
         "]]",
@@ -191,5 +195,6 @@ def define(
             references_before_rendering,
             pages_to_include,
             page_name_to_include,
-            rendering_web_id),
+            rendering_web_id,
+            only_this),
         True)

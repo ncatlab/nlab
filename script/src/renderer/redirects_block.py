@@ -121,10 +121,13 @@ def redirect_processor(
         references_before_rendering,
         pages_to_re_render_and_expire,
         page_name_to_redirect,
-        rendering_web_id):
+        rendering_web_id,
+        only_this):
     page_name_to_redirect = page_name_to_redirect.strip()
     if not page_name_to_redirect:
         raise RedirectCannotBeEmptyException()
+    if only_this:
+        return
     if _redirect_already_present(
             page_id,
             page_name_to_redirect,
@@ -143,7 +146,8 @@ def define(
         page_id,
         rendering_web_id,
         references_before_rendering,
-        pages_to_re_render_and_expire):
+        pages_to_re_render_and_expire,
+        only_this):
     return find_block.Block(
         "[[!redirects ",
         "]]",
@@ -152,5 +156,6 @@ def define(
             references_before_rendering,
             pages_to_re_render_and_expire,
             page_name_to_redirect,
-            rendering_web_id),
+            rendering_web_id,
+            only_this),
         False)

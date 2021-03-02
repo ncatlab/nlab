@@ -380,12 +380,14 @@ def render(page_id, page_content, only_this=False):
             page_id,
             rendering_web_id,
             references_before_rendering,
-            pages_to_render_to_include),
+            pages_to_render_to_include,
+            only_this),
         redirects_block.define(
             page_id,
             rendering_web_id,
             references_before_rendering,
-            pages_to_re_render_and_expire),
+            pages_to_re_render_and_expire,
+            only_this),
         link_block.define(
             page_id,
             rendering_web_id,
