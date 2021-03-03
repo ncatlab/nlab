@@ -5,45 +5,23 @@ For centring of some content.
 """
 
 import find_block
-import nowiki_block
 
-def initial_centre_processor(content):
+def centre_processor(blocks, content):
     return (
-        "\nfor_centring\n" +
-        content.strip() +
-        "/for_centring\n")
-
-def post_centre_processor(content):
-    return (
-        '<div style="text-align: center">' +
-        content +
+        "<div style=\"text-align: center\">" +
+        find_block.Processor(blocks).process(content) +
         "</div>")
 
-def define_center():
+def define_center(blocks):
     return find_block.Block(
         "\\begin{center}",
         "\\end{center}",
-        initial_centre_processor,
+        lambda content: centre_processor(blocks, content),
         True)
 
-def define_centre():
+def define_centre(blocks):
     return find_block.Block(
         "\\begin{centre}",
         "\\end{centre}",
-        initial_centre_processor,
+        lambda content: centre_processor(blocks, content),
         True)
-
-def handle_initial_centring(content):
-    processor = find_block.Processor([
-        define_center(),
-        define_centre(),
-        nowiki_block.define(True)])
-    return processor.process(content)
-
-def handle_post_centring(content):
-    centre_paragraph_block = find_block.Block(
-        "<p>for_centring",
-        "/for_centring</p>",
-        post_centre_processor,
-        True)
-    return find_block.Processor([centre_paragraph_block]).process(content)

@@ -366,7 +366,6 @@ pages, category links, table of contents, etc.
 def render(page_id, page_content, only_this=False):
     _check_for_scripting(page_content)
     #_check_for_xml(page_id, page_content)
-    page_content = centre_block.handle_initial_centring(page_content)
     page_content = tikz_diagram_block.handle_tikz_diagrams(page_content)
     page_content = xypic_diagram_block.handle_xypic_diagrams(page_content)
     pages_to_re_render_and_expire = []
@@ -405,7 +404,12 @@ def render(page_id, page_content, only_this=False):
         image_from_file_block.define(),
         vertical_space_block.define_linebreak(),
         bibitem_block.define(_web_address_of_page(page_id), page_id),
-        citation_block.define() ]
+        citation_block.define()
+    ]
+    blocks.extend([
+        centre_block.define_center(blocks),
+        centre_block.define_centre(blocks)
+    ])
     processor = find_block.Processor(blocks)
     processed_content = processor.process(page_content)
     processed_content = _surround_tables_with_blank_lines(processed_content)
@@ -554,7 +558,6 @@ def post_maruku_rendering(
         page_content,
         web_address,
         page_content_file_name):
-    page_content = centre_block.handle_post_centring(page_content)
     logger.info(
         "Beginning rendering theorem environments for page with id: " +
         str(page_id))
