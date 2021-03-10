@@ -58,6 +58,19 @@ def _execute_single_with_parameters(query, parameters):
 def _render_pages(pages):
     return pages.replace("--", "-")
 
+def _add_sources(final_rendering_parts, arxiv, doi):
+    if arxiv:
+        if doi:
+            final_rendering_parts.append(
+                "(" + arxiv + ", " + doi + ")")
+        else:
+            final_rendering_parts.append(
+                "(" + arxiv + ")")
+    elif doi:
+        final_rendering_parts.append(
+            "(" + doi + ")")
+    return final_rendering_parts
+
 def _render_article(reference):
     author = reference[5]
     title = reference[21]
@@ -79,16 +92,30 @@ def _render_article(reference):
         _render_pages(pages),
         "(" + year + ")",
     ]
-    if arxiv:
-        if doi:
-            final_parts_of_rendering.append(
-                "(" + arxiv + ", " + doi + ")")
-        else:
-            final_parts_of_rendering.append(
-                "(" + arxiv + ")")
-    elif doi:
-        final_parts_of_rendering.append(
-            "(" + doi + ")")
+    _add_sources(final_parts_of_rendering, arxiv, doi)
+    parts_of_rendering.append(" ".join(final_parts_of_rendering))
+    return ", ".join(parts_of_rendering)
+
+def _render_book(reference):
+    author = reference[5]
+    title = reference[21]
+    journal = reference[12]
+    volume = reference[23]
+    publisher = reference[19]
+    year = reference[24]
+    arxiv = reference[26]
+    doi = reference[27]
+    parts_of_rendering = [
+        author,
+        "_" + title + "_",
+    ]
+    if journal:
+        parts_of_rendering.append(journal + " " + volume)
+    final_parts_of_rendering = [
+        publisher,
+        "(" + year + ")"
+    ]
+    _add_sources(final_parts_of_rendering, arxiv, doi)
     parts_of_rendering.append(" ".join(final_parts_of_rendering))
     return ", ".join(parts_of_rendering)
 
@@ -103,6 +130,9 @@ def render(citation_key):
     if reference_type == "article":
         rendered_reference = mistletoe_nlab_renderer.render(
             _render_article(reference))
+    elif reference_type == "book":
+        rendered_reference = mistletoe_nlab_renderer.render(
+            _render_book(reference))
     else:
         raise UnsupportedReferenceTypeException(reference_type)
     reference_id = reference[0]
