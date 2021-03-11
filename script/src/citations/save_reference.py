@@ -297,11 +297,16 @@ def _validate_article(bibtex_json):
         bibtex_json)
 
 def _validate_book(bibtex_json):
+    try:
+        bibtex_json["journal"]
+        conditional_required_fields = { "journal": [ "volume" ] }
+    except KeyError:
+        conditional_required_fields = { }
     _validate(
         "book",
         ["author", "year", "publisher", "title"],
         bibtex_json,
-        { "journal": [ "volume" ] })
+        conditional_required_fields)
 
 def add(bibtex_entry, made_by):
     try:
