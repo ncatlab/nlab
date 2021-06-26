@@ -1,9 +1,12 @@
 source "https://rubygems.org"
 gem "sqlite3", :require => "sqlite3"
 gem "itextomml", :git => "https://github.com/adeel/itextomml.git"
-gem "rack", "1.4.5"
+gem "rack", ">=2.0"
 gem "unicorn"
-gem "rubyzip", '~> 0.9.9'
+gem "rubyzip", '~>2.3.0'
+gem "zip-zip"
+gem "rexml"
+gem "webrick"
 gem "RedCloth", ">=4.0.0"
 gem "erubis"
 gem "nokogiri", '~>1.8.0'
