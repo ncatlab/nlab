@@ -1,4 +1,8 @@
-\documentclass[tikz]{standalone}
+\documentclass[class=scrartcl]{standalone}
+
+\KOMAoptions{fontsize=12pt}
+
+\usepackage{tikz}
 
 \usepackage{amsmath, amssymb, amsthm, mathtools}
 
