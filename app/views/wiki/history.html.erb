@@ -24,12 +24,7 @@
         <%- else %>
           <%= link_to_page(rev.author) %>
         <%- end %>
-        on <%= format_date(rev.revised_at) %>
-        <%- if rev.author.respond_to?(:ip) %>
-          <%= "from #{rev.author.ip}." %>
-        <%- else %>
-          <%= "." %>
-        <%- end %>
+        on <%= format_date(rev.revised_at) %>.
       </div>
     </li>
   <%- end -%>
