@@ -609,6 +609,7 @@ class WikiController < ApplicationController
           raise Instiki::ValidationError.new(
             "Some content must be added to a page before it can be created")
         end
+
         wiki.write_page(@web_name, @page_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
 
@@ -735,6 +736,7 @@ class WikiController < ApplicationController
 
   def history
     if @page
+      @link_to_nforum_discussion = link_to_nforum_discussion()
       @revisions_by_day = Hash.new { |h, day| h[day] = [] }
       @revision_numbers = Hash.new { |h, id| h[id] = [] }
       revision_number = @page.rev_ids.size
