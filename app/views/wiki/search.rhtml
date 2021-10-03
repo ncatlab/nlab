@@ -39,16 +39,10 @@
 <%- if (@results + @title_results).empty? -%>
   <h2>No pages contain "<%= h(@query).html_safe %>" </h2>
   <p>
-    Perhaps you should try expanding your query. Remember that Instiki searches for entire 
-    phrases, so if you search for "all that jazz" it will not match pages that contain these 
-    words in separation &#x2014; only as a sentence fragment.
+    If you wish to ask a question related to this, or to request that some information related to your search be added to a certain nLab page, please get in touch at the <a href="https://nforum.ncatlab.org/">nForum</a>.
   </p>
-  <p>
-    If you're a high-tech computer wizard, you might even want try constructing a Ruby regular 
-    expression. That's actually what Instiki uses, so go right ahead and flex your 
-    "[a-z]*Leet?RegExpSkill(s|z)"
-  </p>
-  <p>
-    <b>Create a new page, named:</b> "<span class='newWikiWord'><%= link_to h(@query).html_safe, :web => @web.address, :action => 'new', :id => @query %></span>"
+
+   <p>
+     If you have a particular nLab page in mind, one possibility is to leave a comment or question at the thread dedicated to discussion of that page, a link to which can be found in menus at the top ('Discuss this page') and bottom ('Discuss') of the page.
   </p>
 <%- end -%>
