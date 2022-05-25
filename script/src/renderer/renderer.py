@@ -349,6 +349,10 @@ def _check_for_xml(page_id, content):
 
 def log_edit(page_id, web_address, page_content):
     edit_log_directory_path = os.environ["EDIT_LOG_DIRECTORY_PATH"]
+    try:
+        os.mkdir(edit_log_directory_path)
+    except FileExistsError:
+        pass
     edit_log_name = (
         time.strftime("%Y-%m-%d--%H:%M:%S", time.gmtime()) +
         "--" +
