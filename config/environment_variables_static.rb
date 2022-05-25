@@ -32,3 +32,7 @@ ENV["NLAB_CACHE_DIRECTORY"] = "cache/views"
 
 # Web files root.
 ENV["WEB_FILES_ROOT"] = "webs"
+
+# Command-line for itex2MML.
+# Currently packaged as a binary inside this repository.
+ENV["RUN_COMMAND_FOR_LATEX_COMPILER"] = "script/itex2MML"
