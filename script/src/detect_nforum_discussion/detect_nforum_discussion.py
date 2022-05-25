@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/python3
 
 """
 API for detecting the latest nForum discussion corresponding to an nLab page

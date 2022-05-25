@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/python3
 
 """
 API for finding the list of nLab pages to which an nLab author has contributed

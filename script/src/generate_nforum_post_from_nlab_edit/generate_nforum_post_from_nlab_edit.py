@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/python3
 
 """
 API for generating an nForum post following an nLab page edit

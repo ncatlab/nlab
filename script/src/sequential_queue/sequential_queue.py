@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/python3
 
 """
 This API is designed so that the data governing the processing of jobs to be
