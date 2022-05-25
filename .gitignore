@@ -1,12 +1,16 @@
+# Temporary and log files.
 *.~1~
-*.log
 *~
+.*.swp
+*.log
+
+# Generated files.
 .bundle
 vendor/bundle
-database.yml
-secret
-unicorn.rb
-environment_variables.rb
-.*.swp
-conf
 __pycache__
+secret
+
+# User-specific configuration.
+config/database.yml
+config/environment_variables.rb
+config/unicorn.rb
