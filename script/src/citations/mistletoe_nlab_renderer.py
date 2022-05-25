@@ -1,6 +1,7 @@
 import mistletoe
 import os
 import re
+import shlex
 import subprocess
 import urllib.parse
 
@@ -10,7 +11,7 @@ class RendererException(Exception):
 
 def _render_latex(latex):
     latex_renderer_subprocess = subprocess.run(
-        os.environ["RUN_COMMAND_FOR_LATEX_COMPILER"].split(),
+        shlex.split(os.environ["RUN_COMMAND_FOR_LATEX_COMPILER"]),
         capture_output = True,
         text = True,
         check = True,
