@@ -251,7 +251,7 @@ def create_svg(diagram_source_directory, diagram_id):
         "#" + diagram_id + "-clip")
 
 def remove_diagram_files(diagram_source_directory, diagram_id):
-    diagram_id_path = os.path.join(diagram_source_directory, diagram_id + "*")
+    diagram_id_path = os.path.join(glob.escape(diagram_source_directory), diagram_id + "*")
     for diagram_file in glob.glob(diagram_id_path):
         os.remove(diagram_file)
 
