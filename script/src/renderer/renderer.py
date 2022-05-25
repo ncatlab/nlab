@@ -1,5 +1,34 @@
 #!/usr/bin/python3
 
+"""
+Renders the content of an nLab page.
+Uses the external programs maruku and itex2MML (typically installed by Ruby gems).
+These need to be on PATH.
+Calls the command specified by RUN_COMMAND_FOR_LATEX_COMPILER (itex2MML).
+Calls the diagram and sequential queue APIs.
+
+Depends on MySQLdb and mistletoe.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* NLAB_DIAGRAM_API_PATH, XML_DETECTOR_API_PATH
+* NLAB_LOG_DIRECTORY
+* NLAB_PAGE_CONTENT_DIRECTORY
+* EDIT_LOG_DIRECTORY_PATH
+* WEB_FILES_ROOT (webs)
+
+From calling the diagrams API:
+* NLAB_DIAGRAM_SOURCE_DIRECTORY (script/src/diagrams/diagram_source)
+* NLAB_TIKZ_DIAGRAM_TEMPLATE: (script/src/diagrams/tikz_diagram_template)
+* NLAB_XYPIC_DIAGRAM_TEMPLATE: (script/src/diagrams/xypic_diagram_template)
+
+From calling the sequential queue API:
+* QUEUE_COMPLETED_JOBS_DIRECTORY (sequential_queue/completed)
+* QUEUE_CONTROL_DIRECTORY (sequential_queue/control)
+* QUEUE_JOB_ROOT_DIRECTORY (sequential_queue/jobs)
+* QUEUE_MAXIMUM_NUMBER_OF_SIMULTANEOUS_JOBS (50)
+"""
+
 import argparse
 import bibitem_block
 import category_block

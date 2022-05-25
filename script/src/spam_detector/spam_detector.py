@@ -1,5 +1,16 @@
 #!/usr/bin/python3
 
+"""
+Detects whether an edit to an nLab page is spam. Content of edit to be passed on stdin.
+
+Depends on MySQLdb.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* NLAB_LOG_DIRECTORY
+* NLAB_AUTHOR_TO_USER_FILE: (script/author_to_user)
+"""
+
 import argparse
 import difflib
 import logging

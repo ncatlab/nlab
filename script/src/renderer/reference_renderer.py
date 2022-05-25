@@ -5,6 +5,15 @@ Library defining a block for converting \bibitem{something}, where something is
 the citation key of some entry in the 'bibliography' table of the nLab
 database into a reference. If no such entry can be found, returns 'something?'
 as a link to creating the reference.
+
+Renders a bibliography item.
+Calls the command specified by RUN_COMMAND_FOR_LATEX_COMPILER (usually itex2MML).
+
+Depends on MySQLdb and mistletoe.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* RUN_COMMAND_FOR_LATEX_COMPILER
 """
 
 import argparse

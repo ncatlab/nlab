@@ -1,5 +1,18 @@
 #!/usr/bin/python3
 
+"""
+Obtains a summary of all references in the bibliography.
+Prints a JSON dump of a list of bibliography items.
+Calls the command specified by RUN_COMMAND_FOR_LATEX_COMPILER (usually itex2MML).
+
+Depends on MySQLdb and mistletoe.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* NLAB_LOG_DIRECTORY
+* RUN_COMMAND_FOR_LATEX_COMPILER
+"""
+
 import argparse
 import json
 import logging

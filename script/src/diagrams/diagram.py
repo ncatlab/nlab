@@ -1,5 +1,17 @@
 #!/usr/bin/python3
 
+"""
+Creates SVG source from diagram code passed into stdin.
+Can handle both xypic and tikz style (flag --commutative_diagram) diagrams.
+Uses the external programs pdflatex and pdf2svg, which need to be on PATH.
+
+Depends on the environment variables:
+* NLAB_LOG_DIRECTORY
+* NLAB_DIAGRAM_SOURCE_DIRECTORY (script/src/diagrams/diagram_source)
+* NLAB_TIKZ_DIAGRAM_TEMPLATE: (script/src/diagrams/tikz_diagram_template)
+* NLAB_XYPIC_DIAGRAM_TEMPLATE: (script/src/diagrams/xypic_diagram_template)
+"""
+
 import argparse
 import enum
 import errno

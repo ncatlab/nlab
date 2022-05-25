@@ -1,9 +1,22 @@
 #!/usr/bin/python3
 
 """
+API for job control.
+Places jobs on a queue and carries them out successively.
+Jobs persist over stopping of the carrying out.
+Stopping and starting of carrying out of jobs can be manually controlled.
+
 This API is designed so that the data governing the processing of jobs to be
 immutable, and so that race conditions should not occur.
+
+Depends on the environment variables:
+* NLAB_LOG_DIRECTORY
+* QUEUE_COMPLETED_JOBS_DIRECTORY (sequential_queue/completed)
+* QUEUE_CONTROL_DIRECTORY (sequential_queue/control)
+* QUEUE_JOB_ROOT_DIRECTORY (sequential_queue/jobs)
+* QUEUE_MAXIMUM_NUMBER_OF_SIMULTANEOUS_JOBS (50)
 """
+
 import argparse
 import datetime
 import enum

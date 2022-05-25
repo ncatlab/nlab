@@ -4,6 +4,12 @@
 API for listing all page categories for a given web, and for checking whether
 a given string defines a page category in this web
 
+Depends on MySQLdb.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* NLAB_LOG_DIRECTORY
+
 ---
 
 To use, set up (if it is not already in place) a virtual environment as follows.

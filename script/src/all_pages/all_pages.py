@@ -1,7 +1,13 @@
 #!/usr/bin/python3
 
 """
-API for listing all pages for a given web
+Lists all pages for a given web. Prints a JSON dump of a list of page data.
+
+Depends on MySQLdb.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* NLAB_LOG_DIRECTORY
 
 ---
 

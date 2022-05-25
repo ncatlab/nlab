@@ -3,6 +3,12 @@
 """
 API for creating a bib entry for citation of an nLab page
 
+Depends on MySQLdb.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* NLAB_LOG_DIRECTORY
+
 ---
 
 To use, set up (if it is not already in place) a virtual environment as follows.

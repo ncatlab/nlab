@@ -1,5 +1,12 @@
 #!/usr/bin/python3
 
+"""
+Checks for presence of XML tags outside of a whitelist. Expects input on stdin.
+
+Depends on the environment variables:
+* XML_WHITELIST_PATH (script/src/xml_detector/xml_whitelist)
+"""
+
 import argparse
 import os
 import re

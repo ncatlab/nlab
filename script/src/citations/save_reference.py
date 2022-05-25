@@ -1,5 +1,17 @@
 #!/usr/bin/python3
 
+"""
+Adds a bibliography item to the database.
+Expects a entry on stdin.
+Outputs the generated citation key of the saved bibliography item.
+
+Depends on MySQLdb.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* NLAB_LOG_DIRECTORY
+"""
+
 import argparse
 import enum
 import json

@@ -3,6 +3,12 @@
 """
 API for finding the list of nLab pages to which an nLab author has contributed
 
+Depends on MySQLdb.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* NLAB_LOG_DIRECTORY
+
 ---
 
 To use, set up (if it is not already in place) a virtual environment as follows.

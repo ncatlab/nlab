@@ -3,6 +3,13 @@
 """
 API for generating an nForum post following an nLab page edit
 
+Depends on MySQLdb.
+
+Depends on the environment variables:
+* NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
+* NLAB_LOG_DIRECTORY
+* NLAB_AUTHOR_TO_USER_FILE (script/author_to_user)
+
 ---
 
 To use, set up (if it is not already in place) a virtual environment as follows.
