@@ -400,9 +400,7 @@ def add_job(arguments):
             "An attempt will be made to process job with id " +
             str(timestamp) +
             " immediately")
-        path_to_sequential_queue_api = (
-            "/home/nlab/www/nlab-prod/script/src/sequential_queue/" +
-            "sequential_queue.py")
+        path_to_sequential_queue_api = os.environ["NLAB_SEQUENTIAL_QUEUE_PATH"]
         processing_jobs_subprocess = subprocess.Popen(
             [ path_to_sequential_queue_api, "job_processing", "start" ])
         logger.info(
@@ -426,9 +424,7 @@ def job_status_update(arguments):
         str(job_id) +
         " to: " +
         job_status.value)
-    path_to_sequential_queue_api = (
-        "/home/nlab/www/nlab-prod/script/src/sequential_queue/" +
-        "sequential_queue.py")
+    path_to_sequential_queue_api = os.environ["NLAB_SEQUENTIAL_QUEUE_PATH"]
     processing_jobs_subprocess = subprocess.Popen(
         [ path_to_sequential_queue_api, "job_processing", "start" ])
     logger.info(

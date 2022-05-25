@@ -734,13 +734,12 @@ def re_render(original_page_id, page_ids_to_re_render):
         ": " +
         str(page_ids_to_re_render) +
         ". Adding them to job queue")
-    path_to_sequential_queue_api = (
-        "/home/nlab/www/nlab-prod/script/src/sequential_queue/" +
-        "sequential_queue.py")
+    path_to_sequential_queue_api = os.environ["NLAB_SEQUENTIAL_QUEUE_PATH"]
+    path_to_page_renderer = os.environ["NLAB_PAGE_RENDERER_PATH"]
     for page_id_to_re_render in page_ids_to_re_render:
         job = {
             "execution_commands": [
-                "/home/nlab/www/nlab-prod/script/src/renderer/renderer.py",
+                path_to_page_renderer,
                 str(page_id_to_re_render),
                 "-f",
                 str(original_page_id)
@@ -758,9 +757,7 @@ def re_render(original_page_id, page_ids_to_re_render):
             str(add_job_process.pid))
 
 def _indicate_success_of_re_rendering(job_id, completion_success):
-    path_to_sequential_queue_api = (
-        "/home/nlab/www/nlab-prod/script/src/sequential_queue/" +
-        "sequential_queue.py")
+    path_to_sequential_queue_api = os.environ["NLAB_SEQUENTIAL_QUEUE_PATH"]
     completed_process = subprocess.run(
         [
             path_to_sequential_queue_api,

@@ -167,7 +167,7 @@ def _validate(tex_string):
     if not tex_string:
         raise InvalidTexException(
             "A LaTeX block has not been closed or opened properly somewhere")
-    path_to_itex_to_mml = "/home/nlab/www/nlab-prod/script/itex2MML"
+    path_to_itex_to_mml = os.environ["RUN_COMMAND_FOR_LATEX_COMPILER"]
     validation_subprocess = subprocess.run(
         [ path_to_itex_to_mml ],
         input = bytes("$" + tex_string + "$", "utf-8"),
