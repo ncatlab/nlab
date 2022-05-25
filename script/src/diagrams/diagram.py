@@ -236,7 +236,7 @@ def create_svg(diagram_source_directory, diagram_id):
     svg_path = os.path.join(diagram_source_directory, diagram_id + ".svg")
     completed_svg_process = subprocess.run(
         [ "pdf2svg", pdf_path, svg_path ],
-        cwd = diagram_source_directory)
+        capture_output = True)
     if completed_svg_process.returncode != 0:
         raise SvgRenderingException(completed_svg_process.stderr)
     with open(svg_path, "r") as svg_file:
