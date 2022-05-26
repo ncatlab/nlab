@@ -1,8 +1,11 @@
-# Database connection.
-ENV["NLAB_DATABASE_NAME"] = ""
+# These environment variables are only used by the Python scripts in script/src.
+# Those Python scripts are called from the Ruby code.
+
+# Database connection (as used by the Python scripts).
+ENV["NLAB_DATABASE_NAME"] = "nlab"
 ENV["NLAB_DATABASE_USER"] = ""
 ENV["NLAB_DATABASE_PASSWORD"] = ""
 
-# Log directories.
+# Log directories (for the Python scripts).
 ENV["EDIT_LOG_DIRECTORY_PATH"] = "edit_log"
 ENV["NLAB_LOG_DIRECTORY"] = "log"
