@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import find_block
+import os
 import subprocess
 
 class InvalidTexException(Exception):
