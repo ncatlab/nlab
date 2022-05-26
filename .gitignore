@@ -6,11 +6,12 @@
 
 # Generated files.
 .bundle
-vendor/bundle
+/vendor/bundle
 __pycache__
-secret
+/secret
+/cache
 
 # User-specific configuration.
-config/database.yml
-config/environment_variables.rb
-config/unicorn.rb
+/config/database.yml
+/config/environment_variables.rb
+/config/unicorn.rb
