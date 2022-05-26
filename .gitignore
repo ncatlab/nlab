@@ -4,11 +4,13 @@
 .*.swp
 *.log
 
-# Generated files.
+# Generated files and directories.
 .bundle
 /vendor/bundle
 __pycache__
 /secret
+/page_content
+/webs
 /cache
 
 # User-specific configuration.
