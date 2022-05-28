@@ -495,19 +495,11 @@ class WikiController < ApplicationController
         @page_name = new_name
 
         if old_name != @page_name
-          old_page_content_file_name = old_name.split.join("_")
-          old_page_content_file_name = old_page_content_file_name.gsub("/", "¤")
-          old_submitted_edits_page_content_file_path = File.join(
-            submitted_edits_directory_path,
-            old_page_content_file_name)
-          if File.exists?(old_submitted_edits_page_content_file_path)
-            File.delete(old_submitted_edits_page_content_file_path)
-          end
-          old_submitted_announcement_file_path = File.join(
-            submitted_announcements_directory_path,
-            old_page_content_file_name)
-          if File.exists?(old_submitted_announcement_file_path)
-            File.delete(old_submitted_announcement_file_path)
+          require "fileutils"
+          page_content_file_name = @page_name.split.join("_")
+          page_content_file_name = page_content_file_name.gsub("/", "¤")
+          [submitted_edits_directory_path, submitted_announcements_directory_path].each do |dir|
+            FileUtils.safe_unlink(File.join(dir, old_page_content_file_name))
           end
         end
 

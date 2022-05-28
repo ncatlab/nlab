@@ -55,7 +55,7 @@ class WikiFile < ActiveRecord::Base
   
   def delete_content_file
     require 'fileutils'
-    FileUtils.rm_f(content_path) if File.exists?(content_path)
+    FileUtils.safe_unlink(content_path)
   end
 
   SANE_FILE_NAME = /^[a-zA-Z0-9\-_\. ]*$/  

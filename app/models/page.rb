@@ -151,6 +151,7 @@ class Page < ActiveRecord::Base
   private
 
   def expire_cache(web_address, page_name)
+    require "fileutils"
     cache_directory = File.join(
       ENV["NLAB_CACHE_DIRECTORY"],
       web_address,
@@ -158,7 +159,7 @@ class Page < ActiveRecord::Base
     cached_content_path = File.join(
       cache_directory,
       "\"" + CGI.escape(page_name) + ".cache" + "\"")
-    File.delete(cached_content_path) if File.exist?(cached_content_path)
+    FileUtils.safe_unlink(cached_content_path)
   end
 
   def continous_revision?(time, author)
