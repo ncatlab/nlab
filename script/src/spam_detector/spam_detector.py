@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """
 Detects whether an edit to an nLab page is spam. Content of edit to be passed on stdin.

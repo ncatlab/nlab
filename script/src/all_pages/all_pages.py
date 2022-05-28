@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """
 Lists all pages for a given web. Prints a JSON dump of a list of page data.

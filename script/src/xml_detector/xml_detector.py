@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """
 Checks for presence of XML tags outside of a whitelist. Expects input on stdin.
