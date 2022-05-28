@@ -8,7 +8,6 @@ class FileController < ApplicationController
   layout 'default'
 
   before_filter :check_authorized
-  before_filter :check_allow_uploads, :dnsbl_check, :except => [:file, :blahtex_png]
 
   def file
     # Check for spam

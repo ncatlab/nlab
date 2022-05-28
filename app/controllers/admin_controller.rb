@@ -2,7 +2,6 @@ class AdminController < ApplicationController
 
   layout 'default'
   cache_sweeper :web_sweeper
-  before_filter :dnsbl_check
 
   def create_system
     if @wiki.setup?

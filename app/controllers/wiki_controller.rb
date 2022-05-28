@@ -9,7 +9,6 @@ require 'resolv'
 class WikiController < ApplicationController
 
   before_filter :load_page
-  before_filter :dnsbl_check, :only => [:edit, :new, :save]
   caches_action :show, :published, :tex, :print, :list, :recently_revised, :file_list, :source,
 	:history, :revision, :atom_with_content, :atom_with_headlines, :atom_with_changes, :if => Proc.new { |c| c.send(:do_caching?) }
   caches_action :authors, :cache_path => Proc.new { |c| c.params }
