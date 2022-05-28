@@ -47,7 +47,6 @@ class WikiController < ApplicationController
     @webs = wiki.webs.values.sort_by { |web| web.name }
   end
 
-
   # Within a single web ---------------------------------------------------------
 
   def authors
@@ -163,8 +162,7 @@ class WikiController < ApplicationController
      if all_pages_found.size == 1
        redirect_to_page(all_pages_found.first.name)
      end
-   end
-
+  end
 
   # Within a single page --------------------------------------------------------
 
@@ -226,8 +224,7 @@ class WikiController < ApplicationController
     submitted_edits_directory_path = File.join(
       ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
       @web.address)
-    page_content_file_name = @page_name.split.join("_")
-    page_content_file_name = page_content_file_name.gsub("/", "¤")
+    page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
     submitted_edits_page_content_file_path = File.join(
       submitted_edits_directory_path,
       page_content_file_name)
@@ -413,8 +410,8 @@ class WikiController < ApplicationController
           raise Instiki::ValidationError.new("Cannot use the symbol ¤ in a page name")
         end
 
-        page_content_file_name = submitted_edit_page_name.split.join("_")
-        page_content_file_name = page_content_file_name.gsub("/", "¤")
+        page_content_file_name = submitted_edit_page_name.split.join("_").gsub("/", "¤")
+        page_content_file_name = page_content_file_name
         submitted_edits_page_content_file_path = File.join(
           submitted_edits_directory_path,
           page_content_file_name)
@@ -459,7 +456,6 @@ class WikiController < ApplicationController
           ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
           @web.address)
 
-
         if !File.exist?(submitted_announcements_directory_path)
           Dir.mkdir(submitted_announcements_directory_path)
         end
@@ -496,8 +492,7 @@ class WikiController < ApplicationController
 
         if old_name != @page_name
           require "fileutils"
-          page_content_file_name = @page_name.split.join("_")
-          page_content_file_name = page_content_file_name.gsub("/", "¤")
+          page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
           [submitted_edits_directory_path, submitted_announcements_directory_path].each do |dir|
             FileUtils.safe_unlink(File.join(dir, old_page_content_file_name))
           end
@@ -567,8 +562,7 @@ class WikiController < ApplicationController
         end
       else
         @page_name = @page_name.split.join(" ").strip
-        page_content_file_name = @page_name.split.join("_")
-        page_content_file_name = page_content_file_name.gsub("/", "¤")
+        page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
         submitted_edits_page_content_file_path = File.join(
           submitted_edits_directory_path,
           page_content_file_name)
@@ -803,7 +797,6 @@ class WikiController < ApplicationController
   end
 
   def export_pages_as_zip(file_type, &block)
-
     file_prefix = "#{@web.address}-#{file_type}-"
     timestamp = @web.revised_at.strftime('%Y-%m-%d-%H-%M-%S')
     file_path = @wiki.storage_path.join(file_prefix + timestamp + '.zip')
