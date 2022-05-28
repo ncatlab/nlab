@@ -514,51 +514,23 @@ class WikiController < ApplicationController
           else
             web_name = @web.name
           end
-          if make_announcement
-            if old_name != new_name
-              system(
-                generate_nforum_post_from_nlab_edit_path,
-                "edit",
-                new_name,
-                web_name,
-                @web.id.to_s,
-                announcement,
-                author_name,
-                @page.id.to_s,
-                "--old_page_name",
-                old_name)
-              #   "--ip_address",
-              #   remote_ip
-              # )
-            else
-              system(
-                generate_nforum_post_from_nlab_edit_path,
-                "edit",
-                new_name,
-                web_name,
-                @web.id.to_s,
-                announcement,
-                author_name,
-                @page.id.to_s)
-              #   "--ip_address",
-              #   remote_ip
-              # )
-            end
-          else
-            system(
-              generate_nforum_post_from_nlab_edit_path,
-              "edit",
-              new_name,
-              web_name,
-              @web.id.to_s,
-              "",
-              author_name,
-              @page.id.to_s,
-              "--is_trivial")
-            #   "--ip_address",
-            #   remote_ip
-            # )
+          cmdline = [
+            generate_nforum_post_from_nlab_edit_path,
+            "edit",
+            new_name,
+            web_name,
+            @web.id.to_s,
+            make_announcement ? announcement : "",
+            author_name,
+            @page.id.to_s,
+          ]
+          if not make_announcement
+            cmdline.push("--is_trivial")
           end
+          if old_name != new_name
+            cmdline.push("--old_page_name", old_name)
+          end
+          system(*cmdline)
         end
       else
         @page_name = @page_name.split.join(" ").strip
