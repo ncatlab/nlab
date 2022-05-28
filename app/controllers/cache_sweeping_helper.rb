@@ -29,6 +29,8 @@ module CacheSweepingHelper
     end
   end
 
+  # This method does not seem to be used.
+  # Note that its functionality is included in expire_cached_summary_pages for non-nlab webs.
   def expire_recently_revised_page(web)
     categories = WikiReference.list_categories(web)
     expire_action :controller => 'wiki', :web => web.address, :action => 'recently_revised'
