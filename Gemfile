@@ -9,7 +9,7 @@ gem "erubis"
 gem "nokogiri", '~>1.5.6'
 gem "rake"
 gem "rdoc"
-gem "json"
+gem "json", "~> 2.5.1"
 gem "abstract", "~> 1.0.0"
 gem "rails_xss", "~> 0.4.0"
 gem "file_signature", "~> 1.2.0"
