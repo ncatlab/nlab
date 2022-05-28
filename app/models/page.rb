@@ -150,6 +150,7 @@ class Page < ActiveRecord::Base
 
   private
 
+  # This method appears not to be unused.
   def expire_cache(web_address, page_name)
     require "fileutils"
     cache_directory = File.join(
