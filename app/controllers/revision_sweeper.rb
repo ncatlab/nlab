@@ -10,13 +10,13 @@ class RevisionSweeper < ActionController::Caching::Sweeper
     if record.is_a?(Page)
       expire_cached_page(record.web, record.name)
       expire_cached_revisions(record.web, record.name)
-      expire_caches(record)
+      expire_caches(record.web, record.name)
     end
   end
 
   def after_save(record)
     if record.is_a?(Page) && record.web.id != '1'
-      expire_caches(record)
+      expire_caches(record.web, record.name)
     end
   end
 
@@ -30,7 +30,7 @@ class RevisionSweeper < ActionController::Caching::Sweeper
 
   def after_delete(record)
     if record.is_a?(Page)
-      expire_caches(record)
+      expire_caches(record.web, record.name)
     end
   end
 
@@ -40,12 +40,12 @@ class RevisionSweeper < ActionController::Caching::Sweeper
 
   private
 
-  def expire_caches(page)
-    expire_cached_summary_pages(page.web)
-    pages_to_expire = ([page.name] +
-       WikiReference.pages_redirected_to(page.web, page.name) +
-       WikiReference.pages_that_include(page.web, page.name)).uniq
-    pages_to_expire.each { |page_name| expire_cached_page(page.web, page_name) }
+  def expire_caches(web, page_name)
+    expire_cached_summary_pages(web)
+    pages_to_expire = ([page_name] +
+       WikiReference.pages_redirected_to(web, page_name) +
+       WikiReference.pages_that_include(web, page_name)).uniq
+    pages_to_expire.each { |page_name_2| expire_cached_page(web, page_name_2) }
   end
 
 end
