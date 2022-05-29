@@ -10,13 +10,13 @@ class RevisionSweeper < ActionController::Caching::Sweeper
     if record.is_a?(Page)
       expire_cached_page(record.web, record.name)
       expire_cached_revisions(record.web, record.name)
-      expire_related_caches(record.web, record.name)
+      expire_related_caches(record.web, record.name, record)
     end
   end
 
   def after_save(record)
     if record.is_a?(Page) && record.web.id != '1'
-      expire_related_caches(record.web, record.name)
+      expire_related_caches(record.web, record.name, record)
     end
   end
 
@@ -28,7 +28,7 @@ class RevisionSweeper < ActionController::Caching::Sweeper
 
   def after_delete(record)
     if record.is_a?(Page)
-      expire_related_caches(record.web, record.name)
+      expire_related_caches(record.web, record.name, record)
     end
   end
 
