@@ -40,14 +40,23 @@ module CacheSweepingHelper
   end
 
   def expire_cached_revisions(page)
-    page.rev_ids.count.times  do |i|
-      revno = i+1
-      expire_action :controller => 'wiki', :web => page.web.address,
-          :action => 'revision', :id => page.name, :rev => revno
-      expire_action :controller => 'wiki', :web => page.web.address,
-          :action => 'revision', :id => page.name, :rev => revno, :mode => 'diff'
-      expire_action :controller => 'wiki', :web => page.web.address,
-          :action => 'source', :id => page.name, :rev => revno
+    # Hack to expire all revisions, even the ones created for non-existing revision numbers.
+    # Saves time over manually expiring each revision, in particular for pages with thousands of revision (e.g. Sandbox).
+    [ File.join('revision'),
+      File.join('revision', 'diff'),
+      File.join('source')
+    ].each do |rel_path|
+      base_path = File.join(
+        Rails.configuration.cache_store[1],
+        'views',
+        page.web.address,
+        rel_path,
+      )
+      # Rudimentary protection against file path manipulation attacks:
+      # only take the prefix up until the first slash (Unix only).
+      file_name = page.name.split('/', 2).first
+      path = File.join(base_path, file_name)
+      FileUtils.rm_rf(path)
     end
   end
 
