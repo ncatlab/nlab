@@ -66,6 +66,8 @@ class WikiReference < ActiveRecord::Base
     page = web.page(page_name)
     return [] unless page
     redirected_pages.concat page.redirects
+    # The following line is unsed.
+    # The symbol page_redirects used to be defined in the page renderer (which got evicted).
     redirected_pages.concat Thread.current[:page_redirects][page] if
             Thread.current[:page_redirects] && Thread.current[:page_redirects][page]
     redirected_pages.uniq.each { |name| names.concat self.pages_that_reference(web, name) }
