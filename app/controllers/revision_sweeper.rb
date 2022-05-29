@@ -22,9 +22,7 @@ class RevisionSweeper < ActionController::Caching::Sweeper
 
   def after_create(record)
     if record.is_a?(Page) && record.web.id != '1'
-       WikiReference.pages_that_reference(record.web, record.name).each do |page_name|
-         expire_cached_page(record.web, page_name)
-      end
+      expire_referencing_caches(record.web, record.name)
     end
   end
 
