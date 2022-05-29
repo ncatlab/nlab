@@ -68,7 +68,7 @@ class PageSet < Array
         false
       else
         references = (WikiReference.pages_that_reference(@web, page.name) +
-                      WikiReference.pages_redirected_to(@web, page.name)).uniq
+                      WikiReference.pages_redirected_to(@web, page.name, page)).uniq
         references.empty? or references == [page.name]
       end
     }

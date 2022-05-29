@@ -60,11 +60,11 @@ class WikiReference < ActiveRecord::Base
     names = connection.select_all(sanitize_sql([query, page_name])).map { |row| row['name'] }
   end
 
-  def self.pages_redirected_to(web, page_name)
+  def self.pages_redirected_to(web, page_name, page)
+    page = web.page(page_name) unless page
+    return [] unless page
     names = []
     redirected_pages = []
-    page = web.page(page_name)
-    return [] unless page
     redirected_pages.concat page.redirects
     # The following line is unsed.
     # The symbol page_redirects used to be defined in the page renderer (which got evicted).
