@@ -60,4 +60,13 @@ module CacheSweepingHelper
     end
   end
 
+  def expire_related_caches(web, page_name)
+    expire_cached_summary_pages(web)
+    pages_to_expire = (
+       WikiReference.pages_redirected_to(web, page_name) +
+       WikiReference.pages_that_include(web, page_name)
+    ).uniq
+    pages_to_expire.each { |page_name_2| expire_cached_page(web, page_name_2) }
+  end
+
 end
