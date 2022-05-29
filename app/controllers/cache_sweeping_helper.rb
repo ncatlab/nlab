@@ -1,12 +1,5 @@
 module CacheSweepingHelper
 
-  def expire_cached_page(web, page_name)
-    expire_action :controller => 'wiki', :web => web.address,
-        :action => %w(show published tex print history source), :id => page_name
-    expire_action :controller => 'wiki', :web => web.address,
-        :action => 'show', :id => page_name, :mode => 'diff'
-  end
-
   def expire_cached_summary_pages(web)
     categories = WikiReference.list_categories(web)
     list_of_actions = %w(list recently_revised)
@@ -39,7 +32,14 @@ module CacheSweepingHelper
     end
   end
 
-  def expire_cached_revisions(page)
+  def expire_cached_page(web, page_name)
+    expire_action :controller => 'wiki', :web => web.address,
+        :action => %w(show published tex print history source), :id => page_name
+    expire_action :controller => 'wiki', :web => web.address,
+        :action => 'show', :id => page_name, :mode => 'diff'
+  end
+
+  def expire_cached_revisions(web, page_name)
     # Hack to expire all revisions, even the ones created for non-existing revision numbers.
     # Saves time over manually expiring each revision, in particular for pages with thousands of revision (e.g. Sandbox).
     [ File.join('revision'),
@@ -49,12 +49,12 @@ module CacheSweepingHelper
       base_path = File.join(
         Rails.configuration.cache_store[1],
         'views',
-        page.web.address,
+        web.address,
         rel_path,
       )
       # Rudimentary protection against file path manipulation attacks:
       # only take the prefix up until the first slash (Unix only).
-      file_name = page.name.split('/', 2).first
+      file_name = page_name.split('/', 2).first
       path = File.join(base_path, file_name)
       FileUtils.rm_rf(path)
     end
