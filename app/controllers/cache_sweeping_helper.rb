@@ -32,6 +32,13 @@ module CacheSweepingHelper
     end
   end
 
+  # Christian:
+  # Recently revised pages for each category seem disabled on the nlab.
+  # Because there are so many categories, we expose a version of the above method that just expires the global list.
+  def expire_global_recently_revised_page(web)
+    expire_action :controller => 'wiki', :web => web.address, :action => 'recently_revised'
+  end
+
   def expire_cached_page(web, page_name)
     expire_action :controller => 'wiki', :web => web.address,
         :action => %w(show published tex print history source), :id => page_name

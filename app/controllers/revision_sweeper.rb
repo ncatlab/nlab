@@ -11,15 +11,17 @@ class RevisionSweeper < ActionController::Caching::Sweeper
     if record.is_a?(Revision)
       revision = record
       expire_cached_page(revision.web, revision.page.name)
-      expire_cached_summary_pages(revision.web)
+      expire_global_recently_revised_page(revision.web)
+      # Only necessary if the current revision has been updated.
       expire_cached_revisions(revision.web, revision.page.name)
-      expire_related_caches(revision.web, revision.page.name, revision.page)
     end
   end
 
   def after_create(record)
     if record.is_a?(Page)
       page = record
+      expire_cached_summary_pages(page.web)
+      expire_related_caches(page.web, page.name, page)
       expire_referencing_caches(page.web, page.name)
     end
   end
