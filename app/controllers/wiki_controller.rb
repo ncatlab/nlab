@@ -498,7 +498,7 @@ class WikiController < ApplicationController
           end
         end
 
-        if ([1, 23, 39].include?(@web.id)) && (@page_name != "Sandbox")
+        if ([1, 23].include?(@web.id)) && (@page_name != "Sandbox")
           announcement = params[:announcement]
           if !announcement.nil?
             announcement = announcement.purify
@@ -540,7 +540,7 @@ class WikiController < ApplicationController
           page_content_file_name)
         File.write(submitted_edits_page_content_file_path, the_content)
 
-        if [1, 23, 39].include?(@web.id)
+        if [1, 23].include?(@web.id)
           submitted_announcements_directory_path = File.join(
             ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
             @web.address)
@@ -570,7 +570,7 @@ class WikiController < ApplicationController
         wiki.write_page(@web_name, @page_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
 
-        if [1, 23, 39].include?(@web.id)
+        if [1, 23].include?(@web.id)
           announcement = params[:announcement].purify
           generate_nforum_post_from_nlab_edit_path = File.join(
             Rails.root,

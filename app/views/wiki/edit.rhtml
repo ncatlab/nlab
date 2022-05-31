@@ -32,7 +32,7 @@
 <% else -%>
        <%= hidden_field_tag 'new_name', @page_name %>
 <% end%>
-            <% if ([1, 23, 39].include?(@web.id)) && (@page_name != "Sandbox") -%>
+            <% if ([1, 23].include?(@web.id)) && (@page_name != "Sandbox") -%>
                 <div>
                     <p style="font-size: 0.8em; width: 70%;">
                         For non-trivial edits, please briefly describe your changes below.
