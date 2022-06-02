@@ -36,3 +36,9 @@ ENV["WEB_FILES_ROOT"] = "webs"
 # Command-line for itex2MML.
 # Currently packaged as a binary inside this repository.
 ENV["RUN_COMMAND_FOR_LATEX_COMPILER"] = "script/itex2MML"
+
+# Configuration of the diagram_caching script.
+# See script/src/diagram_caching/diagram_caching.py for documentation.
+ENV["NLAB_DIAGRAM_CACHE_DIRECTORY"] = "diagram_cache"
+ENV["NLAB_DIAGRAM_TIMEOUT"] = "5"
+ENV["NLAB_DIAGRAM_LATEX_RESTRICT_OPEN"] = "1"
