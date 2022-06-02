@@ -3,6 +3,7 @@
 *~
 .*.swp
 *.log
+#*#
 
 # Generated files and directories.
 .bundle
@@ -12,6 +13,7 @@ __pycache__
 /page_content
 /webs
 /cache
+/diagram_cache
 
 # User-specific configuration.
 /config/database.yml
