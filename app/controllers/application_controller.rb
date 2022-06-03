@@ -66,9 +66,10 @@ class ApplicationController < ActionController::Base
     @author = cookies['author'] || 'Anonymous'
     if @web_name
       @web = @wiki.webs[@web_name]
-      render(:status => 404, :text => "Unknown web '#{@web_name}'",
-             :layout => 'error') if @web.nil?
-      if @web.published? && @action_name == "show"
+      if @web.nil?
+        render(:status => 404, :text => "Unknown web '#{@web_name}'",
+               :layout => 'error')
+      elsif @web.published? && @action_name == "show"
         @action_name = "published"
       end
     end
