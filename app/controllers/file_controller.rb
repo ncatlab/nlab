@@ -23,7 +23,7 @@ class FileController < ApplicationController
       if new_file.valid?
         flash[:info] = "File '#{@file_name}' successfully uploaded"
         WikiReference.pages_that_link_to_file(@web, @file_name).each do |page_name|
-          CacheSweepingHelper.expire_cached_page(@web, page_name)
+          RevisionSweeper.expire_page(@web, page_name)
         end
         redirect_to(params['referring_page'])
       else
