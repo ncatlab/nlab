@@ -439,7 +439,7 @@ class WikiController < ApplicationController
             raise Instiki::ValidationError.new(error_message)
           elsif response.strip == "Blocked"
             raise Instiki::ValidationError.new(
-              "Edit blocked by spam detector")
+              "Edit blocked by spam detector. This can happen if you've substantially rewritten a page. Decompose your edit into smaller pieces to placate the spam detector.")
           end
         end
 
