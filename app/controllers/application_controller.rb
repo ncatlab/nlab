@@ -295,6 +295,12 @@ class ApplicationController < ActionController::Base
 
   def render_error(exception)
     @exception = exception
+    if not @exception.nil?
+      logger.debug "EXCEPTION!: #{exception.message}"
+      if not @exception.backtrace.nil?
+        logger.debug exception.backtrace.join("\n")
+      end
+    end
     render :template => "/errors/500.rhtml", :status => 500
   end
 

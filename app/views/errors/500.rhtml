@@ -7,9 +7,8 @@
 <p><a href="https://ncatlab.org/nlab/show/HomePage">nLab home page</a></p>
 
 <%- if !(@exception.nil?) && !(@exception.backtrace.nil?) -%>
-  <!-- exception:
-    <%= @exception %>
-
-    <%= @exception.backtrace.join("\n") %>
-  -->
+    <p>Here is the error:</p>
+    <pre><%= @exception %></pre>
+    <p>And here is the exception backtrace:</p>
+    <pre><%= @exception.backtrace.join("\n") %></pre>
 <%- end -%>
