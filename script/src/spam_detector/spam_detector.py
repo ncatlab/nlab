@@ -134,15 +134,13 @@ def detect_spam(
         new_content)
     difference_ratio = sequence_matcher.quick_ratio()
     if (not has_nforum_user) and is_title_change:
-        threshold = 0.9
+        threshold = 0.6
     elif not has_nforum_user:
-        threshold = 0.8
+        threshold = 0.4
     elif is_title_change:
-        threshold = 0.5 - (
-            0.5 * (_number_of_pages_edited_up_to_limit(author, 250) / 250))
+        threshold = 0.4 * (1 - _number_of_pages_edited_up_to_limit(author, 250) / 250)
     else:
-        threshold = 0.2 - (
-            0.2 * (_number_of_pages_edited_up_to_limit(author, 250) / 250))
+        threshold = 0.2 * (1 - _number_of_pages_edited_up_to_limit(author, 250) / 250)
     if difference_ratio < threshold:
         raise SpamDetectionException(difference_ratio, threshold)
     return difference_ratio, threshold
