@@ -492,7 +492,7 @@ class WikiController < ApplicationController
 
         if old_name != @page_name
           require "fileutils"
-          page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
+          old_page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
           [submitted_edits_directory_path, submitted_announcements_directory_path].each do |dir|
             FileUtils.safe_unlink(File.join(dir, old_page_content_file_name))
           end
