@@ -215,8 +215,6 @@ td, th {
 blockquote p {
     font-size: 16px;
     font-style: normal;
-    margin-left: 2em;
-    margin-right: 2em;
     text-align: justify;
 }
 blockquote p math {
