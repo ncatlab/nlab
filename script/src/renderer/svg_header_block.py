@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.7
 
 """
 Maruku removes a crucial header from inline SVG files. We add it back.

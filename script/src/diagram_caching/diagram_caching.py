@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.7
 r"""
 Generates SVG from a diagram source.
 Uses the external programs pdflatex and pdf2svg, which need to be on PATH.

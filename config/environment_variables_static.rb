@@ -41,4 +41,4 @@ ENV["RUN_COMMAND_FOR_LATEX_COMPILER"] = "script/itex2MML"
 # See script/src/diagram_caching/diagram_caching.py for documentation.
 ENV["NLAB_DIAGRAM_CACHE_DIRECTORY"] = "diagram_cache"
 ENV["NLAB_DIAGRAM_TIMEOUT"] = "5"
-ENV["NLAB_DIAGRAM_LATEX_RESTRICT_OPEN"] = "1"
+ENV["NLAB_DIAGRAM_LATEX_RESTRICT_OPEN"] = "0"
