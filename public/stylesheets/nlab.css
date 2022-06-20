@@ -32,17 +32,14 @@ h6 {
     font-size: 1.075em;
 }
 p {
-    line-height: 1.3em;
     font-size: 18px;
     text-align: justify;
 }
 li {
-    line-height: 1.3em;
     font-size: 18px;
     text-align: justify;
 }
 li p {
-    line-height: 1.3em;
     margin-top: 0em;
     margin-bottom: 0em;
 }
@@ -142,11 +139,7 @@ span.backintime {
 }
 
 .maruku_toc li{
-    line-height: 1.3em;
     font-size: 19px;
-}
-.maruku_toc li p{
-    line-height: 1.3em;
 }
 .maruku_toc li a{
     color: #226622;
