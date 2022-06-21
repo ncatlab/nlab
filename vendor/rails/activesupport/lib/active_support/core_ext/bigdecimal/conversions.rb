@@ -13,7 +13,7 @@ module ActiveSupport #:nodoc:
             alias_method :_original_to_s, :to_s
             alias_method :to_s, :to_formatted_s
 
-            yaml_as YAML_TAG
+            yaml_tag YAML_TAG
           end
         end
 
