@@ -27,12 +27,14 @@ GEM
     iconv (1.0.8)
     json (2.5.1)
     kgio (2.11.4)
+    mini_portile2 (2.1.0)
     mysql2 (0.5.4)
-    nokogiri (1.5.11)
+    nokogiri (1.7.2)
+      mini_portile2 (~> 2.1.0)
     rack (1.4.5)
     rails_xss (0.4.0)
     raindrops (0.20.0)
-    rake (13.0.6)
+    rake (10.4.2)
     rdoc (4.3.0)
     rdoc-data (4.1.0)
       rdoc (~> 4.0)
@@ -59,10 +61,10 @@ DEPENDENCIES
   json (~> 2.5.1)
   maruku!
   mysql2
-  nokogiri (~> 1.5.6)
+  nokogiri (~> 1.7.0)
   rack (= 1.4.5)
   rails_xss (~> 0.4.0)
-  rake
+  rake (~> 10.4.0)
   rdoc
   rdoc-data
   rubyzip (~> 0.9.9)
