@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 r"""
 Generates SVG from a diagram source.
-Uses the external programs pdflatex and pdf2svg, which need to be on PATH.
+Uses the external programs pdflatex and pdftocairo (from poppler-utils), which need to be on PATH.
 
 Input: the diagram as parsed by script/src/renderer/renderer.py
 Output: SVG code for the diagram, with ids prefixed by a hash of the diagram.
@@ -17,7 +17,7 @@ Depends on the following environment variables:
   Diagrams are identified by their base64-encoded (URL-safe) SHA-1 hash.
   Will be created if not existing.
 * NLAB_DIAGRAM_TIMEOUT:
-  Timeout in seconds to use for calls to helper programs (pdflatex and pdf2svg).
+  Timeout in seconds to use for calls to helper programs (pdflatex and pdftocairo).
   Defaults to 5.
 * NLAB_DIAGRAM_LATEX_RESTRICT_OPEN:
   Defaults to 1.
@@ -273,7 +273,7 @@ $font_size
 def latex_to_svg(latex, timeout = 5, restrict_open = True, diagram = None):
     '''
     Converts a given LaTeX source into an ET.Element object.
-    Uses the programs pdflatex and pdf2svg, which need to be on the executable path.
+    Uses the programs pdflatex and pdftocairo, which need to be on the executable path.
 
     Arguments:
     * latex: the LaTeX source to convert.
@@ -362,7 +362,7 @@ class SVGExtractionException(Exception):
 def run_pdf2svg(dir, filename_in, filename_out, timeout):
     try:
         process = subprocess.run(
-            ['pdf2svg', filename_in, filename_out],
+            ['pdftocairo', '-svg', filename_in, filename_out],
             cwd = dir,
             capture_output = True,
             timeout = timeout,
