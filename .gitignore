@@ -6,16 +6,24 @@
 #*#
 
 # Generated files and directories.
-.bundle
+/.bundle
 /vendor/bundle
-__pycache__
 /secret
 /page_content
 /webs
 /cache
 /diagram_cache
+__pycache__
 
 # User-specific configuration.
 /config/database.yml
 /config/environment_variables.rb
-/config/unicorn.rb
+
+# Default location of itex2MML
+/script/itex2MML
+
+# Default location of log directory.
+/log
+
+# Default location of unicorn configuration file.
+/config/unicorn.conf.rb
