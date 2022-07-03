@@ -345,6 +345,8 @@ def run_pdflatex(dir, filename, timeout, restrict_open):
         )
     except subprocess.TimeoutExpired:
         raise PDFRenderingException("timed out")
+
+    # TODO: fail if generated PDF does not have exactly one page.
     if process.returncode:
         match = re.search(
             r'\n\!\s*(.*)\n\!',
@@ -362,7 +364,7 @@ class SVGExtractionException(Exception):
 def run_pdf2svg(dir, filename_in, filename_out, timeout):
     try:
         process = subprocess.run(
-            ['pdftocairo', '-svg', filename_in, filename_out],
+            ['pdftocairo', '-svg', '-f', 1, '-l', 1, filename_in, filename_out],
             cwd = dir,
             capture_output = True,
             timeout = timeout,
