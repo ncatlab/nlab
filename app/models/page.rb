@@ -22,9 +22,6 @@ class Page < ActiveRecord::Base
     self.name = name
     author = Author.new(author.to_s) unless author.is_a?(Author)
 
-    revision = Revision.new(
-       :page => self, :content => content, :author => author, :revised_at => time)
-
     renderer_path = ENV["NLAB_PAGE_RENDERER_PATH"]
 
     # Check that the actual page can be rendererd
@@ -33,7 +30,7 @@ class Page < ActiveRecord::Base
       self.id.to_s,
       "-o",
       "-c",
-      stdin_data: revision.content)
+      stdin_data: content)
 
     if !status.success?
       raise Instiki::ValidationError.new(error_message)
@@ -56,7 +53,7 @@ class Page < ActiveRecord::Base
       renderer_path,
       self.id.to_s,
       "-c") do | stdin, stdout_and_stderr, wait_thread |
-      stdin.puts(revision.content)
+      stdin.puts(content)
       stdin.close
       stdout_and_stderr.close
     end
