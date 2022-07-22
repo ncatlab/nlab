@@ -1,8 +1,7 @@
-# Temporary and log files.
+# Temporary files.
 *.~1~
 *~
 .*.swp
-*.log
 #*#
 
 # Generated files and directories.
