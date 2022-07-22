@@ -6,6 +6,5 @@ ENV["NLAB_DATABASE_NAME"] = "nlab"
 ENV["NLAB_DATABASE_USER"] = ""
 ENV["NLAB_DATABASE_PASSWORD"] = ""
 
-# Log directories (for the Python scripts).
-ENV["EDIT_LOG_DIRECTORY_PATH"] = "edit_log"
+# Log directory (for the Python scripts).
 ENV["NLAB_LOG_DIRECTORY"] = "log"
