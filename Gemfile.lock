@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: https://github.com/distler/maruku.git
-  revision: 588716382cfa77806ccd79fff6d97a3d6caba454
+  revision: 97c0489d33eb0a3bc3abab1f6187291cc306a7ce
   branch: nokogiri
   specs:
     maruku (0.7.3.beta1)
