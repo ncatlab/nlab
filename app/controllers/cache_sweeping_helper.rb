@@ -61,7 +61,7 @@ module CacheSweepingHelper
       )
       # Rudimentary protection against file path manipulation attacks:
       # only take the prefix up until the first slash (Unix only).
-      file_name = page_name.split('/', 2).first
+      file_name = CGI.escape(page_name).split('/', 2).first
       path = File.join(base_path, file_name)
       FileUtils.rm_rf(path)
     end
