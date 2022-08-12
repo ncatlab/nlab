@@ -18,8 +18,12 @@ class RevisionSweeper < ActionController::Caching::Sweeper
       # So we also expire the old page name in the else-branch.
       expire_cached_page(revision.web, revision.page.name)
       expire_global_recently_revised_page(revision.web)
+
       # Only necessary if the current revision has been updated.
       expire_cached_revisions(revision.web, revision.page.name)
+
+      expire_related_caches(revision.web, revision.page.name, nil)
+      expire_referencing_caches(revision.web, revision.page.name)
     else
       page = record
       # If the page name has changed, expire the old page.
@@ -45,6 +49,7 @@ class RevisionSweeper < ActionController::Caching::Sweeper
       expire_cached_page(page.web, page.name)
       expire_cached_summary_pages(page.web)
       expire_related_caches(page.web, page.name, page)
+      expire_referencing_caches(page.web, page.name)
       expire_cached_revisions(page.web, page.name)
     end
   end
