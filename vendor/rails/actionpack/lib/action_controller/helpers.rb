@@ -191,11 +191,15 @@ module ActionController #:nodoc:
 
       private
         def default_helper_module!
-          unless name.blank?
-            module_name = name.sub(/Controller$|$/, 'Helper')
-            module_path = module_name.split('::').map { |m| m.underscore }.join('/')
-            require_dependency module_path
-            helper module_name.constantize
+          begin
+            unless name.blank?
+              module_name = name.sub(/Controller$|$/, 'Helper')
+              module_path = module_name.split('::').map { |m| m.underscore }.join('/')
+              require_dependency module_path
+              helper module_name.constantize
+            end
+          rescue LoadError => e
+            raise MissingSourceFile.new(e.to_s, e.path)
           end
         rescue MissingSourceFile => e
           raise unless e.is_missing? module_path
@@ -207,9 +211,13 @@ module ActionController #:nodoc:
           inherited_without_helper(child)
 
           begin
-            child.master_helper_module = Module.new
-            child.master_helper_module.__send__ :include, master_helper_module
-            child.__send__ :default_helper_module!
+            begin
+              child.master_helper_module = Module.new
+              child.master_helper_module.__send__ :include, master_helper_module
+              child.__send__ :default_helper_module!
+            rescue LoadError => e
+              raise MissingSourceFile.new(e.to_s, e.path)
+            end
           rescue MissingSourceFile => e
             raise unless e.is_missing?("helpers/#{child.controller_path}_helper")
           end

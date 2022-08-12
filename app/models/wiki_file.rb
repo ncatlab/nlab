@@ -49,7 +49,7 @@ class WikiFile < ActiveRecord::Base
   end
   
   def write_content_to_file
-    web.create_files_directory unless File.exists?(web.files_path)
+    web.create_files_directory unless File.exist?(web.files_path)
     File.open(self.content_path, 'wb') { |f| f.write(@content) }
   end
   

@@ -5,11 +5,13 @@ begin
 rescue LoadError => e
   begin
     require_library_or_gem 'postgres'
-    class PGresult
-      alias_method :nfields, :num_fields unless self.method_defined?(:nfields)
-      alias_method :ntuples, :num_tuples unless self.method_defined?(:ntuples)
-      alias_method :ftype, :type unless self.method_defined?(:ftype)
-      alias_method :cmd_tuples, :cmdtuples unless self.method_defined?(:cmd_tuples)
+    class PG
+      class Result
+        alias_method :nfields, :num_fields unless self.method_defined?(:nfields)
+        alias_method :ntuples, :num_tuples unless self.method_defined?(:ntuples)
+        alias_method :ftype, :type unless self.method_defined?(:ftype)
+        alias_method :cmd_tuples, :cmdtuples unless self.method_defined?(:cmd_tuples)
+      end
     end
   rescue LoadError
     raise e
@@ -187,6 +189,7 @@ module ActiveRecord
     # * <tt>:allow_concurrency</tt> - If true, use async query methods so Ruby threads don't deadlock; otherwise, use blocking query methods.
     class PostgreSQLAdapter < AbstractAdapter
       ADAPTER_NAME = 'PostgreSQL'.freeze
+      MONEY_COLUMN_TYPE_OID = 790 #:nodoc:
 
       NATIVE_DATABASE_TYPES = {
         :primary_key => "serial primary key".freeze,
@@ -220,14 +223,14 @@ module ActiveRecord
       # Is this connection alive and ready for queries?
       def active?
         if @connection.respond_to?(:status)
-          @connection.status == PGconn::CONNECTION_OK
+          @connection.status == PG::Connection::CONNECTION_OK
         else
           # We're asking the driver, not ActiveRecord, so use @connection.query instead of #query
           @connection.query 'SELECT 1'
           true
         end
       # postgres-pr raises a NoMethodError when querying if no connection is available.
-      rescue PGError, NoMethodError
+      rescue PG::Error, NoMethodError
         false
       end
 
@@ -297,10 +300,10 @@ module ActiveRecord
               @connection.escape_bytea(value) if value
             end
           end
-        elsif PGconn.respond_to?(:escape_bytea)
+        elsif PG::Connection.respond_to?(:escape_bytea)
           self.class.instance_eval do
             define_method(:escape_bytea) do |value|
-              PGconn.escape_bytea(value) if value
+              PG::Connection.escape_bytea(value) if value
             end
           end
         else
@@ -329,10 +332,10 @@ module ActiveRecord
               @connection.unescape_bytea(value) if value
             end
           end
-        elsif PGconn.respond_to?(:unescape_bytea)
+        elsif PG::Connection.respond_to?(:unescape_bytea)
           self.class.instance_eval do
             define_method(:unescape_bytea) do |value|
-              PGconn.unescape_bytea(value) if value
+              PG::Connection.unescape_bytea(value) if value
             end
           end
         else
@@ -370,10 +373,10 @@ module ActiveRecord
               @connection.escape(s)
             end
           end
-        elsif PGconn.respond_to?(:escape)
+        elsif PG::Connection.respond_to?(:escape)
           self.class.instance_eval do
             define_method(:quote_string) do |s|
-              PGconn.escape(s)
+              PG::Connection.escape(s)
             end
           end
         else
@@ -407,7 +410,7 @@ module ActiveRecord
 
       # Quotes column names for use in SQL queries.
       def quote_column_name(name) #:nodoc:
-        PGconn.quote_ident(name.to_s)
+        PG::Connection.quote_ident(name.to_s)
       end
 
       # Quote date/time values for use in SQL input. Includes microseconds
@@ -546,11 +549,11 @@ module ActiveRecord
         execute "ROLLBACK"
       end
 
-      if defined?(PGconn::PQTRANS_IDLE)
+      if defined?(PG::Connection::PQTRANS_IDLE)
         # The ruby-pg driver supports inspecting the transaction status,
         # while the ruby-postgres driver does not.
         def outside_transaction?
-          @connection.transaction_status == PGconn::PQTRANS_IDLE
+          @connection.transaction_status == PG::Connection::PQTRANS_IDLE
         end
       end
 
@@ -622,11 +625,10 @@ module ActiveRecord
 
       # Returns the list of all tables in the schema search path or a specified schema.
       def tables(name = nil)
-        schemas = schema_search_path.split(/,/).map { |p| quote(p) }.join(',')
-        query(<<-SQL, name).map { |row| row[0] }
+        query(<<-SQL, 'SCHEMA').map { |row| row[0] }
           SELECT tablename
-            FROM pg_tables
-           WHERE schemaname IN (#{schemas})
+          FROM pg_tables
+          WHERE schemaname = ANY (current_schemas(false))
         SQL
       end
 
@@ -714,7 +716,8 @@ module ActiveRecord
 
       # Set the client message level.
       def client_min_messages=(level)
-        execute("SET client_min_messages TO '#{level}'")
+        execute("SET client_min_messages TO '#{level.downcase}'") if level &&
+          ['debug5', 'debug4', 'debug3', 'debug2', 'debug1', 'log', 'notice', 'warning', 'error'].include?(level.downcase)
       end
 
       # Returns the sequence name for a table's primary key or some other specified key.
@@ -771,10 +774,10 @@ module ActiveRecord
           result = query(<<-end_sql, 'PK and custom sequence')[0]
             SELECT attr.attname,
               CASE
-                WHEN split_part(def.adsrc, '''', 2) ~ '.' THEN
-                  substr(split_part(def.adsrc, '''', 2),
-                         strpos(split_part(def.adsrc, '''', 2), '.')+1)
-                ELSE split_part(def.adsrc, '''', 2)
+                WHEN split_part(pg_get_expr(def.adbin, def.adrelid), '''', 2) ~ '.' THEN
+                  substr(split_part(pg_get_expr(def.adbin, def.adrelid), '''', 2),
+                         strpos(split_part(pg_get_expr(def.adbin, def.adrelid), '''', 2), '.')+1)
+                ELSE split_part(pg_get_expr(def.adbin, def.adrelid), '''', 2)
               END
             FROM pg_class       t
             JOIN pg_attribute   attr ON (t.oid = attrelid)
@@ -782,7 +785,7 @@ module ActiveRecord
             JOIN pg_constraint  cons ON (conrelid = adrelid AND adnum = conkey[1])
             WHERE t.oid = '#{quote_table_name(table)}'::regclass
               AND cons.contype = 'p'
-              AND def.adsrc ~* 'nextval'
+              AND pg_get_expr(def.adbin, def.adrelid) ~* 'nextval'
           end_sql
         end
 
@@ -869,13 +872,32 @@ module ActiveRecord
 
       # Maps logical Rails types to PostgreSQL-specific data types.
       def type_to_sql(type, limit = nil, precision = nil, scale = nil)
-        return super unless type.to_s == 'integer'
+        case type.to_s
+        when 'binary'
+          # PostgreSQL doesn't support limits on binary (bytea) columns.
+          # The hard limit is 1Gb, because of a 32-bit size field, and TOAST.
+          case limit
+          when nil, 0..0x3fffffff; super(type)
+          else raise(ActiveRecordError, "No binary type has byte size #{limit}.")
+          end
+        when 'text'
+          # PostgreSQL doesn't support limits on text columns.
+          # The hard limit is 1Gb, according to section 8.3 in the manual.
+          case limit
+          when nil, 0..0x3fffffff; super(type)
+          else raise(ActiveRecordError, "The limit on text can be at most 1GB - 1byte.")
+          end
+        when 'integer'
+          return 'integer' unless limit
 
-        case limit
-          when 1..2;      'smallint'
-          when 3..4, nil; 'integer'
-          when 5..8;      'bigint'
-          else raise(ActiveRecordError, "No integer type has byte size #{limit}. Use a numeric with precision 0 instead.")
+          case limit
+            when 1, 2; 'smallint'
+            when 3, 4; 'integer'
+            when 5..8; 'bigint'
+            else raise(ActiveRecordError, "No integer type has byte size #{limit}. Use a numeric with precision 0 instead.")
+          end
+        else
+          super
         end
       end
 
@@ -933,13 +955,12 @@ module ActiveRecord
 
       private
         # The internal PostgreSQL identifier of the money data type.
-        MONEY_COLUMN_TYPE_OID = 790 #:nodoc:
 
         # Connects to a PostgreSQL server and sets up the adapter depending on the
         # connected server's characteristics.
         def connect
-          @connection = PGconn.connect(*@connection_parameters)
-          PGconn.translate_results = false if PGconn.respond_to?(:translate_results=)
+          @connection = PG::Connection.connect(*@connection_parameters)
+          PG::Connection.translate_results = false if PG::Connection.respond_to?(:translate_results=)
 
           # Ignore async_exec and async_query when using postgres-pr.
           @async = @config[:allow_concurrency] && @connection.respond_to?(:async_exec)
@@ -1054,7 +1075,7 @@ module ActiveRecord
         #  - ::regclass is a function that gives the id for a table name
         def column_definitions(table_name) #:nodoc:
           query <<-end_sql
-            SELECT a.attname, format_type(a.atttypid, a.atttypmod), d.adsrc, a.attnotnull
+            SELECT a.attname, format_type(a.atttypid, a.atttypmod), pg_get_expr(d.adbin, d.adrelid), a.attnotnull
               FROM pg_attribute a LEFT JOIN pg_attrdef d
                 ON a.attrelid = d.adrelid AND a.attnum = d.adnum
              WHERE a.attrelid = '#{quote_table_name(table_name)}'::regclass
@@ -1075,4 +1096,3 @@ module ActiveRecord
     end
   end
 end
-

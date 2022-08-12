@@ -93,9 +93,13 @@ module ActionMailer
         def inherited_with_helper(child)
           inherited_without_helper(child)
           begin
-            child.master_helper_module = Module.new
-            child.master_helper_module.__send__(:include, master_helper_module)
-            child.helper child.name.to_s.underscore
+            begin
+              child.master_helper_module = Module.new
+              child.master_helper_module.__send__(:include, master_helper_module)
+              child.helper child.name.to_s.underscore
+            rescue LoadError => e
+              raise MissingSourceFile.new(e.to_s, e.path)
+            end
           rescue MissingSourceFile => e
             raise unless e.is_missing?("helpers/#{child.name.to_s.underscore}_helper")
           end

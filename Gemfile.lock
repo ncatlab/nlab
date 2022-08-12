@@ -15,7 +15,7 @@ GIT
       syntax (~> 1.1.0)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     RedCloth (4.3.2)
     abstract (1.0.0)
@@ -27,24 +27,33 @@ GEM
     iconv (1.0.8)
     json (2.5.1)
     kgio (2.11.4)
+    mini_portile2 (2.3.0)
     mysql2 (0.5.4)
-    nokogiri (1.5.11)
-    rack (1.4.5)
+    nokogiri (1.8.5)
+      mini_portile2 (~> 2.3.0)
+    power_assert (2.0.1)
+    rack (2.2.4)
     rails_xss (0.4.0)
     raindrops (0.20.0)
-    rake (13.0.6)
+    rake (12.3.3)
     rdoc (4.3.0)
     rdoc-data (4.1.0)
       rdoc (~> 4.0)
-    rubyzip (0.9.9)
+    rexml (3.2.5)
+    rubyzip (2.3.2)
     syntax (1.1.0)
+    test-unit (3.5.3)
+      power_assert
     unicorn (6.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
+    webrick (1.7.0)
     will_paginate (2.3.17)
+    zip-zip (0.3)
+      rubyzip (>= 1.0.0)
 
 PLATFORMS
-  ruby
+  x86_64-linux
 
 DEPENDENCIES
   RedCloth (>= 4.0.0)
@@ -58,16 +67,20 @@ DEPENDENCIES
   json (~> 2.5.1)
   maruku!
   mysql2
-  nokogiri (~> 1.5.6)
-  rack (= 1.4.5)
+  nokogiri (~> 1.8.0)
+  rack (>= 2.0)
   rails_xss (~> 0.4.0)
-  rake
+  rake (~> 12.3.2)
   rdoc
   rdoc-data
-  rubyzip (~> 0.9.9)
+  rexml
+  rubyzip (~> 2.3.0)
   syntax (~> 1.1.0)
+  test-unit
   unicorn
+  webrick
   will_paginate (~> 2.3.15)
+  zip-zip
 
 BUNDLED WITH
-   1.17.3
+   2.3.7

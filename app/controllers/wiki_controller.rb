@@ -874,7 +874,7 @@ class WikiController < ApplicationController
 
   def load_spam_patterns
     spam_patterns_file = Rails.root.join('config', 'spam_patterns.txt')
-    if File.exists?(spam_patterns_file)
+    if File.exist?(spam_patterns_file)
       spam_patterns_file.readlines.inject([]) { |patterns, line| patterns << Regexp.new(line.chomp, Regexp::IGNORECASE) }
     else
       []
