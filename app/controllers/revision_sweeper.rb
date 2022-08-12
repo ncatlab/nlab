@@ -10,10 +10,27 @@ class RevisionSweeper < ActionController::Caching::Sweeper
   def after_save(record)
     if record.is_a?(Revision)
       revision = record
+      # If the page name changed in page.revise, revision.page.name will refer to:
+      # * the old name if the revision was updated using current_revision.update_attributes
+      # * the new name if the revision was created using revisions.build.
+      # We want to expire only the old page name here (the new one doesn't need expiring).
+      # But I don't know how to do that here.
+      # So we also expire the old page name in the else-branch.
       expire_cached_page(revision.web, revision.page.name)
       expire_global_recently_revised_page(revision.web)
+
       # Only necessary if the current revision has been updated.
       expire_cached_revisions(revision.web, revision.page.name)
+
+      expire_related_caches(revision.web, revision.page.name, nil)
+      expire_referencing_caches(revision.web, revision.page.name)
+    else
+      page = record
+      # If the page name has changed, expire the old page.
+      if page.changed.include? 'name'
+        name_prev = page.changes['name'][0]
+        expire_cached_page(page.web, name_prev)
+      end
     end
   end
 
@@ -32,6 +49,7 @@ class RevisionSweeper < ActionController::Caching::Sweeper
       expire_cached_page(page.web, page.name)
       expire_cached_summary_pages(page.web)
       expire_related_caches(page.web, page.name, page)
+      expire_referencing_caches(page.web, page.name)
       expire_cached_revisions(page.web, page.name)
     end
   end

@@ -19,12 +19,6 @@ class Page < ActiveRecord::Base
           "You have tried to save page '#{name}' without changing its content")
     end
 
-    self.name = name
-    author = Author.new(author.to_s) unless author.is_a?(Author)
-
-    revision = Revision.new(
-       :page => self, :content => content, :author => author, :revised_at => time)
-
     renderer_path = ENV["NLAB_PAGE_RENDERER_PATH"]
 
     # Check that the actual page can be rendererd
@@ -33,7 +27,7 @@ class Page < ActiveRecord::Base
       self.id.to_s,
       "-o",
       "-c",
-      stdin_data: revision.content)
+      stdin_data: content)
 
     if !status.success?
       raise Instiki::ValidationError.new(error_message)
@@ -43,11 +37,16 @@ class Page < ActiveRecord::Base
     # Not to record every such iteration as a new revision, if the previous revision was done
     # by the same author, not more than 30 minutes ago, then update the last revision instead of
     # creating a new one
+    author = Author.new(author.to_s) unless author.is_a?(Author)
     if (revisions_size > 0) && continous_revision?(time, author)
       current_revision.update_attributes(:content => content, :revised_at => time)
     else
       revisions.build(:content => content, :author => author, :revised_at => time)
     end
+
+    # Placement of name assignment does not make a difference in the cache sweepers.
+    # Putting it after the above block does not actually help us expire the old page name.
+    self.name = name
     save
 
     # Asynchronously render all pages affected by the rendering of the current
@@ -56,7 +55,7 @@ class Page < ActiveRecord::Base
       renderer_path,
       self.id.to_s,
       "-c") do | stdin, stdout_and_stderr, wait_thread |
-      stdin.puts(revision.content)
+      stdin.puts(content)
       stdin.close
       stdout_and_stderr.close
     end

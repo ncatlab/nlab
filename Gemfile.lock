@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: https://github.com/distler/maruku.git
-  revision: 588716382cfa77806ccd79fff6d97a3d6caba454
+  revision: d56b03f95609d2de64dae10c513e30d9ea0bf5df
   branch: nokogiri
   specs:
     maruku (0.7.3.beta1)
@@ -41,7 +41,6 @@ GEM
       rdoc (~> 4.0)
     rexml (3.2.5)
     rubyzip (2.3.2)
-    sqlite3 (1.4.4)
     syntax (1.1.0)
     test-unit (3.5.3)
       power_assert
@@ -76,7 +75,6 @@ DEPENDENCIES
   rdoc-data
   rexml
   rubyzip (~> 2.3.0)
-  sqlite3
   syntax (~> 1.1.0)
   test-unit
   unicorn
@@ -85,4 +83,4 @@ DEPENDENCIES
   zip-zip
 
 BUNDLED WITH
-   2.2.32
+   2.3.7

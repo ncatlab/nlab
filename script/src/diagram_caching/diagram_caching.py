@@ -16,6 +16,15 @@ Depends on the following environment variables:
   If this is set, use this directory as a SVG compilation cache.
   Diagrams are identified by their base64-encoded (URL-safe) SHA-1 hash.
   Will be created if not existing.
+* NLAB_PDF_LATEX:
+  Command line for invoking pdflatex.
+  This will be called with working directory the directory of the LaTeX file to process.
+  This script may append several options to the call (see run_pdflatex):
+  - -halt-on-error
+  - -no-shell-escape
+  - -cnf-line openin_any=p
+  - -cnf-line openout_any=p
+  Defaults to pdflatex.
 * NLAB_DIAGRAM_TIMEOUT:
   Timeout in seconds to use for calls to helper programs (pdflatex and pdftocairo).
   Defaults to 5.
@@ -50,6 +59,7 @@ import logging
 import os
 from pathlib import Path
 import re
+import shlex
 import string
 import subprocess
 import sys
@@ -321,13 +331,13 @@ class PDFRenderingException(Exception):
 
 def run_pdflatex(dir, filename, timeout, restrict_open):
     # It is dangerous to run if TEXMFOUTPUT is set.
-    # The LaTeX code may then read and write arbitary files within the hiarchy of the directory specified by TEXMFOUTPUT.
+    # The LaTeX code may then read and write arbitary files within the hierarchy of the directory specified by TEXMFOUTPUT.
     # For example, if it is set to '/tmp', it exposes other programs that run simultaneously.
     if 'TEXMFOUTPUT' in os.environ:
         raise PDFRenderingException('TEXMFOUTPUT set, refusing to run')
 
     def args():
-        yield 'pdflatex'
+        yield from shlex.split(os.environ.get('NLAB_PDFLATEX', 'pdflatex'))
         yield '-halt-on-error'
         # Christian: I checked that these take precedence over the texmf.cfg configuration file:
         yield '-no-shell-escape'
@@ -345,6 +355,8 @@ def run_pdflatex(dir, filename, timeout, restrict_open):
         )
     except subprocess.TimeoutExpired:
         raise PDFRenderingException("timed out")
+
+    # TODO: fail if generated PDF does not have exactly one page.
     if process.returncode:
         match = re.search(
             r'\n\!\s*(.*)\n\!',
@@ -362,7 +374,7 @@ class SVGExtractionException(Exception):
 def run_pdf2svg(dir, filename_in, filename_out, timeout):
     try:
         process = subprocess.run(
-            ['pdftocairo', '-svg', filename_in, filename_out],
+            ['pdftocairo', '-svg', '-f', '1', '-l', '1', filename_in, filename_out],
             cwd = dir,
             capture_output = True,
             timeout = timeout,
