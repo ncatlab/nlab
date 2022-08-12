@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 gem "itextomml", :git => "https://github.com/adeel/itextomml.git"
-gem "rack", "1.4.5"
+gem "rack", "2.1.4.1"
 gem "unicorn"
 gem "rubyzip", '~> 0.9.9'
 gem "RedCloth", ">=4.0.0"
