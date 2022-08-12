@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: https://github.com/distler/maruku.git
-  revision: 97c0489d33eb0a3bc3abab1f6187291cc306a7ce
+  revision: d56b03f95609d2de64dae10c513e30d9ea0bf5df
   branch: nokogiri
   specs:
     maruku (0.7.3.beta1)
@@ -37,7 +37,6 @@ GEM
     rdoc-data (4.1.0)
       rdoc (~> 4.0)
     rubyzip (0.9.9)
-    sqlite3 (1.4.4)
     syntax (1.1.0)
     unicorn (6.1.0)
       kgio (~> 2.6)
@@ -66,7 +65,6 @@ DEPENDENCIES
   rdoc
   rdoc-data
   rubyzip (~> 0.9.9)
-  sqlite3
   syntax (~> 1.1.0)
   unicorn
   will_paginate (~> 2.3.15)
