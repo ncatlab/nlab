@@ -8,6 +8,7 @@ Depends on MySQLdb.
 Depends on the environment variables:
 * NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
 * NLAB_LOG_DIRECTORY
+* NLAB_NFORUM_PREFIX
 
 ---
 
@@ -169,7 +170,7 @@ def nforum_discussion_link(nlab_page_name):
     discussion_id = nforum_discussion_id(nlab_page_name)
     comment_number = last_comment_number(discussion_id)
     return (
-        "https://nforum.ncatlab.org/discussion/" +
+        os.environ['NLAB_NFORUM_PREFIX'] +
         str(discussion_id) +
         "/#Item_" +
         str(comment_number))
