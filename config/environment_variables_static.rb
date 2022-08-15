@@ -22,7 +22,7 @@ ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"] = "page_content/submitted_announce
 ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"] = "page_content/submitted_edits"
 
 # nForum-related
-ENV["NLAB_NFORUM_PREFIX"] = "https://nforum.ncatlab.org/discussion/"
+ENV["NLAB_NFORUM_PREFIX"] = "http://saunders2.andrew.cmu.edu:8009/discussion/"
 
 # Working paths for the sequential queue API.
 ENV["QUEUE_COMPLETED_JOBS_DIRECTORY"] = "sequential_queue/completed"
