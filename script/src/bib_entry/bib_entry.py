@@ -8,6 +8,7 @@ Depends on MySQLdb.
 Depends on the environment variables:
 * NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
 * NLAB_LOG_DIRECTORY
+* NLAB_URL
 
 ---
 
