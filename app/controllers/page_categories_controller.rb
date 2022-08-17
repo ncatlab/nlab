@@ -11,7 +11,7 @@ class PageCategoriesController < ApplicationController
   end
 
   def link_to_category(category)
-      "https://ncatlab.org/" + @web_name + "/all_pages/" + URI.encode(category)
+      "https://ncatlab.org/" + @web_name + "/all_pages/" + CGI.escape(category)
   end
 
   helper_method :link_to_category

@@ -28,7 +28,7 @@ class AllPagesController < ApplicationController
   end
 
   def link_to_web_page(page)
-    page_name_for_link = URI.encode(page).sub('?', '%3F')
+    page_name_for_link = CGI.escape(page).sub('?', '%3F')
     if @web.published?
       "https://ncatlab.org/" + @web_name + "/published/" + page_name_for_link
     else
