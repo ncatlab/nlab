@@ -19,7 +19,7 @@
 <div class="revisedby">
     <p>
     <%= @page.revisions? ? "Last revised" : "Created" %> on <%= @page.revisions? ? format_date(@page.revised_at) : format_date(@page.created_at) %>.
-    See the <a href="https://ncatlab.org/<%= @web.address %>/history/<%= @page.name %>" style="color: #005c19">history</a> of this page for a list of all contributions to it.
+    See the <%= link_to("history", {:web => @web.address, :action => "history", :id => @page.name}, {:style => "color: #005c19"}) %> of this page for a list of all contributions to it.
     </p>
 </div>
 
@@ -27,7 +27,7 @@
 
   <%= raw navigation_menu_for_page.join('') %>
   <%- if @web.name == "nLab" %>
-  <a href="https://ncatlab.org/nlab/show/<%= h @page.name %>/cite" style="color: black">Cite</a>
+  <%= link_to("Cite", {:web => @web.address, :controller => "cite", :action => "cite_current", :page_name => @page.name}, {:style => "color: black"}) %>
   <%- end %>
   <%= link_to('Print',
             { :web => @web.address, :action => 'print', :id => @page.name },

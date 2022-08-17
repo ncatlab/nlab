@@ -11,7 +11,7 @@
   <table style="border: 0">
   <%- for contribution_details in @last_pages_contributed_to %>
     <tr>
-      <td style="border: 0; padding-right: 1em"><a style="color: #005c19" href="<%= link_to_nlab_revision(contribution_details["revision_number"], contribution_details["page"]) %>"><%= contribution_details["page"] %></a></td>
+      <td style="border: 0; padding-right: 1em"><%= link_to(contribution_details["page"], {:web => @web.address, :controller => "wiki", :action => "revision", :mode => "diff", :rev => contribution_details["revision_number"], :id => contribution_details["page"]}, {:style => "color: #005c19"}) %></td>
       <td style="border: 0"><%= contribution_details["edit_time"] %></td>
     </tr>
   <%- end -%>
@@ -20,7 +20,7 @@
   <h3>All pages contributed to</h3>
   <ul style="list-style: none; padding-left: 0">
   <%- for page in @pages_contributed_to %>
-    <li><a style="color: #005c19" href="<%= link_to_nlab_page(page) %>"><%= page %></a></li>
+    <li><%= link_to(page, {:web => @web.address, :controller => "wiki", :action => "show", :id => page}, {:style => "color: #005c19"}) %></li>
   <%- end -%>
   </ul>
 </div>

@@ -163,7 +163,7 @@ class Page < ActiveRecord::Base
   end
 
   def continous_revision?(time, author)
-    (current_revision.author == author) && (revised_at + 30.minutes > time)
+    (current_revision.author == author) && (revised_at + LOCKING_PERIOD > time)
   end
 
   # Forward method calls to the current revision, so the page responds to all revision calls

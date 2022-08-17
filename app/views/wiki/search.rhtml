@@ -39,7 +39,7 @@
 <%- if (@results + @title_results).empty? -%>
   <h2>No pages contain "<%= h(@query).html_safe %>" </h2>
   <p>
-    If you wish to ask a question related to this, or to request that some information related to your search be added to a certain nLab page, please get in touch at the <a href="https://nforum.ncatlab.org/">nForum</a>.
+    If you wish to ask a question related to this, or to request that some information related to your search be added to a certain nLab page, please get in touch at the <a href="<%= ENV["NFORUM_URL"] %>">nForum</a>.
   </p>
 
    <p>

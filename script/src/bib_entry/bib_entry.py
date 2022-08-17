@@ -8,6 +8,7 @@ Depends on MySQLdb.
 Depends on the environment variables:
 * NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
 * NLAB_LOG_DIRECTORY
+* NLAB_URL
 
 ---
 
@@ -302,11 +303,11 @@ def latex_page_name(page_name, unicode_permitted):
     return replaced_page_name
 
 def page_link_for(page_name):
-    return os.environ["NLAB_URL"] + "/nlab/show/" + urllib.parse.quote(page_name)
+    return os.environ["NLAB_URL"] + "nlab/show/" + urllib.parse.quote(page_name)
 
 def revision_link_for(page_name, revision_number):
     return (
-        os.environ["NLAB_URL"] + "/nlab/revision/" +
+        os.environ["NLAB_URL"] + "nlab/revision/" +
         urllib.parse.quote(page_name) +
         "/" +
         str(revision_number))

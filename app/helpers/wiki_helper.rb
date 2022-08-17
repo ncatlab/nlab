@@ -37,7 +37,7 @@ module WikiHelper
   end
 
   def nforum_discussion
-    generic_nforum_link = "<a href=\"https://nforum.ncatlab.org/discussions/?CategoryID=0\">Discuss</a>"
+    generic_nforum_link = "<a href=\"" + ENV["NFORUM_URL"] + "discussions/?CategoryID=0\">Discuss</a>"
     if !(([1, 23, 39].include?(@web.id)) && (@page != nil) && (@page.name != "Sandbox"))
       return generic_nforum_link
     elsif @link_to_nforum_discussion.nil? || @link_to_nforum_discussion == ""
