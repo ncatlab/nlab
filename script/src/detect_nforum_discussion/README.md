@@ -38,7 +38,7 @@ NLAB_DATABASE_USER
 NLAB_DATABASE_PASSWORD
 NLAB_DATABASE_NAME
 NLAB_LOG_DIRECTORY
-NLAB_NFORUM_PREFIX
+NFORUM_URL
 
 Currently these are hardcoded in config/environment_variables.rb (not in git).
 
