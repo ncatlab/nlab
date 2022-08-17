@@ -21,6 +21,6 @@ gem 'iconv'
 gem 'rdoc-data', :platforms => :ruby_18
 gem "mysql2"
 gem "activerecord-mysql2-adapter"
-gem "will_paginate", "~> 2.3.15"
+gem "will_paginate", :git => 'https://github.com/ncatlab/will_paginate.git', :branch => '2-3-stable'
 gem "diff-lcs", "~> 1.1.2"
 gem 'test-unit'
