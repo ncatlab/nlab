@@ -14,6 +14,13 @@ GIT
       nokogiri (~> 1.5, >= 1.5.6)
       syntax (~> 1.1.0)
 
+GIT
+  remote: https://github.com/ncatlab/will_paginate.git
+  revision: 19a3a10de067cbd390f3615b08af278f650df3d1
+  branch: 2-3-stable
+  specs:
+    will_paginate (2.3.17)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -48,7 +55,6 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     webrick (1.7.0)
-    will_paginate (2.3.17)
     zip-zip (0.3)
       rubyzip (>= 1.0.0)
 
@@ -79,8 +85,8 @@ DEPENDENCIES
   test-unit
   unicorn
   webrick
-  will_paginate (~> 2.3.15)
+  will_paginate!
   zip-zip
 
 BUNDLED WITH
-   2.3.7
+   2.3.19
