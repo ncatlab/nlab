@@ -557,7 +557,7 @@ class _CreateForumPostParameters(_ForumPostParameters):
         url_encoded_page_name = urllib.parse.quote_plus(self.nlab_page_name)
         web_address = _address_of_web(self.web_id)
         version = (
-            '<a href="' + os.environ["NLAB_URL"] + '/' +
+            '<a href="' + os.environ["NLAB_URL"] +
             web_address +
             '/revision/' +
             url_encoded_page_name +
@@ -567,7 +567,7 @@ class _CreateForumPostParameters(_ForumPostParameters):
             str(1) +
             '</a>')
         current = (
-            '<a href="' + os.environ["NLAB_URL"] + '/' +
+            '<a href="' + os.environ["NLAB_URL"] +
             web_address +
             '/show/' +
             url_encoded_page_name +
@@ -669,7 +669,7 @@ class _EditForumPostParameters(_ForumPostParameters):
         web_address = _address_of_web(self.web_id)
         revision_number_for_edit = revision_number(self.page_id)
         version = (
-            '<a href="' + os.environ["NLAB_URL"] + '/' +
+            '<a href="' + os.environ["NLAB_URL"] +
             web_address +
             '/revision/' +
             url_encoded_page_name +
@@ -679,14 +679,14 @@ class _EditForumPostParameters(_ForumPostParameters):
             str(revision_number_for_edit) +
             '</a>')
         current = (
-            '<a href="' + os.environ["NLAB_URL"] + '/' +
+            '<a href="' + os.environ["NLAB_URL"] +
             web_address +
             '/show/' +
             url_encoded_page_name +
             '">current</a>')
         if revision_number_for_edit > 1:
             diff = (
-                '<a href="' + os.environ["NLAB_URL"] + '/' +
+                '<a href="' + os.environ["NLAB_URL"] +
                 web_address +
                 '/revision/diff/' +
                 url_encoded_page_name +

@@ -171,7 +171,7 @@ def nforum_discussion_link(nlab_page_name):
     comment_number = last_comment_number(discussion_id)
     return (
         os.environ['NFORUM_URL'] +
-        "/discussion/" +
+        "discussion/" +
         str(discussion_id) +
         "/#Item_" +
         str(comment_number))

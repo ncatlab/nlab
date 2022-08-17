@@ -21,9 +21,9 @@ ENV["NLAB_PAGE_CONTENT_DIRECTORY"] = "page_content"
 ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"] = "page_content/submitted_announcements"
 ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"] = "page_content/submitted_edits"
 
-# URLs
-ENV["NLAB_URL"] = "https://ncatlab.org"
-ENV["NFORUM_URL"] = "https://nforum.ncatlab.org"
+# URLs, trailing slash included.
+ENV["NLAB_URL"] = "https://ncatlab.org/"
+ENV["NFORUM_URL"] = "https://nforum.ncatlab.org/"
 
 # Working paths for the sequential queue API.
 ENV["QUEUE_COMPLETED_JOBS_DIRECTORY"] = "sequential_queue/completed"
