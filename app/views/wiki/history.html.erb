@@ -20,7 +20,7 @@
       <div class="revisedby" style="margin-bottom: 0px">
         by
         <%- if @web.name == "nLab" -%>
-          <a href="https://ncatlab.org/nlab/author/<%= rev.author.name %>" style="color: #005c19"><%= rev.author %></a>
+          <%= link_to(rev.author, {:web => @web.address, :action => "author", :id => rev.author.name}) %>
         <%- else %>
           <%= link_to_page(rev.author) %>
         <%- end %>

@@ -18,23 +18,6 @@ class AuthorController < ApplicationController
     return
   end
 
-  def link_to_nlab_page(page)
-    "https://ncatlab.org/" + @web_name + "/show/" + CGI.escape(page)
-  end
-
-  helper_method :link_to_nlab_page
-
-  def link_to_nlab_revision(revision_number, page)
-    "https://ncatlab.org/" +
-        @web_name +
-        "/revision/diff/" +
-        CGI.escape(page) +
-        "/" +
-        revision_number.to_s
-  end
-
-  helper_method :link_to_nlab_revision
-
   private
 
   def nlab_author?(possible_author)

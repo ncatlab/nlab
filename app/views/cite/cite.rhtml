@@ -5,7 +5,7 @@
 
 <div>
   <h3>Overview</h3>
-  <p>We recommend the following .bib file entries for citing this revision of the page <a style="color: #005c19" href="<%= link_to_nlab_page(@page_name) %>"><%= @page_name %></a>. The first is to be used if one does not have unicode support, which is likely the case if one is using bibtex. The second can be used if one does has unicode support. If there are no non-ascii characters in the page name, then the two entries are the same.</p>
+  <p>We recommend the following .bib file entries for citing this revision of the page <%= link_to(@page_name, {:web => @web.address, :controller => "wiki", :action => "show", :id => @page_name}, {:style => "color: #005c19"}) %>. The first is to be used if one does not have unicode support, which is likely the case if one is using bibtex. The second can be used if one does has unicode support. If there are no non-ascii characters in the page name, then the two entries are the same.</p>
   <p>In either case, the hyperref package needs to have been imported in one's tex (or sty) file. There are no other dependencies.</p>
   <p>The author field has been chosen so that the reference appears in the 'alpha' citation style. Feel free to adjust this.</p>
 
