@@ -8,3 +8,6 @@ ENV["NLAB_DATABASE_PASSWORD"] = ""
 
 # Log directory (for the Python scripts).
 ENV["NLAB_LOG_DIRECTORY"] = "log"
+
+# Preconfigured values (unlikely that change is needed).
+require File.join(File.dirname(__FILE__), "environment_variables_static")
