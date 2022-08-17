@@ -1,4 +1,5 @@
 # These environment variables are only used by the Python scripts in script/src.
+# The exception is NFORUM_URL in environment_variables_static.rb, which is also used in the Ruby code.
 # Those Python scripts are called from the Ruby code.
 
 # Database connection (as used by the Python scripts).
