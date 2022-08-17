@@ -19,7 +19,7 @@ class AuthorController < ApplicationController
   end
 
   def link_to_nlab_page(page)
-    "https://ncatlab.org/" + @web_name + "/show/" + URI.encode(page)
+    "https://ncatlab.org/" + @web_name + "/show/" + CGI.escape(page)
   end
 
   helper_method :link_to_nlab_page
@@ -28,7 +28,7 @@ class AuthorController < ApplicationController
     "https://ncatlab.org/" +
         @web_name +
         "/revision/diff/" +
-        URI.encode(page) +
+        CGI.escape(page) +
         "/" +
         revision_number.to_s
   end
