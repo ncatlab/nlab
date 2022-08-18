@@ -20,7 +20,6 @@
     <ul style="list-style: none; padding-left: 0">
     <%- for category in @all_categories %>
       <li><%= link_to(category, {:web => @web.address, :controller => "all_pages", :action => "all_in_category", :category => category}, {:style => "color: #005c19"}) %></li>
-      <li><a style="color: #005c19" href="<%= link_to_category(category) %>"><%= category %></a></li>
     <%- end -%>
     </ul>
   <%- end -%>
