@@ -151,13 +151,14 @@ def _content_of_page(page_id):
         [ page_id ])
     return query_results[0][0]
 
-def _references_before_rendering(page_id):
+def _references_before_rendering(page_id, rendering_web_id):
     query_results = _execute_single_with_parameters(
         "SELECT wiki_references.id, referenced_name, link_type, web_id FROM " +
         "wiki_references LEFT JOIN pages ON page_id = pages.id " +
         "WHERE page_id = %s " +
-        "AND link_type != %s",
-        [ page_id, "A" ])
+        "AND link_type != %s" +
+        "AND web_id = %s",
+        [ page_id, "A", rendering_web_id ])
     return list(query_results)
 
 def _remove_references_not_from_rendering_web(
@@ -168,22 +169,28 @@ def _remove_references_not_from_rendering_web(
 
 def _update_pages_where_redirect_was_used(
         reference_name,
+        rendering_web_id,
         pages_to_re_render_and_expire):
     query_results = _execute_single_with_parameters(
         "SELECT page_id FROM wiki_references " +
+        "LEFT JOIN pages ON pages.id = wiki_references.page_id " +
         "WHERE referenced_name = %s " +
-        "AND link_type = %s",
-        [ reference_name, "L" ])
+        "AND link_type = %s " +
+        "AND web_id = %s",
+        [ reference_name, "L", rendering_web_id ])
     pages_to_re_render_and_expire.extend(
         [ query_result[0] for query_result in query_results ])
     _execute_single_with_parameters(
         "UPDATE wiki_references " +
+        "LEFT JOIN pages ON pages.id = wiki_references.page_id " +
         "SET link_type = %s " +
         "WHERE referenced_name = %s " +
-        "AND link_type = %s",
-        [ "W", reference_name, "L"])
+        "AND link_type = %s " +
+        "AND web_id = %s",
+        [ "W", reference_name, "L", rendering_web_id ])
 
 def _delete_references_which_no_longer_exist(
+        rendering_web_id,
         references,
         pages_to_re_render_and_expire):
     if not references:
@@ -196,6 +203,7 @@ def _delete_references_which_no_longer_exist(
         if link_type == "R":
             _update_pages_where_redirect_was_used(
                reference_name,
+               rendering_web_id,
                pages_to_re_render_and_expire)
         reference_ids_to_delete.append(reference_id)
     condition_string = "id = %s"
@@ -207,22 +215,24 @@ def _delete_references_which_no_longer_exist(
         ")",
         reference_ids_to_delete)
 
-def _pages_included_in(page_name):
+def _pages_included_in(page_name, rendering_web_id):
     query_results = _execute_single_with_parameters(
         "SELECT page_id FROM wiki_references " +
         "LEFT JOIN pages ON pages.id = wiki_references.page_id " +
         "WHERE referenced_name = %s " +
-        "AND link_type = %s",
-        [ page_name, "I"])
+        "AND link_type = %s " +
+        "AND web_id = %s",
+        [ page_name, "I", rendering_web_id ])
     return [ query_result[0] for query_result in query_results ]
 
-def _pages_which_require(page_name):
+def _pages_which_require(page_name, rendering_web_id):
     query_results = _execute_single_with_parameters(
         "SELECT page_id FROM wiki_references " +
         "LEFT JOIN pages ON pages.id = wiki_references.page_id " +
         "WHERE referenced_name = %s " +
-        "AND link_type = %s",
-        [ page_name, "W" ])
+        "AND link_type = %s " +
+        "AND web_id = %s",
+        [ page_name, "W", rendering_web_id ])
     return [ query_result[0] for query_result in query_results ]
 
 """
@@ -403,10 +413,10 @@ def render(page_id, page_content, only_this=False):
     page_content = xypic_diagram_block.handle_xypic_diagrams(page_content)
     pages_to_re_render_and_expire = []
     pages_to_render_to_include = []
-    references_before_rendering = _references_before_rendering(page_id)
-    page_name = _name_of_page(page_id)
     rendering_web_id = _web_id_of_page(page_id)
-    pages_to_re_render_and_expire.extend(_pages_which_require(page_name))
+    references_before_rendering = _references_before_rendering(page_id, rendering_web_id)
+    page_name = _name_of_page(page_id)
+    pages_to_re_render_and_expire.extend(_pages_which_require(page_name, rendering_web_id))
     blocks = [
         include_block.define(
             page_id,
@@ -458,10 +468,11 @@ def render(page_id, page_content, only_this=False):
             str(references_before_rendering))
     if not only_this:
         _delete_references_which_no_longer_exist(
+            rendering_web_id,
             references_before_rendering,
             pages_to_re_render_and_expire)
     pages_to_re_render_and_expire.extend(pages_to_render_to_include)
-    pages_to_re_render_and_expire.extend(_pages_included_in(page_name))
+    pages_to_re_render_and_expire.extend(_pages_included_in(page_name, rendering_web_id))
     pages_to_re_render_and_expire = list(set(pages_to_re_render_and_expire))
     if pages_to_render_to_include:
         pages_to_re_render_and_expire.append(page_id)
