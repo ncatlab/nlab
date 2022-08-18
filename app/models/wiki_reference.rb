@@ -77,6 +77,12 @@ class WikiReference < ActiveRecord::Base
     names.uniq
   end
 
+  def self.pages_redirected_to_for_real(web, page_name, page)
+    page = web.page(page_name) unless page
+    return [] unless page
+    return page.redirects
+  end
+
   def self.pages_that_redirect_for(web, page_name)
     query = 'SELECT name FROM pages JOIN wiki_references ' +
       'ON pages.id = wiki_references.page_id ' +
