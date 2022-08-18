@@ -33,7 +33,7 @@ class RevisionSweeper < ActionController::Caching::Sweeper
 
         # Actually, we would need to do this whenever redirects etc. are updated.
         # But we don't have a good way of tracking that.
-        expire_referencing_caches(revision.web, revision.page.name)
+        expire_referencing_caches(page.web, page.name)
       end
     end
   end
