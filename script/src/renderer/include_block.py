@@ -54,10 +54,10 @@ def _name_of_page(page_id):
         [ page_id ])
     return query_results[0][0]
 
-def _id_of_page(page_name):
+def _id_of_page(page_name, web_id):
     query_results = _execute_single_with_parameters(
-        "SELECT id FROM pages WHERE name = %s",
-        [ page_name ])
+        "SELECT id FROM pages WHERE name = %s AND web_id = %s",
+        [ page_name, web_id ])
     try:
         return query_results[0][0]
     except IndexError:
@@ -93,15 +93,17 @@ def _include_reference_already_present(
             return True
     return False
 
-def _circular(page_id, page_name_to_include):
+def _circular(page_id, web_id, page_name_to_include):
     page_name = _name_of_page(page_id)
-    id_of_page_to_include = _id_of_page(page_name_to_include)
+    id_of_page_to_include = _id_of_page(page_name_to_include, web_id)
     query_results = _execute_single_with_parameters(
         "SELECT id FROM wiki_references " +
+        "LEFT JOIN pages ON pages.id = page_id " +
         "WHERE link_type = %s " +
         "AND referenced_name = %s " +
-        "AND page_id = %s",
-        ["I", page_name, id_of_page_to_include])
+        "AND page_id = %s " +
+        "AND web_id = %s",
+        ["I", page_name, id_of_page_to_include, web_id])
     try:
         query_results[0]
         return True
@@ -110,9 +112,10 @@ def _circular(page_id, page_name_to_include):
 
 def _make_include_reference(
         page_id,
+        web_id,
         original_page_name_to_include,
         page_name_to_include):
-    if _circular(page_id, page_name_to_include):
+    if _circular(page_id, web_id, page_name_to_include):
         raise CircularIncludeException()
     _execute_single_with_parameters(
         "INSERT INTO wiki_references(" +
@@ -132,7 +135,7 @@ def _page_name_to_include(original_page_name_to_include, web_id):
     try:
         page_id_to_include = query_results[0][0]
     except IndexError:
-        page_id_to_include = _id_of_page(original_page_name_to_include)
+        page_id_to_include = _id_of_page(original_page_name_to_include, web_id)
     query_results = _execute_single_with_parameters(
         "SELECT name, web_id FROM pages " +
         "WHERE id = %s",
@@ -160,6 +163,7 @@ def include_processor(
             rendering_web_id):
         _make_include_reference(
             page_id,
+            rendering_web_id,
             original_page_name_to_include,
             page_name_to_include)
     page_content_directory = os.path.join(
@@ -177,7 +181,7 @@ def include_processor(
             return "<div>\n" + page_to_include + "</div>\n"
         content_to_include = after_opening_body_tag.split("</body>", 1)[0]
         return "<div>\n" + content_to_include + "</div>\n"
-    id_of_page_to_include = _id_of_page(page_name_to_include)
+    id_of_page_to_include = _id_of_page(page_name_to_include, rendering_web_id)
     pages_to_include.append(id_of_page_to_include)
     return "[[!include " + page_name_to_include + "]]"
 
