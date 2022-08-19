@@ -97,7 +97,7 @@ def _circular(page_id, web_id, page_name_to_include):
     page_name = _name_of_page(page_id)
     id_of_page_to_include = _id_of_page(page_name_to_include, web_id)
     query_results = _execute_single_with_parameters(
-        "SELECT id FROM wiki_references " +
+        "SELECT wiki_references.id FROM wiki_references " +
         "LEFT JOIN pages ON pages.id = page_id " +
         "WHERE link_type = %s " +
         "AND referenced_name = %s " +
