@@ -15,7 +15,15 @@ class FileController < ApplicationController
       flash[:error] = "Cannot upload file due to activation of spam filter"
       return
     end
+
+    # Validate filename.
     @file_name = params['id']
+    if not WikiFile::is_valid?(@file_name)
+      flash[:error] = "File name '#{@file_name}' is invalid. Only latin characters, digits, " +
+          "dots, underscores, dashes and spaces are accepted. Also, '.' and '..' are forbidden."
+      return
+    end
+
     if params['file']
       return unless is_post and check_allow_uploads
       # form supplied

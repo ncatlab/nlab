@@ -13,11 +13,6 @@ class WikiFile < ActiveRecord::Base
   end
 
   def validate
-    if file_name 
-      if ! WikiFile.is_valid?(file_name)
-      end
-    end
-    
     if @web and @content
       if (@content.size > @web.max_upload_size.kilobytes)
         errors.add("content", "size (#{(@content.size / 1024.0).round} kilobytes) exceeds " +
