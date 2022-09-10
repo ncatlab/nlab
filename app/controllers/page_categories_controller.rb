@@ -10,12 +10,6 @@ class PageCategoriesController < ApplicationController
     return
   end
 
-  def link_to_category(category)
-      "https://ncatlab.org/" + @web_name + "/all_pages/" + URI.encode(category)
-  end
-
-  helper_method :link_to_category
-
   private
 
   def all_categories_in_web(web_id)

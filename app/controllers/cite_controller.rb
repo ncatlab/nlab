@@ -58,10 +58,4 @@ class CiteController < ApplicationController
   end
 
   helper_method :bib_entry
-
-  def link_to_nlab_page(page_name)
-    "https://ncatlab.org/" + @web_name + "/show/" + URI.encode(page_name)
-  end
-
-  helper_method :link_to_nlab_page
 end

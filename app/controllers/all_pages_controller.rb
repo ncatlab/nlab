@@ -27,23 +27,6 @@ class AllPagesController < ApplicationController
     return
   end
 
-  def link_to_web_page(page)
-    page_name_for_link = URI.encode(page).sub('?', '%3F')
-    if @web.published?
-      "https://ncatlab.org/" + @web_name + "/published/" + page_name_for_link
-    else
-      "https://ncatlab.org/" + @web_name + "/show/" + page_name_for_link
-    end
-  end
-
-  helper_method :link_to_web_page
-
-  def link_to_all_categories_page()
-    "https://ncatlab.org/" + @web_name + "/page_categories"
-  end
-
-  helper_method :link_to_all_categories_page
-
   private
 
   def all_pages_in_web(web_id)

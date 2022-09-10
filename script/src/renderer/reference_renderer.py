@@ -38,7 +38,7 @@ class UnsupportedReferenceTypeException(Exception):
             "Reference type not yet supported: " +
             reference_type +
             ". Please raise this at the <a " +
-            "href=\"https://nforum.ncatlab.org\">nForum</a>.")
+            'href="' + os.environ["NFORUM_URL"] + '">nForum</a>.')
 
 """
 For a single database query

@@ -34,7 +34,7 @@
                     <li style="font-size: 0.85em">If available, add arXiv data to a field 'arxiv' in the form of a Markdown link, for example: [arXiv:0812.0298](https://arxiv.org/abs/0812.0298).</li>
                     <li style="font-size: 0.85em">If available, add DOI data to a field 'doi' in the form of a Markdown link, for example: [doi:10.1112/plms/pdq026](https://doi.org/10.1112/plms/pdq026).</li>
                   </ol>
-                If you have any problems, just get in touch at the <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" target="_blank">nForum</a>.
+                If you have any problems, just get in touch at the <a href="<%= ENV["NFORUM_URL"] %>discussions/?CategoryID=0" target="_blank">nForum</a>.
               </p>
             </div>
             <% if !@failed_edit -%>
@@ -66,7 +66,7 @@
             <% if [1, 23].include?(@web.id) -%>
                 <div>
                     <p style="font-size: 0.85em; width: 70%;">
-                      Please make some comments about the new page, such as a brief summary of its contents, how it relates to other pages (existing or future), and how it might be further developed. They will form the first comment of a thread at the <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" target="_blank">nForum</a> for discussing this page.
+                      Please make some comments about the new page, such as a brief summary of its contents, how it relates to other pages (existing or future), and how it might be further developed. They will form the first comment of a thread at the <a href="<%= ENV["NFORUM_URL"] %>discussions/?CategoryID=0" target="_blank">nForum</a> for discussing this page.
                     </p>
                 </div>
                 <div>

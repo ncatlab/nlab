@@ -12,7 +12,6 @@ require File.join(File.dirname(__FILE__), 'boot')
 require 'active_support/secure_random'
 
 require File.join(File.dirname(__FILE__), "environment_variables")
-require File.join(File.dirname(__FILE__), "environment_variables_static")
 
 Rails::Initializer.run do |config|
 

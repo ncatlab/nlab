@@ -10,7 +10,7 @@
   <h3>Pages</h3>
   <ul style="list-style: none; padding-left: 0">
   <%- for page in @all_pages_in_category %>
-    <li><a style="color: #005c19" href="<%= link_to_web_page(page) %>"><%= page %></a></li>
+    <li><%= link_to(page, {:web => @web.address, :controller => "wiki", :action => @web.published? ? "published" : "show", :id => page}, {:style => "color: #005c19"}) %></li>
   <%- end -%>
   </ul>
 </div>

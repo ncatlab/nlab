@@ -23,10 +23,10 @@ end
   <%- if !(@link_to_nforum_discussion.nil?) && !(@link_to_nforum_discussion == "")  -%>
     <a href="<%= @link_to_nforum_discussion -%>" title="Discuss this page in its dedicated thread on the nForum" style="color: black">Discuss this page</a> |
   <%- else -%>
-    <a href="https://nforum.ncatlab.org/discussions/?CategoryID=0" title="Discuss this page on the nForum. It does not yet have a dedicated thread; feel free to create one, giving it the same name as the title of this page" style="color:black">Discuss this page</a> |
+    <a href="<%= ENV["NFORUM_URL"] %>discussions/?CategoryID=0" title="Discuss this page on the nForum. It does not yet have a dedicated thread; feel free to create one, giving it the same name as the title of this page" style="color:black">Discuss this page</a> |
   <%- end -%>
   <%- if ([1, 23, 39].include?(@web.id)) && (@page != nil) && (@page.name != "HomePage") && @is_author -%>
-    <a href="https://ncatlab.org/nlab/author/<%= u @page.name =%>" title="Overview of nLab pages which <%= @page.name =%> has edited" style="color: black">Pages contributed to</a> |
+    <%= link_to("Pages contributed to", {:web => @web.address, :controller => "author", :action => "author", :name => @page.name}, {:title => "Overview of nLab pages which " + @page.name + " has edited", :style => "color: black"}) %>
   <%- end -%>
 <% end -%>
     <% form_tag({ :controller => 'wiki', :action => 'search', :web => @web.address},

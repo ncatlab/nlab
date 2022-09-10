@@ -60,6 +60,9 @@ class WikiReference < ActiveRecord::Base
     names = connection.select_all(sanitize_sql([query, page_name])).map { |row| row['name'] }
   end
 
+  # Warning.
+  # These are not just the pages redirecting to the given page.
+  # Rather, they additionally include pages that *reference* any such page.
   def self.pages_redirected_to(web, page_name, page)
     page = web.page(page_name) unless page
     return [] unless page
@@ -72,6 +75,12 @@ class WikiReference < ActiveRecord::Base
             Thread.current[:page_redirects] && Thread.current[:page_redirects][page]
     redirected_pages.uniq.each { |name| names.concat self.pages_that_reference(web, name) }
     names.uniq
+  end
+
+  def self.pages_redirected_to_for_real(web, page_name, page)
+    page = web.page(page_name) unless page
+    return [] unless page
+    return page.redirects
   end
 
   def self.pages_that_redirect_for(web, page_name)
