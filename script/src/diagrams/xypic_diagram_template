@@ -4,7 +4,7 @@
 
 \usepackage[all, color, 2cell]{xy}
 
-\UseTwocells
+\UseAllTwocells
 
 \begin{document}
 
