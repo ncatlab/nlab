@@ -264,7 +264,7 @@ def diagram_to_latex_xypic(diagram):
     template = r'''\documentclass[$document_params]{standalone}
 \usepackage{amsmath,amssymb,amsthm,mathtools,xcolor}
 \usepackage[all,color,2cell]{xy}
-\UseTwocells
+\UseAllTwocells
 \begin{document}
 $font_size
 \xymatrix$diagram_params{$diagram_body}
