@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(:version => 20100101192755) do
     t.datetime "locked_at"
   end
 
+  add_index "pages", ["web_id", "name"], :name => "index_pages_on_web_id_and_name"
+
   create_table "revisions", :force => true do |t|
     t.datetime "created_at",                                     :null => false
     t.datetime "updated_at",                                     :null => false
@@ -81,5 +83,6 @@ ActiveRecord::Schema.define(:version => 20100101192755) do
 
   add_index "wiki_references", ["page_id"], :name => "index_wiki_references_on_page_id"
   add_index "wiki_references", ["referenced_name"], :name => "index_wiki_references_on_referenced_name"
+  add_index "wiki_references", ["link_type"], :name => "index_wiki_references_on_link_type"
 
 end
