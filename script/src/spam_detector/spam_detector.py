@@ -138,9 +138,9 @@ def detect_spam(
     elif not has_nforum_user:
         threshold = 0.4
     elif is_title_change:
-        threshold = 0.4 * (1 - _number_of_pages_edited_up_to_limit(author, 250) / 250)
+        threshold = 0.4 * (1 - _number_of_pages_edited_up_to_limit(author, 25) / 25)
     else:
-        threshold = 0.2 * (1 - _number_of_pages_edited_up_to_limit(author, 250) / 250)
+        threshold = 0.2 * (1 - _number_of_pages_edited_up_to_limit(author, 25) / 25)
     if difference_ratio < threshold:
         raise SpamDetectionException(difference_ratio, threshold)
     return difference_ratio, threshold
