@@ -1,0 +1,5 @@
+production:
+  adapter: mysql2
+  username: nlab
+  database: nlab
+  encoding: utf8
