@@ -18,5 +18,5 @@ def define():
     return find_block.Block(
         "\\ref{",
         "}",
-        lambda reference: reference_processor(reference),
+        reference_processor,
         True)
