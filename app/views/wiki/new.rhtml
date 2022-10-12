@@ -1,56 +1,16 @@
 <%# coding: utf-8 %>
-<% if !@is_reference -%>
-  <%-
-    @title = "Create #{WikiWords.separate(@page_name).escapeHTML}".html_safe
-    @content_width = 720
-    @hide_navigation = true
-  -%>
-  <div id="MarkupHelp">
-    <%= render(:file => "#{@web.markup}_help") -%>
-    <%= render(:file => 'wiki_words_help') unless @web.brackets_only? -%>
-  </div>
-<% else -%>
-  <%-
-    @title = "Create reference"
-    @content_width = 720
-    @hide_navigation = true
-  -%>
-<% end -%>
+<%-
+  @title = "Creating #{WikiWords.separate(@page_name).escapeHTML}".html_safe
+  @content_width = 720
+  @hide_navigation = true
+-%>
+
+<div id="MarkupHelp">
+<%= render(:file => "#{@web.markup}_help") -%>
+<%= render(:file => 'wiki_words_help') unless @web.brackets_only? -%>
+</div>
 
 <div id="editForm">
-  <% if @is_reference -%>
-	<% form_tag({ :action => 'save', :web => @web.address, :id => @page_name, :is_reference => 1 },
-	        { 'id' => 'editForm', 'method' => 'post', 'onsubmit' => 'cleanAuthorName();', 'accept-charset' => 'utf-8' }) do %>
-            <div style="display: none;">
-              <input name="see_if_human" id="see_if_human" style="tabindex: -1; autocomplete: off"/>
-            </div>
-
-            <div>
-              <p style="font-size: 0.85em; width: 70%; padding-bottom: 1em">
-                Please take the following steps:
-                  <ol>
-                    <li style="font-size: 0.85em">Paste a BibTex entry for the reference you wish to add below. You can for example use <a href="https://www.zbmath.org/">Zentralblatt</a> to obtain a BibTex entry you are interested in by clicking on the 'BibTex'. DOI and arXiv data are sometimes also available at Zentrablatt as separate links, though need to be manually added to the BibTex entry in the manner described below.</li>
-                    <li style="font-size: 0.85em">In the 'author' field, the surname of each author must be enclosed in curly brackets: the format must be first names/initials {surname}. To link to an nLab page for an author, you can use the same syntax as you would on the main nLab: [[ nLab page name for author | first names/initials {surname}]]. </li>
-                    <li style="font-size: 0.85em">If available, add arXiv data to a field 'arxiv' in the form of a Markdown link, for example: [arXiv:0812.0298](https://arxiv.org/abs/0812.0298).</li>
-                    <li style="font-size: 0.85em">If available, add DOI data to a field 'doi' in the form of a Markdown link, for example: [doi:10.1112/plms/pdq026](https://doi.org/10.1112/plms/pdq026).</li>
-                  </ol>
-                If you have any problems, just get in touch at the <a href="<%= ENV["NFORUM_URL"] %>discussions/?CategoryID=0" target="_blank">nForum</a>.
-              </p>
-            </div>
-            <% if !@failed_edit -%>
-	      <textarea name="content" id="content" style="height: 45em; width: 70%;"></textarea>
-            <% else -%>
-              <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= @submitted_edit %></textarea>
-            <%- end %>
-
-            <div id="editFormButtons">
-              <input type="submit" value="Submit" accesskey="s"/> as
-              <%= text_field_tag :author, @author,
-                :onfocus => "this.value == 'Anonymous' ? this.value = '' : true;",
-                :onblur  => "this.value == '' ? this.value = 'Anonymous' : true" %>
-            </div>
-	<%- end -%>
-  <% else -%>
 	<% form_tag({ :action => 'save', :web => @web.address, :id => @page_name },
 	        { 'id' => 'editForm', 'method' => 'post', 'onsubmit' => 'cleanAuthorName();', 'accept-charset' => 'utf-8' }) do %>
             <div style="display: none;">
@@ -84,7 +44,6 @@
 		        :onblur  => "this.value == '' ? this.value = 'Anonymous' : true" %>
         </div>
 	<%- end -%>
-  <% end -%>
 </div>
 
 <script type="text/javascript">
