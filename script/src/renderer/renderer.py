@@ -446,7 +446,7 @@ def render(page_id, page_content, only_this=False):
         script_block.define_javascript_prefix(),
         image_from_file_block.define(),
         vertical_space_block.define_linebreak(),
-        bibitem_block.define(_web_address_of_page(page_id), page_id),
+        bibitem_block.define(_web_address_of_page(page_id)),
         citation_block.define()
     ]
     blocks.extend([
