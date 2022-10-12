@@ -21,9 +21,7 @@ import datetime
 import json
 import MySQLdb
 import os
-import re
 import sys
-import urllib.parse
 
 import find_block
 import mistletoe_nlab_renderer
@@ -69,33 +67,6 @@ def _execute_single_with_parameters(query, parameters):
 def _render_pages(pages):
     return pages.replace("--", "-")
 
-def _render_title(title):
-    pattern = re.compile(r"(?!\[\[([^\|]+?)\]\])\[\[([^\|]+?)\|([^\|]+?)\]\]")
-    match = pattern.match(title)
-    if match:
-        return (
-            "_" +
-            "<a class=\"existingWikiWord\" " +
-            "href=\"/nlab/show/" +
-            urllib.parse.quote_plus(match.group(2).strip()) +
-            "\">" +
-            match.group(3).strip() +
-            "</a>" +
-            "_")
-    pattern = re.compile(r"\[\[([^\|]+?)\]\]")
-    match = pattern.match(title)
-    if match:
-        return (
-            "_" +
-            "<a class=\"existingWikiWord\" " +
-            "href=\"/nlab/show/" +
-            urllib.parse.quote_plus(match.group(1).strip()) +
-            "\">" +
-            match.group(1).strip() +
-            "</a>" +
-            "_")
-    return "_" + title + "_"
-
 def _add_sources(final_rendering_parts, arxiv, doi):
     if arxiv:
         if doi:
@@ -111,7 +82,7 @@ def _add_sources(final_rendering_parts, arxiv, doi):
 
 def _render_article(reference):
     author = reference[5]
-    title = _render_title(reference[21])
+    title = reference[21]
     journal = reference[12]
     volume = reference[23]
     number = reference[16]
@@ -121,7 +92,7 @@ def _render_article(reference):
     doi = reference[27]
     parts_of_rendering = [
         author,
-        title,
+        "_" + title + "_",
         journal + " " + volume
     ]
     if number:
@@ -136,7 +107,7 @@ def _render_article(reference):
 
 def _render_book(reference):
     author = reference[5]
-    title = _render_title(reference[21])
+    title = reference[21]
     journal = reference[12]
     volume = reference[23]
     publisher = reference[19]
@@ -145,7 +116,7 @@ def _render_book(reference):
     doi = reference[27]
     parts_of_rendering = [
         author,
-        title
+        "_" + title + "_",
     ]
     if journal:
         parts_of_rendering.append(journal + " " + volume)

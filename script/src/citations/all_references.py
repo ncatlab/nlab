@@ -16,14 +16,11 @@ Depends on the environment variables:
 import argparse
 import json
 import logging
+import mistletoe_nlab_renderer
 import MySQLdb
 import os
-import re
 import sys
 import time
-import urllib.parse
-
-import mistletoe_nlab_renderer
 
 """
 Initialises logging. Logs to
@@ -67,37 +64,6 @@ def _execute_single_with_parameters(query, parameters):
         database_connection.close()
     return results
 
-"""
-Essentially the same as the corresponding method in reference_renderer.py,
-with markdown italics replaced by HTML
-"""
-def _render_title(title):
-    pattern = re.compile(r"(?!\[\[([^\|]+?)\]\])\[\[([^\|]+?)\|([^\|]+?)\]\]")
-    match = pattern.match(title)
-    if match:
-        return (
-            "_" +
-            "<em><a class=\"existingWikiWord\" " +
-            "href=\"/nlab/show/" +
-            urllib.parse.quote_plus(match.group(2).strip()) +
-            "\">" +
-            match.group(3).strip() +
-            "</a>" +
-            "</em>")
-    pattern = re.compile(r"\[\[([^\|]+?)\]\]")
-    match = pattern.match(title)
-    if match:
-        return (
-            "<em>" +
-            "<a class=\"existingWikiWord\" " +
-            "href=\"/nlab/show/" +
-            urllib.parse.quote_plus(match.group(1).strip()) +
-            "\">" +
-            match.group(1).strip() +
-            "</a>" +
-            "</em>")
-    return "<em>" + title + "</em>"
-
 def fetch_all():
     results = _execute_single_with_parameters(
         "SELECT citation_key, title, year, author FROM bibliography",
@@ -105,7 +71,10 @@ def fetch_all():
     return [
         {
             "citation_key": result[0],
-            "title": _render_title(result[1]),
+            "title": mistletoe_nlab_renderer.render(
+                "_" + result[1] + "_").replace(
+                "<p>", "").replace(
+                "</p>", "").strip(),
             "year": result[2],
             "author": mistletoe_nlab_renderer.render(
                 result[3]).replace("<p>", "").replace("</p>", "").strip()
