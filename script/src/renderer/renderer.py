@@ -30,9 +30,7 @@ From calling the sequential queue API:
 """
 
 import argparse
-import bibitem_block
 import category_block
-import citation_block
 import errno
 import centre_block
 import find_block
@@ -446,8 +444,6 @@ def render(page_id, page_content, only_this=False):
         script_block.define_javascript_prefix(),
         image_from_file_block.define(),
         vertical_space_block.define_linebreak(),
-        bibitem_block.define(_web_address_of_page(page_id)),
-        citation_block.define()
     ]
     blocks.extend([
         centre_block.define_center(blocks),
