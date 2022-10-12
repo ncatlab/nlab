@@ -231,9 +231,7 @@ def parse_line(line):
                     "Unexpected bibtex field '" +
                     field +
                     "'")
-    bibtex_value = line_parts[1].strip()
-    if bibtex_value[-1] == ',':
-        bibtex_value = bibtex_value[:-1]
+    bibtex_value = line_parts[1].strip()[:-1]
     if bibtex_field != BibtexField.AUTHOR:
         bibtex_value = bibtex_value.lstrip("{").rstrip("}")
     else:
@@ -271,11 +269,7 @@ def parse(bibtex_entry):
             bibtex_json[bibtex_field.name.lower()] = bibtex_value
     return bibtex_json
 
-def _validate(
-        document_type,
-        required_fields,
-        bibtex_json,
-        conditional_required_fields = {}):
+def _validate(document_type, required_fields, bibtex_json):
     for required_field in required_fields:
         try:
             bibtex_json[required_field]
@@ -285,35 +279,12 @@ def _validate(
                 document_type +
                 " type: " +
                 required_field)
-    if not conditional_required_fields:
-        return
-    for conditional_field, required_fields_given_field in \
-            conditional_required_fields.items():
-        for required_field in required_fields_given_field:
-            try:
-                bibtex_json[required_field]
-            except KeyError:
-                raise RequiredFieldException(
-                    "When the field " +
-                    conditional_field +
-                    " is present, the following field must also be present for " +
-                    "a reference of " +
-                    document_type +
-                    " type: " +
-                    required_field)
 
 def _validate_article(bibtex_json):
     _validate(
         "article",
         ["author", "year", "journal", "pages", "title", "volume"],
         bibtex_json)
-
-def _validate_book(bibtex_json):
-    _validate(
-        "book",
-        ["author", "year", "publisher", "title"],
-        bibtex_json,
-        { "journal": [ "volume" ] })
 
 def add(bibtex_entry, made_by):
     try:
@@ -326,8 +297,6 @@ def add(bibtex_entry, made_by):
         sys.exit(str(unexpectedBibtexFieldException))
     if bibtex_json["document_type"] == "article":
         _validate_article(bibtex_json)
-    elif bibtex_json["document_type"] == "book":
-        _validate_book(bibtex_json)
     logger.info(
         "Successfully constructed the JSON " +
         json.dumps(bibtex_json) +
