@@ -176,11 +176,7 @@ def _extract_surname(author):
     if (len(author_parts) != 2) or ('}' not in author_parts[1]):
         raise AuthorFormatException(
             "An author must be given in the form:\n\nfirst names/initials " +
-            "{surname},\n\nincluding the curly brackets around 'surname', " +
-            "and without any use of LaTeX code for diacritic " +
-            "marks/accents (please replace such code by the actual " +
-            "characters, the nLab understands unicode).\n\nThis is not the " +
-            "case for: " +
+            "{surname}\n\nThis is not the case for: " +
             author)
     return author_parts[1].split('}')[0]
 
@@ -231,14 +227,8 @@ def parse_line(line):
                     "Unexpected bibtex field '" +
                     field +
                     "'")
-    bibtex_value = line_parts[1].strip()[:-1]
-    if bibtex_field != BibtexField.AUTHOR:
-        bibtex_value = bibtex_value.lstrip("{").rstrip("}")
-    else:
-        if bibtex_value[0] == '{':
-            bibtex_value = bibtex_value[1:]
-        if bibtex_value[-1] == '}':
-            bibtex_value = bibtex_value[:-1]
+    bibtex_value = \
+        line_parts[1].strip()[:-1].replace("{", "", 1).replace("}", "", 1)
     return bibtex_field, bibtex_value
 
 def parse(bibtex_entry):
@@ -255,6 +245,8 @@ def parse(bibtex_entry):
             first_line_parts[1].split(",")[0].strip()
     for line in bibtex_entry_lines[1:-1]:
         bibtex_field, bibtex_value = parse_line(line)
+        if bibtex_field != BibtexField.AUTHOR:
+            bibtex_value = bibtex_value.lstrip("{").rstrip("}").rstrip(".")
         if bibtex_field.is_custom_field():
             bibtex_json["custom"][bibtex_field.name.lower()] = bibtex_value
         else:
