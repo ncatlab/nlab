@@ -64,42 +64,13 @@ def _execute_single_with_parameters(query, parameters):
         database_connection.close()
     return results
 
-def _render_pages(pages):
-    return pages.replace("--", "-")
-
 def _render_article(reference):
-    author = reference[5]
-    title = reference[21]
-    journal = reference[12]
-    volume = reference[23]
-    number = reference[16]
-    pages = reference[18]
-    year = reference[24]
-    arxiv = reference[26]
-    doi = reference[27]
-    parts_of_rendering = [
-        author,
-        "_" + title + "_",
-        journal + " " + volume
-    ]
-    if number:
-        parts_of_rendering.append("No. " + str(number))
-    final_parts_of_rendering = [
-        _render_pages(pages),
-        "(" + year + ")",
-    ]
-    if arxiv:
-        if doi:
-            final_parts_of_rendering.append(
-                "(" + arxiv + ", " + doi + ")")
-        else:
-            final_parts_of_rendering.append(
-                "(" + arxiv + ")")
-    elif doi:
-        final_parts_of_rendering.append(
-            "(" + doi + ")")
-    parts_of_rendering.append(" ".join(final_parts_of_rendering))
-    return ", ".join(parts_of_rendering)
+    return ", ".join([
+        reference[5],
+        "_" + reference[21] + "_",
+        reference[12] + " " + reference[23],
+        reference[18] + " (" + reference[24] + ")"
+    ])
 
 def render(citation_key):
     try:
