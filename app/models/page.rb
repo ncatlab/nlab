@@ -19,10 +19,11 @@ class Page < ActiveRecord::Base
           "You have tried to save page '#{name}' without changing its content")
     end
 
-    if web.id == 1 and author.name == 'Anonymous' and author.ip == '73.168.5.183'
-      raise Instiki::ValidationError.new(
-          "Hello anonymous editor. Please respond to https://nforum.ncatlab.org/discussion/14612/flood-of-unresponsive-anonymous-edits/?Focus=99880#Comment_99880 before making any further edits!")
-    end
+    self.name = name
+    author = Author.new(author.to_s) unless author.is_a?(Author)
+
+    revision = Revision.new(
+       :page => self, :content => content, :author => author, :revised_at => time)
 
     renderer_path = ENV["NLAB_PAGE_RENDERER_PATH"]
 
