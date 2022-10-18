@@ -524,6 +524,13 @@ class WikiController < ApplicationController
             "Some content must be added to a page before it can be created")
         end
 
+        if [1].include?(@web.id)
+          announcement = params[:announcement]
+          unless !announcement.nil? and announcement.purify.present?
+            raise Instiki::ValidationError.new("This is a new page. Please write a comment below for the nForum discussion thread.")
+          end
+        end
+
         wiki.write_page(@web_name, @page_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
 
