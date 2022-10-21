@@ -8,7 +8,7 @@ gem "rexml"
 gem "webrick"
 gem "RedCloth", ">=4.0.0"
 gem "erubis"
-gem "nokogiri", '~>1.8.0'
+gem "nokogiri", '~>1.13.9'
 gem "rake", '~>12.3.2'
 gem "rdoc"
 gem "json", "~> 2.5.1"
