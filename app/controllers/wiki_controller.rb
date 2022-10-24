@@ -455,7 +455,7 @@ class WikiController < ApplicationController
           end
         end
 
-        if ([1, 23].include?(@web.id)) && (@page_name != "Sandbox")
+        if [1, 23].include?(@web.id) && @page_name != "Sandbox" && !author_name.starts_with?('do not announce')
           announcement = params[:announcement]
           if !announcement.nil?
             announcement = announcement.purify
@@ -534,7 +534,7 @@ class WikiController < ApplicationController
         wiki.write_page(@web_name, @page_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
 
-        if [1, 23].include?(@web.id)
+        if [1, 23].include?(@web.id) && !author_name.starts_with?('do not announce')
           announcement = params[:announcement].purify
           generate_nforum_post_from_nlab_edit_path = File.join(
             Rails.root,
