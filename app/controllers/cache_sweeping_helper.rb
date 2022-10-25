@@ -67,6 +67,14 @@ module CacheSweepingHelper
     end
   end
 
+  # To be used for expiring pages in which the status of links may have changed between "linked" and "wanted".
+  def expire_referencing_cached_page(web, page_name)
+    expire_action :controller => 'wiki', :web => web.address,
+        :action => %w(show published print history), :id => page_name
+    expire_action :controller => 'wiki', :web => web.address,
+        :action => 'show', :id => page_name, :mode => 'diff'
+  end
+
   def expire_related_caches(web, page_name, page)
     expire_cached_summary_pages(web)
     pages_to_expire = (
@@ -76,12 +84,14 @@ module CacheSweepingHelper
     pages_to_expire.each { |page_name_2| expire_cached_page(web, page_name_2) }
   end
 
-  # Does not take into account redirects.
-  def expire_referencing_caches(web, page_name)
-    WikiReference.pages_that_reference(web, page_name).each do |page_name_2|
-      expire_cached_page(web, page_name_2)
+  # Terrible hack.
+  # Does not iteratively consider inclusions and redirects.
+  def expire_referencing_caches(page)
+    ([page.name] + page.redirects).each do |redirect_name|
+      WikiReference.pages_that_reference(page.web, redirect_name).each do |page_name_2|
+        expire_cached_page(page.web, page_name_2)
+      end
     end
   end
-
 
 end

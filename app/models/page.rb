@@ -108,6 +108,7 @@ class Page < ActiveRecord::Base
     # web.select.pages_that_link_to(name)
   end
 
+  # Sometimes more expensive than necessary (if there are lots of references, but only a few redirects).
   def redirects
     wiki_references.select { |ref| ref.redirected_page? }.map { |ref| ref.referenced_name }
   end
