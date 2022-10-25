@@ -24,16 +24,14 @@ class RevisionSweeper < ActionController::Caching::Sweeper
       expire_cached_revisions(revision.web, revision.page.name)
 
       expire_related_caches(revision.web, revision.page.name, nil)
+
+      expire_referencing_caches(revision.page)
     else
       page = record
       # If the page name has changed, expire the old page.
       if page.changed.include? 'name'
         name_prev = page.changes['name'][0]
         expire_cached_page(page.web, name_prev)
-
-        # Actually, we would need to do this whenever redirects etc. are updated.
-        # But we don't have a good way of tracking that.
-        expire_referencing_caches(page.web, page.name)
       end
     end
   end
@@ -43,7 +41,6 @@ class RevisionSweeper < ActionController::Caching::Sweeper
       page = record
       expire_cached_summary_pages(page.web)
       expire_related_caches(page.web, page.name, page)
-      expire_referencing_caches(page.web, page.name)
     end
   end
 
@@ -53,7 +50,7 @@ class RevisionSweeper < ActionController::Caching::Sweeper
       expire_cached_page(page.web, page.name)
       expire_cached_summary_pages(page.web)
       expire_related_caches(page.web, page.name, page)
-      expire_referencing_caches(page.web, page.name)
+      expire_referencing_caches(page)
       expire_cached_revisions(page.web, page.name)
     end
   end
