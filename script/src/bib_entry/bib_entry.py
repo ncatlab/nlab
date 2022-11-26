@@ -303,12 +303,12 @@ def latex_page_name(page_name, unicode_permitted):
     return replaced_page_name
 
 def page_link_for(page_name):
-    return os.environ["NLAB_URL"] + "nlab/show/" + urllib.parse.quote(page_name)
+    return os.environ["NLAB_URL"] + "nlab/show/" + urllib.parse.quote_plus(page_name)
 
 def revision_link_for(page_name, revision_number):
     return (
         os.environ["NLAB_URL"] + "nlab/revision/" +
-        urllib.parse.quote(page_name) +
+        urllib.parse.quote_plus(page_name) +
         "/" +
         str(revision_number))
 
