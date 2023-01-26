@@ -375,6 +375,10 @@ class WikiController < ApplicationController
         File.write(submitted_edits_page_content_file_path, the_content)
 
         if @page_name != "Sandbox"
+          if author_name == "Anonymous"
+            raise Instiki::ValidationError.new("Please enter your name. (Due to a flood of low quality edits, we restrict anonymous edits.)")
+          end
+
           spam_detector_path = ENV["NLAB_SPAM_DETECTOR_PATH"]
           if new_name != @page_name
             response, error_message, status = Open3.capture3(
