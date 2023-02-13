@@ -80,6 +80,7 @@ h1#pageName {
 }
 .maruku-equation {
     font-size: 1.05em;
+    margin: 1.05em auto 1.05em auto;
 }
 .navigation:not(.navfoot) {
     position: absolute;
