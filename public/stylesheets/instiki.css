@@ -428,7 +428,7 @@ border: 1px solid blue;
 }
 
 merror {display:inline;font-size:1em;}
-math[display=block] {overflow:auto;}
+math[display=block] {overflow:auto;overflow-y:hidden}
 math { white-space: nowrap }
 .maruku-eq-number {float:right}
 .maruku-equation {text-align:center}
