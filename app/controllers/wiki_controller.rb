@@ -375,7 +375,7 @@ class WikiController < ApplicationController
         File.write(submitted_edits_page_content_file_path, the_content)
 
         if @page_name != "Sandbox"
-          if author_name == "Anonymous"
+          if ['anonymous', 'guest'].include?(author_name.downcase)
             raise Instiki::ValidationError.new("Please enter your name. (Due to a flood of low quality edits, we restrict anonymous edits.)")
           end
 
