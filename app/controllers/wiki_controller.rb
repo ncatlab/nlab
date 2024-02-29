@@ -184,26 +184,7 @@ class WikiController < ApplicationController
         return
       end
       @failed_edit = true
-      submitted_edits_directory_path = File.join(
-        ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
-        @web.address)
-      page_content_file_name = @page_name.split.join("_")
-      page_content_file_name = page_content_file_name.gsub("/", "¤")
-      submitted_edits_page_content_file_path = File.join(
-        submitted_edits_directory_path,
-        page_content_file_name)
-      @submitted_edit = File.read(submitted_edits_page_content_file_path)
-      submitted_announcements_directory_path = File.join(
-        ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
-        @web.address)
-      submitted_announcement_file_path = File.join(
-        submitted_announcements_directory_path,
-        page_content_file_name)
-      if File.file?(submitted_announcement_file_path)
-        @submitted_announcement = File.read(submitted_announcement_file_path)
-      else
-        @submitted_announcement = ""
-      end
+      @submitted_announcement = params[:announcement]
     end
   end
 
@@ -218,26 +199,7 @@ class WikiController < ApplicationController
       return
     end
     @failed_edit = true
-    submitted_edits_directory_path = File.join(
-      ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
-      @web.address)
-    page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
-    submitted_edits_page_content_file_path = File.join(
-      submitted_edits_directory_path,
-      page_content_file_name)
-    @submitted_edit = File.read(submitted_edits_page_content_file_path)
-
-    submitted_announcements_directory_path = File.join(
-      ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
-      @web.address)
-    submitted_announcement_file_path = File.join(
-      submitted_announcements_directory_path,
-      page_content_file_name)
-    if File.file?(submitted_announcement_file_path)
-      @submitted_announcement = File.read(submitted_announcement_file_path)
-    else
-      @submitted_announcement = ""
-    end
+    @submitted_announcement = params[:announcement]
     # to template
   end
 
@@ -568,12 +530,17 @@ class WikiController < ApplicationController
       flash[:error] = e.to_s
       logger.error e
       param_hash = {:web => @web_name, :id => @page_name, :failed_edit => 1}
+      announcement = params[:announcement]
+      unless announcement.blank?
+        param_hash.update( :announcement => announcement )
+      end
       if @page
         @page.unlock
-        redirect_to param_hash.update( :action => 'edit' )
+        param_hash.update( :action => 'edit' )
       else
-        redirect_to param_hash.update( :action => 'new' )
+        param_hash.update( :action => 'new' )
       end
+      redirect_to param_hash
     end
   end
 
