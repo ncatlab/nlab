@@ -184,6 +184,15 @@ class WikiController < ApplicationController
         return
       end
       @failed_edit = true
+      submitted_edits_directory_path = File.join(
+        ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
+        @web.address)
+      page_content_file_name = @page_name.split.join("_")
+      page_content_file_name = page_content_file_name.gsub("/", "¤")
+      submitted_edits_page_content_file_path = File.join(
+        submitted_edits_directory_path,
+        page_content_file_name)
+      @submitted_edit = File.read(submitted_edits_page_content_file_path)
       @submitted_announcement = params[:announcement]
     end
   end
@@ -199,6 +208,14 @@ class WikiController < ApplicationController
       return
     end
     @failed_edit = true
+    submitted_edits_directory_path = File.join(
+      ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
+      @web.address)
+    page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
+    submitted_edits_page_content_file_path = File.join(
+      submitted_edits_directory_path,
+      page_content_file_name)
+    @submitted_edit = File.read(submitted_edits_page_content_file_path)
     @submitted_announcement = params[:announcement]
     # to template
   end
