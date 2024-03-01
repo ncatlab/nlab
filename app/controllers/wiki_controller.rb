@@ -179,21 +179,6 @@ class WikiController < ApplicationController
     else
       @page.lock(Time.now, @author)
       @link_to_nforum_discussion = link_to_nforum_discussion()
-      if params["failed_edit"].nil? || params["failed_edit"].to_i != 1
-        @failed_edit = false
-        return
-      end
-      @failed_edit = true
-      submitted_edits_directory_path = File.join(
-        ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
-        @web.address)
-      page_content_file_name = @page_name.split.join("_")
-      page_content_file_name = page_content_file_name.gsub("/", "¤")
-      submitted_edits_page_content_file_path = File.join(
-        submitted_edits_directory_path,
-        page_content_file_name)
-      @submitted_edit = File.read(submitted_edits_page_content_file_path)
-      @submitted_announcement = params[:announcement]
     end
   end
 
@@ -203,20 +188,6 @@ class WikiController < ApplicationController
 
   def new
     redirect_to :web => @web_name, :action => 'edit', :id => @page_name unless @page.nil?
-    if params["failed_edit"].nil? || params["failed_edit"].to_i != 1
-      @failed_edit = false
-      return
-    end
-    @failed_edit = true
-    submitted_edits_directory_path = File.join(
-      ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
-      @web.address)
-    page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
-    submitted_edits_page_content_file_path = File.join(
-      submitted_edits_directory_path,
-      page_content_file_name)
-    @submitted_edit = File.read(submitted_edits_page_content_file_path)
-    @submitted_announcement = params[:announcement]
     # to template
   end
 
@@ -318,13 +289,6 @@ class WikiController < ApplicationController
       @page.unlock
     end
 
-    submitted_edits_directory_path = File.join(
-      ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"],
-      @web.address)
-    if !File.exist?(submitted_edits_directory_path)
-      Dir.mkdir(submitted_edits_directory_path)
-    end
-
     author_name = params['author'].purify.strip
     author_name = 'Anonymous' if (author_name.empty? || (author_name =~ /^\s*$/))
 
@@ -336,22 +300,10 @@ class WikiController < ApplicationController
         new_name = params['new_name'] ? params['new_name'].purify : @page_name
         new_name = new_name.split.join(" ").strip
         new_name = @page_name if new_name.empty?
-        if new_name != @page_name
-          submitted_edit_page_name = @page_name
-        else
-          submitted_edit_page_name = new_name
-        end
 
         if new_name.include?("¤")
           raise Instiki::ValidationError.new("Cannot use the symbol ¤ in a page name")
         end
-
-        page_content_file_name = submitted_edit_page_name.split.join("_").gsub("/", "¤")
-        page_content_file_name = page_content_file_name
-        submitted_edits_page_content_file_path = File.join(
-          submitted_edits_directory_path,
-          page_content_file_name)
-        File.write(submitted_edits_page_content_file_path, the_content)
 
         if @page_name != "Sandbox"
           spam_detector_path = ENV["NLAB_SPAM_DETECTOR_PATH"]
@@ -388,22 +340,6 @@ class WikiController < ApplicationController
             make_announcement = false
         end
 
-        submitted_announcements_directory_path = File.join(
-          ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
-          @web.address)
-
-        if !File.exist?(submitted_announcements_directory_path)
-          Dir.mkdir(submitted_announcements_directory_path)
-        end
-        submitted_announcement_file_path = File.join(
-          submitted_announcements_directory_path,
-          page_content_file_name)
-        if make_announcement
-          File.write(submitted_announcement_file_path, announcement)
-        else
-          File.write(submitted_announcement_file_path, "")
-        end
-
         if (@web.name == "nLab") && (@page_name != "Sandbox") &&
             (new_name != @page_name) && !make_announcement
           raise Instiki::ValidationError.new(
@@ -425,14 +361,6 @@ class WikiController < ApplicationController
 
         old_name = @page_name
         @page_name = new_name
-
-        if old_name != @page_name
-          require "fileutils"
-          old_page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
-          [submitted_edits_directory_path, submitted_announcements_directory_path].each do |dir|
-            FileUtils.safe_unlink(File.join(dir, old_page_content_file_name))
-          end
-        end
 
         if [1, 23].include?(@web.id) && @page_name != "Sandbox" && !author_name.starts_with?('do not announce')
           announcement = params[:announcement]
@@ -470,29 +398,6 @@ class WikiController < ApplicationController
         end
       else
         @page_name = @page_name.split.join(" ").strip
-        page_content_file_name = @page_name.split.join("_").gsub("/", "¤")
-        submitted_edits_page_content_file_path = File.join(
-          submitted_edits_directory_path,
-          page_content_file_name)
-        File.write(submitted_edits_page_content_file_path, the_content)
-
-        if [1, 23].include?(@web.id)
-          submitted_announcements_directory_path = File.join(
-            ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"],
-            @web.address)
-          if !File.exist?(submitted_announcements_directory_path)
-            Dir.mkdir(submitted_announcements_directory_path)
-          end
-          submitted_announcement_file_path = File.join(
-            submitted_announcements_directory_path,
-            page_content_file_name)
-          announcement = params[:announcement].purify
-          if announcement
-            File.write(submitted_announcement_file_path, announcement)
-          else
-            File.write(submitted_announcement_file_path, "")
-          end
-        end
 
         if @page_name.include?("¤")
           raise Instiki::ValidationError.new(
@@ -540,13 +445,11 @@ class WikiController < ApplicationController
       end
       redirect_to_page @page_name
     rescue Instiki::ValidationError => e
-      flash[:error] = e.to_s
       logger.error e
-      param_hash = {:web => @web_name, :id => @page_name, :failed_edit => 1}
-      announcement = params[:announcement]
-      unless announcement.blank?
-        param_hash.update( :announcement => announcement )
-      end
+      flash[:error] = e.to_s
+      flash[:submitted_content] = params[:content]
+      flash[:submitted_announcement] = params[:announcement]
+      param_hash = {:web => @web_name, :id => @page_name}
       if @page
         @page.unlock
         param_hash.update( :action => 'edit' )
