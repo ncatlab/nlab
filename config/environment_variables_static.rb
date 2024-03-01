@@ -18,8 +18,6 @@ ENV["XML_WHITELIST_PATH"] = "script/src/xml_detector/xml_whitelist"
 
 # Page-content-related paths.
 ENV["NLAB_PAGE_CONTENT_DIRECTORY"] = "page_content"
-ENV["NLAB_SUBMITTED_ANNOUNCEMENTS_DIRECTORY"] = "page_content/submitted_announcements"
-ENV["NLAB_SUBMITTED_EDITS_DIRECTORY"] = "page_content/submitted_edits"
 
 # URLs, trailing slash included.
 ENV["NLAB_URL"] = "https://ncatlab.org/"

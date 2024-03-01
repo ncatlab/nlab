@@ -17,11 +17,7 @@
            </div>
 
 	   <div>
-             <% if !@failed_edit -%>
-	       <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= @page.content ? @page.content : "" %></textarea>
-             <% else -%>
-               <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= @submitted_edit %></textarea>
-             <%- end %>
+	       <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= !flash[:submitted_content].nil? ? flash[:submitted_content] : @page.content %></textarea>
 <% if @page_name != 'HomePage' -%>
 	   <p>
 	      <%= check_box_tag :alter_title, value = "1", checked=false,
@@ -45,11 +41,7 @@ For trivial edits, such as correcting typos, please leave the box below empty; f
                     </p>
                 </div>
                 <div>
-                    <% if !@failed_edit -%>
-                      <textarea name="announcement" id="announcement" style="height: 10em; width: 70%"></textarea>
-                    <% else -%>
-                      <textarea name="announcement" id="announcement" style="height: 10em; width: 70%"><%= @submitted_announcement %></textarea>
-                    <%- end %>
+                      <textarea name="announcement" id="announcement" style="height: 10em; width: 70%"><%= flash[:submitted_announcement] %></textarea>
                 </div>
             <% end%>
 		<div id="editFormButtons">
