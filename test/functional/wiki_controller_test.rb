@@ -945,6 +945,57 @@ class WikiControllerTest < ActionController::TestCase
     assert_match create_pattern, r.body
   end
 
+  def test_search_bad_regex
+    r = process 'search', 'web' => 'wiki1', 'query' => '*'
+
+    assert_response(:success)
+    assert_equal [], r.template_objects['results']
+    assert_equal [], r.template_objects['title_results']
+    create_pattern = Regexp.new(Regexp.escape(%{<b>Create a new page, named:</b> “} +
+        %{<span class='newWikiWord'><a href=\"/wiki1/new/%2A}+
+        %{\">*</a></span>}))
+    assert_match create_pattern, r.body
+  end
+
+  def test_search_partial_title_match
+    r = process 'search', 'web' => 'wiki1', 'query' => 'ant'
+
+    assert_response(:success)
+    assert_equal 'ant', r.template_objects['query']
+    assert_equal [@elephant, @oak], r.template_objects['results']
+    assert_equal [@elephant], r.template_objects['title_results']
+    create_pattern = Regexp.new(Regexp.escape(%{<b>Create a new page, named:</b> “} +
+        %{<span class='newWikiWord'><a href=\"/wiki1/new/ant}+
+        %{\">ant</a></span>}))
+    assert_match create_pattern, r.body
+  end
+
+  def test_search_exact_title_match
+    r = process 'search', 'web' => 'wiki1', 'query' => 'Elephant'
+
+    assert_response(302)
+    assert_equal 'Elephant', r.template_objects['query']
+    assert_equal [@elephant], r.template_objects['results']
+    assert_equal [@elephant], r.template_objects['title_results']
+    create_pattern = Regexp.new(Regexp.escape(%{<html><body>You } +
+        %{are being <a href=\"http://test.host/wiki1/show/Elepha} +
+        %{nt\">redirected</a>.</body></html>}))
+    assert_match create_pattern, r.body
+  end
+
+  def test_search_partial_title_match_stripped
+    r = process 'search', 'web' => 'wiki1', 'query' => ' ant'
+
+    assert_response(:success)
+    assert_equal ' ant', r.template_objects['query']
+    assert_equal [@elephant, @oak], r.template_objects['results']
+    assert_equal [], r.template_objects['title_results']
+    create_pattern = Regexp.new(Regexp.escape(%{<b>Create a new page, named:</b> “} +
+        %{<span class='newWikiWord'><a href=\"/wiki1/new/ant}+
+        %{\">ant</a></span>}))
+    assert_match create_pattern, r.body
+  end
+
   def test_search_null_in_query
     r = process 'search', 'web' => 'wiki1', 'query' => "non-existant\x00"
     
