@@ -150,18 +150,24 @@ class WikiController < ApplicationController
   end
 
   def search
-     @query = params['query'] ? params['query'].purify : ''
-     @title_results = @web.select { |page| page.name =~ /#{@query}/i }.sort
-     if !@title_results.empty? && @title_results.include?(@query)
-       @exact_match = [@query]
-     else
-       @exact_match = []
-     end
-     @results = @web.select { |page| page.content =~ /#{@query}/i}.sort
-     all_pages_found = (@results + @title_results).uniq
-     if all_pages_found.size == 1
-       redirect_to_page(all_pages_found.first.name)
-     end
+    @query = params['query'] ? params['query'].purify : ''
+    begin
+      r = Regexp.new(@query, Regexp::IGNORECASE)
+      @title_results = @web.select { |page| page.name =~ r }.sort
+      @results = @web.select { |page| page.content =~ r }.sort
+    rescue RegexpError => e
+      @title_results = []
+      @results = []
+    end
+    if @title_results.include?(@query)
+      @exact_match = [@query]
+    else
+      @exact_match = []
+    end
+    all_pages_found = (@results + @title_results).uniq
+    if all_pages_found.size == 1
+      redirect_to_page(all_pages_found.first.name)
+    end
   end
 
   # Within a single page --------------------------------------------------------
