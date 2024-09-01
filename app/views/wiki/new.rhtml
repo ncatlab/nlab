@@ -17,7 +17,7 @@
               <input name="see_if_human" id="see_if_human" style="tabindex: -1; autocomplete: off"/>
             </div>
 
-	       <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= !flash[:submitted_content].nil? ? flash[:submitted_content] : @page.content %></textarea>
+	       <textarea name="content" id="content" style="height: 45em; width: 70%;"><%= !flash[:submitted_content].nil? ? flash[:submitted_content] : '' %></textarea>
 
             <% if [1, 23].include?(@web.id) -%>
                 <div>
