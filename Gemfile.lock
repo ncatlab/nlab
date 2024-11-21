@@ -39,7 +39,7 @@ GEM
     nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     power_assert (2.0.1)
-    rack (2.2.4)
+    rack (2.2.6.4)
     rails_xss (0.4.0)
     raindrops (0.20.0)
     rake (12.3.3)
