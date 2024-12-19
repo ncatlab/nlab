@@ -19,6 +19,11 @@ class Page < ActiveRecord::Base
           "You have tried to save page '#{name}' without changing its content")
     end
 
+    if web.id == 1 and author.name == 'Anonymous' and author.ip == '49.205.250.239'
+      raise Instiki::ValidationError.new(
+          "This IP address is banned from making edits")
+    end
+
     renderer_path = ENV["NLAB_PAGE_RENDERER_PATH"]
 
     # Check that the actual page can be rendererd
