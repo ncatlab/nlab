@@ -19,7 +19,7 @@ class Page < ActiveRecord::Base
           "You have tried to save page '#{name}' without changing its content")
     end
 
-    if web.id == 1 and author.name == 'Anonymous' and author.ip == '49.205.250.239'
+    if web.id == 1 and (author.name == 'Anonymous' or author.name == 'dx' or author.ip == '49.205.250.239' or author.ip == '49.205.250.234')
       raise Instiki::ValidationError.new(
           "This IP address is banned from making edits")
     end
