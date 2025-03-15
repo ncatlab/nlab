@@ -29,6 +29,7 @@ grant all privileges on NLAB_DATABASE.* to NLAB_USER@localhost;
 ```
 Next, we import the database dump.
 We assume it resides in a file NLAB_DATABASE_DUMP.
+A database dump with all tables but no data is provided [here](schema.sql).
 ```sql
 connect NLAB_DATABASE;
 set global wait_timeout=3600;
@@ -37,8 +38,6 @@ source NLAB_DATABASE_DUMP;
 ```
 This will take about 15 minutes.
 Now we close the SQL session.
-
-An database dump with all tables but no data is provided [here](schema.sql).
 
 Configuring environment variables
 ---------------------------------
