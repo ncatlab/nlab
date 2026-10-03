@@ -346,10 +346,15 @@ def run_pdflatex(dir, filename, timeout, restrict_open):
             yield from ['-cnf-line', 'openout_any=p']
         yield filename
 
+    # 2026-10-03, Christian
+    # Workaround for this bug: https://github.com/podman-container-tools/podman/issues/20968
+    env = dict(os.environ)
+    env.pop('LISTEN_FDS')
     try:
         process = subprocess.run(
             list(args()),
             cwd = dir,
+            env = env,
             capture_output = True,
             timeout = timeout,
         )
