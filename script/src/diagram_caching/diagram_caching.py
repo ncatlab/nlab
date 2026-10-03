@@ -16,7 +16,7 @@ Depends on the following environment variables:
   If this is set, use this directory as a SVG compilation cache.
   Diagrams are identified by their base64-encoded (URL-safe) SHA-1 hash.
   Will be created if not existing.
-* NLAB_PDF_LATEX:
+* NLAB_PDFLATEX:
   Command line for invoking pdflatex.
   This will be called with working directory the directory of the LaTeX file to process.
   This script may append several options to the call (see run_pdflatex):
@@ -346,10 +346,15 @@ def run_pdflatex(dir, filename, timeout, restrict_open):
             yield from ['-cnf-line', 'openout_any=p']
         yield filename
 
+    # 2026-10-03, Christian
+    # Workaround for this bug: https://github.com/podman-container-tools/podman/issues/20968
+    env = dict(os.environ)
+    env.pop('LISTEN_FDS')
     try:
         process = subprocess.run(
             list(args()),
             cwd = dir,
+            env = env,
             capture_output = True,
             timeout = timeout,
         )
