@@ -1,6 +1,5 @@
 # Relative paths to Python "APIs" and contained paths.
 ENV["NLAB_ALL_REFERENCES_PATH"] = "script/src/citations/all_references.py"
-ENV["NLAB_AUTHOR_TO_USER_FILE"] = "script/author_to_user"
 ENV["NLAB_BIBTEX_TEMPLATE"] = "script/src/citations/bibtex_template"
 ENV["NLAB_CITATION_SOURCE_DIRECTORY"] = "script/src/citations/citation_source"
 ENV["NLAB_DIAGRAM_API_PATH"] = "script/src/diagram_caching/diagram_caching.py"
@@ -22,6 +21,11 @@ ENV["NLAB_PAGE_CONTENT_DIRECTORY"] = "page_content"
 # URLs, trailing slash included.
 ENV["NLAB_URL"] = "https://ncatlab.org/"
 ENV["NFORUM_URL"] = "https://nforum.ncatlab.org/"
+
+# Channel of the nForum (Zulip), by URL "https://nforum.ncatlab.org/#narrow/channel/<channel id>".
+# Set the channel id after the nForum has been imported into Zulip. (The channels of the edit
+# announcements are in the table nlab_zulip_channels, see script/src/zulip_announcer.)
+ENV["NFORUM_TECHNICAL_MATTERS_URL"] = ENV["NFORUM_URL"]
 
 # Working paths for the sequential queue API.
 ENV["QUEUE_COMPLETED_JOBS_DIRECTORY"] = "sequential_queue/completed"

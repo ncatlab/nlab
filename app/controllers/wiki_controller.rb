@@ -5,6 +5,7 @@ require 'maruku/ext/math'
 require 'zip/zip'
 require 'instiki_stringsupport'
 require 'resolv'
+require 'zulip_announcer'
 
 class WikiController < ApplicationController
 
@@ -184,7 +185,7 @@ class WikiController < ApplicationController
       redirect_to :web => @web_name, :action => 'locked', :id => @page_name
     else
       @page.lock(Time.now, @author)
-      @link_to_nforum_discussion = link_to_nforum_discussion()
+      @discussion_url = ZulipAnnouncer.discussion_url(@page.id)
     end
   end
 
@@ -267,7 +268,6 @@ class WikiController < ApplicationController
     else
       get_page_and_revision
       @show_diff = (params[:mode] == 'diff')
-      @link_to_nforum_discussion = link_to_nforum_discussion()
       @renderer = PageRenderer.new(@revision)
     end
   end
@@ -368,39 +368,16 @@ class WikiController < ApplicationController
         old_name = @page_name
         @page_name = new_name
 
-        if [1, 23].include?(@web.id) && @page_name != "Sandbox" && !author_name.starts_with?('do not announce')
+        if ZulipAnnouncer.announced?(@web, @page_name, author_name)
           announcement = params[:announcement]
-          if !announcement.nil?
-            announcement = announcement.purify
+          announcement = announcement.nil? ? "" : announcement.purify.strip
+          # Trivial edits (empty comment) are not announced, but renames
+          # are, so that the page's topic gets renamed too.
+          if announcement.present? || old_name != new_name
+            ZulipAnnouncer.enqueue(
+              "edit", @web, @page.id, new_name, author_name, announcement,
+              old_name != new_name ? old_name : nil)
           end
-          make_announcement = announcement.present?
-          generate_nforum_post_from_nlab_edit_path = File.join(
-            Rails.root,
-            "script/src/generate_nforum_post_from_nlab_edit/generate_nforum_post_from_nlab_edit.py")
-          if @web.id == 39
-            web_name = "HoTT"
-          elsif @web.id == 23
-            web_name = "CatLab"
-          else
-            web_name = @web.name
-          end
-          cmdline = [
-            generate_nforum_post_from_nlab_edit_path,
-            "edit",
-            new_name,
-            web_name,
-            @web.id.to_s,
-            make_announcement ? announcement : "",
-            author_name,
-            @page.id.to_s,
-          ]
-          if not make_announcement
-            cmdline.push("--is_trivial")
-          end
-          if old_name != new_name
-            cmdline.push("--old_page_name", old_name)
-          end
-          system(*cmdline)
         end
       else
         @page_name = @page_name.split.join(" ").strip
@@ -424,29 +401,11 @@ class WikiController < ApplicationController
         wiki.write_page(@web_name, @page_name, the_content, Time.now,
             Author.new(author_name, remote_ip), PageRenderer.new)
 
-        if [1, 23].include?(@web.id) && !author_name.starts_with?('do not announce')
-          announcement = params[:announcement].purify
-          generate_nforum_post_from_nlab_edit_path = File.join(
-            Rails.root,
-            "script/src/generate_nforum_post_from_nlab_edit/generate_nforum_post_from_nlab_edit.py")
-          if @web.id == 39
-            web_name = "HoTT"
-          elsif @web.id == 23
-            web_name = "CatLab"
-          else
-            web_name = @web.name
-          end
-          system(
-            generate_nforum_post_from_nlab_edit_path,
-            "create",
-            @page_name,
-            web_name,
-            @web.id.to_s,
-            announcement,
-            author_name)
-          #   "--ip_address",
-          #   remote_ip
-          # )
+        if ZulipAnnouncer.announced?(@web, @page_name, author_name)
+          page = @web.page(@page_name)
+          ZulipAnnouncer.enqueue(
+            "create", @web, page.id, @page_name, author_name,
+            params[:announcement].to_s.purify.strip)
         end
       end
       redirect_to_page @page_name
@@ -470,7 +429,6 @@ class WikiController < ApplicationController
     if @page
       begin
         @is_author = nlab_author?()
-        @link_to_nforum_discussion = link_to_nforum_discussion()
         @show_diff = (params[:mode] == 'diff')
         if @show_diff
           @renderer = PageRenderer.new(@page.current_revision)
@@ -548,9 +506,16 @@ class WikiController < ApplicationController
     end
   end
 
+  # Redirects to the page's topic on the nForum (Zulip). The "Discuss"
+  # links point here rather than to Zulip directly, so that they are the
+  # same for every page view and can be cached.
+  def discuss
+    url = @page && ZulipAnnouncer.discussion_url(@page.id)
+    redirect_to(url || ZulipAnnouncer.channel_url(@web.id))
+  end
+
   def history
     if @page
-      @link_to_nforum_discussion = link_to_nforum_discussion()
       @revisions_by_day = Hash.new { |h, day| h[day] = [] }
       @revision_numbers = Hash.new { |h, id| h[id] = [] }
       revision_number = @page.rev_ids.size
@@ -735,20 +700,6 @@ class WikiController < ApplicationController
       spam_patterns_file.readlines.inject([]) { |patterns, line| patterns << Regexp.new(line.chomp, Regexp::IGNORECASE) }
     else
       []
-    end
-  end
-
-  def link_to_nforum_discussion()
-    if @page == nil
-      return
-    end
-    detect_nforum_discussion_path = File.join(
-      Rails.root,
-      "script/src/detect_nforum_discussion/detect_nforum_discussion.py")
-    link = IO.popen([detect_nforum_discussion_path.to_s, @page.name.to_s], &:read)
-    link.strip! unless link.nil?
-    if !(link.nil?) && !(link == "")
-      return link
     end
   end
 

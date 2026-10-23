@@ -8,7 +8,6 @@ Depends on MySQLdb.
 Depends on the environment variables:
 * NLAB_DATABASE_NAME, NLAB_DATABASE_USER, NLAB_DATABASE_PASSWORD
 * NLAB_LOG_DIRECTORY
-* NLAB_AUTHOR_TO_USER_FILE: (script/author_to_user)
 """
 
 import argparse
@@ -75,42 +74,16 @@ def _content_of_page(page_id):
         [ page_id ])
     return query_results[0][0], query_results[0][1]
 
+"""
+Whether the nLab author is a known nForum member: the full name or "nLab name"
+of an active user on the nForum (Zulip), which the Zulip announcer copies into
+the table nlab_zulip_member_names (see script/src/zulip_announcer).
+"""
 def _has_nforum_user(nlab_author):
     query_results = _execute_single_with_parameters(
-        "SELECT UserID FROM mathforge_user WHERE Name = %s",
-        [nlab_author])
-    if len(query_results) == 1:
-        return True
-    names = nlab_author.split()
-    if len(names) == 2:
-        query_results = _execute_single_with_parameters(
-            "SELECT UserID FROM mathforge_user " +
-            "WHERE FirstName = %s AND LastName = %s",
-            [names[0], names[1]])
-        if len(query_results) == 1:
-            return True
-        names_joined_with_underscore = names[0] + "_" + names[1]
-        query_results = _execute_single_with_parameters(
-            "SELECT UserID FROM mathforge_user " +
-            "WHERE Name = %s",
-            [names_joined_with_underscore])
-        if len(query_results) == 1:
-            return True
-    author_to_user_filename = os.environ["NLAB_AUTHOR_TO_USER_FILE"]
-    with open(author_to_user_filename, "r") as author_to_user_file:
-        for line in author_to_user_file:
-            author_and_user = line.split(",")
-            number_of_columns = len(author_and_user)
-            if (number_of_columns > 2) or (number_of_columns < 2):
-                logger.warning(
-                    "Syntax error in author_to_user file at the following " +
-                    "line: " +
-                    line)
-            else:
-                author = author_and_user[0].strip()
-                if author == nlab_author:
-                    return True
-    return False
+        "SELECT 1 FROM nlab_zulip_member_names WHERE name = %s",
+        [" ".join(nlab_author.split())])
+    return len(query_results) > 0
 
 def _number_of_pages_edited_up_to_limit(author, limit):
     query_results = _execute_single_with_parameters(
