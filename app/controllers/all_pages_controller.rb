@@ -33,8 +33,7 @@ class AllPagesController < ApplicationController
     all_pages_path = File.join(
       Rails.root,
       "script/src/all_pages/all_pages.py")
-    pages = %x(
-      "#{all_pages_path}" "#{web_id}")
+    pages = IO.popen([all_pages_path.to_s, web_id.to_s], &:read)
     JSON.parse(pages)
   end
 
@@ -42,8 +41,7 @@ class AllPagesController < ApplicationController
     all_pages_path = File.join(
       Rails.root,
       "script/src/all_pages/all_pages.py")
-    pages = %x(
-      "#{all_pages_path}" "#{web_id}" --category "#{category_name}")
+    pages = IO.popen([all_pages_path.to_s, web_id.to_s, "--category", category_name.to_s], &:read)
     JSON.parse(pages)
   end
 
@@ -61,8 +59,7 @@ class AllPagesController < ApplicationController
     author_contributions_path = File.join(
       Rails.root,
       "script/src/author_contributions/author_contributions.py")
-    is_nlab_author = %x(
-      "#{author_contributions_path}" is_author "#{possible_author}")
+    is_nlab_author = IO.popen([author_contributions_path.to_s, "is_author", possible_author.to_s], &:read)
     is_nlab_author.strip! == "True" unless is_nlab_author.nil?
   end
 
@@ -70,8 +67,7 @@ class AllPagesController < ApplicationController
     page_categories_path = File.join(
       Rails.root,
       "script/src/page_categories/page_categories.py")
-    is_nlab_category = %x(
-      "#{page_categories_path}" is_category "#{web_id}" "#{possible_category}")
+    is_nlab_category = IO.popen([page_categories_path.to_s, "is_category", web_id.to_s, possible_category.to_s], &:read)
     is_nlab_category.strip! == "True" unless is_nlab_category.nil?
   end
 
@@ -79,8 +75,7 @@ class AllPagesController < ApplicationController
     page_categories_path = File.join(
       Rails.root,
       "script/src/page_categories/page_categories.py")
-    has_categories = %x(
-      "#{page_categories_path}" has_categories "#{web_id}")
+    has_categories = IO.popen([page_categories_path.to_s, "has_categories", web_id.to_s], &:read)
     has_categories.strip! == "True" unless has_categories.nil?
   end
 end

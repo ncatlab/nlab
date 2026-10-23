@@ -39,19 +39,15 @@ class CiteController < ApplicationController
       "script/src/bib_entry/bib_entry.py")
     if unicode
       if current
-        bib_entry = %x(
-          "#{bib_entry_path}" "#{page_name}" "#{revision_number}" "#{revision_id}" --current --unicode_permitted)
+        bib_entry = IO.popen([bib_entry_path.to_s, page_name.to_s, revision_number.to_s, revision_id.to_s, "--current", "--unicode_permitted"], &:read)
       else
-        bib_entry = %x(
-          "#{bib_entry_path}" "#{page_name}" "#{revision_number}" "#{revision_id}" --unicode_permitted)
+        bib_entry = IO.popen([bib_entry_path.to_s, page_name.to_s, revision_number.to_s, revision_id.to_s, "--unicode_permitted"], &:read)
       end
     else
       if current
-        bib_entry = %x(
-          "#{bib_entry_path}" "#{page_name}" "#{revision_number}" "#{revision_id}" --current)
+        bib_entry = IO.popen([bib_entry_path.to_s, page_name.to_s, revision_number.to_s, revision_id.to_s, "--current"], &:read)
       else
-        bib_entry = %x(
-          "#{bib_entry_path}" "#{page_name}" "#{revision_number}" "#{revision_id}")
+        bib_entry = IO.popen([bib_entry_path.to_s, page_name.to_s, revision_number.to_s, revision_id.to_s], &:read)
       end
     end
     return bib_entry
