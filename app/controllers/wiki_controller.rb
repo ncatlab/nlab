@@ -749,8 +749,7 @@ class WikiController < ApplicationController
     detect_nforum_discussion_path = File.join(
       Rails.root,
       "script/src/detect_nforum_discussion/detect_nforum_discussion.py")
-    link = %x(
-      "#{detect_nforum_discussion_path}" "#{@page.name}")
+    link = IO.popen([detect_nforum_discussion_path.to_s, @page.name.to_s], &:read)
     link.strip! unless link.nil?
     if !(link.nil?) && !(link == "")
       return link
@@ -761,8 +760,7 @@ class WikiController < ApplicationController
     author_contributions_path = File.join(
       Rails.root,
       "script/src/author_contributions/author_contributions.py")
-    is_nlab_author = %x(
-      "#{author_contributions_path}" is_author "#{@page.name}")
+    is_nlab_author = IO.popen([author_contributions_path.to_s, "is_author", @page.name.to_s], &:read)
     is_nlab_author.strip! == "True" unless is_nlab_author.nil?
   end
 
