@@ -24,8 +24,7 @@ class AuthorController < ApplicationController
     author_contributions_path = File.join(
       Rails.root,
       "script/src/author_contributions/author_contributions.py")
-    is_nlab_author = %x(
-      "#{author_contributions_path}" is_author "#{possible_author}")
+    is_nlab_author = IO.popen([author_contributions_path.to_s, "is_author", possible_author.to_s], &:read)
     is_nlab_author.strip! == "True" unless is_nlab_author.nil?
   end
 
@@ -33,8 +32,7 @@ class AuthorController < ApplicationController
     author_contributions_path = File.join(
       Rails.root,
       "script/src/author_contributions/author_contributions.py")
-    pages = %x(
-      "#{author_contributions_path}" pages "#{nlab_author}")
+    pages = IO.popen([author_contributions_path.to_s, "pages", nlab_author.to_s], &:read)
     JSON.parse(pages)
   end
 
@@ -42,8 +40,7 @@ class AuthorController < ApplicationController
     author_contributions_path = File.join(
       Rails.root,
       "script/src/author_contributions/author_contributions.py")
-    pages = %x(
-      "#{author_contributions_path}" recent "#{nlab_author}")
+    pages = IO.popen([author_contributions_path.to_s, "recent", nlab_author.to_s], &:read)
     JSON.parse(pages)
   end
 end
