@@ -5,36 +5,9 @@ Library defining a block for categories, and a processor for the contents of
 such a block
 """
 
+import database
 import find_block
-import MySQLdb
-import os
 import urllib.parse
-
-"""
-For a single database query
-"""
-def _execute_single_with_parameters(query, parameters):
-    database_user = os.environ["NLAB_DATABASE_USER"]
-    database_password = os.environ["NLAB_DATABASE_PASSWORD"]
-    database_name = os.environ["NLAB_DATABASE_NAME"]
-    database_connection = MySQLdb.connect(
-        user = database_user,
-        password= database_password,
-        db = database_name,
-        charset = "utf8",
-        use_unicode = True)
-    cursor = database_connection.cursor()
-    try:
-        cursor.execute(query, parameters)
-        results = cursor.fetchall()
-        database_connection.commit()
-    except MySQLdb.Error as e:
-        database_connection.rollback()
-        raise e
-    finally:
-        cursor.close()
-        database_connection.close()
-    return results
 
 class InvalidCategoryFormatException(Exception):
     def __init__(self, message):
@@ -44,7 +17,7 @@ class _NoSuchWebException(Exception):
     pass
 
 def _address_of_web(web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT address FROM webs WHERE id = %s",
         [ web_id ])
     try:
@@ -66,7 +39,7 @@ def _category_reference_already_present(
     return False
 
 def _make_category_reference(page_id, category):
-    _execute_single_with_parameters(
+    database.execute_single_with_parameters(
         "INSERT INTO wiki_references(" +
         "created_at, updated_at, page_id, referenced_name, link_type) " +
         "VALUES (" +

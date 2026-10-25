@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
+import database
 import find_block
-import MySQLdb
 import os
 import table_of_contents_block
 
@@ -15,34 +15,8 @@ class InvalidHeaderStructureException(Exception):
     def __init__(self, message):
         self.message = message
 
-"""
-For a single database query
-"""
-def _execute_single_with_parameters(query, parameters):
-    database_user = os.environ["NLAB_DATABASE_USER"]
-    database_password = os.environ["NLAB_DATABASE_PASSWORD"]
-    database_name = os.environ["NLAB_DATABASE_NAME"]
-    database_connection = MySQLdb.connect(
-        user = database_user,
-        password= database_password,
-        db = database_name,
-        charset = "utf8",
-        use_unicode = True)
-    cursor = database_connection.cursor()
-    try:
-        cursor.execute(query, parameters)
-        results = cursor.fetchall()
-        database_connection.commit()
-    except MySQLdb.Error as e:
-        database_connection.rollback()
-        raise e
-    finally:
-        cursor.close()
-        database_connection.close()
-    return results
-
 def _id_of_page(page_name):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT id FROM pages WHERE name = %s",
         [ page_name ])
     return query_results[0][0]

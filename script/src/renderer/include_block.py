@@ -5,8 +5,8 @@ Library defining a block for includes, and a processor for the contents of
 such a block
 """
 
+import database
 import find_block
-import MySQLdb
 import os
 
 class IncludeCannotBeEmptyException(Exception):
@@ -19,43 +19,17 @@ class PageToIncludeDoesNotExistException(Exception):
     def __init__(self, message):
         super().__init__(message)
 
-"""
-For a single database query
-"""
-def _execute_single_with_parameters(query, parameters):
-    database_user = os.environ["NLAB_DATABASE_USER"]
-    database_password = os.environ["NLAB_DATABASE_PASSWORD"]
-    database_name = os.environ["NLAB_DATABASE_NAME"]
-    database_connection = MySQLdb.connect(
-        user = database_user,
-        password= database_password,
-        db = database_name,
-        charset = "utf8",
-        use_unicode = True)
-    cursor = database_connection.cursor()
-    try:
-        cursor.execute(query, parameters)
-        results = cursor.fetchall()
-        database_connection.commit()
-    except MySQLdb.Error as e:
-        database_connection.rollback()
-        raise e
-    finally:
-        cursor.close()
-        database_connection.close()
-    return results
-
 class _NoSuchWebException(Exception):
     pass
 
 def _name_of_page(page_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT name FROM pages WHERE id = %s",
         [ page_id ])
     return query_results[0][0]
 
 def _id_of_page(page_name, web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT id FROM pages WHERE name = %s AND web_id = %s",
         [ page_name, web_id ])
     try:
@@ -64,7 +38,7 @@ def _id_of_page(page_name, web_id):
         raise PageToIncludeDoesNotExistException(page_name)
 
 def _content_of_page(page_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT content FROM revisions " +
         "WHERE page_id = %s " +
         "ORDER BY id DESC LIMIT 1",
@@ -72,7 +46,7 @@ def _content_of_page(page_id):
     return query_results[0][0]
 
 def _address_of_web(web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT address FROM webs WHERE id = %s",
         [ web_id ])
     try:
@@ -96,7 +70,7 @@ def _include_reference_already_present(
 def _circular(page_id, web_id, page_name_to_include):
     page_name = _name_of_page(page_id)
     id_of_page_to_include = _id_of_page(page_name_to_include, web_id)
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT wiki_references.id FROM wiki_references " +
         "LEFT JOIN pages ON pages.id = page_id " +
         "WHERE link_type = %s " +
@@ -117,7 +91,7 @@ def _make_include_reference(
         page_name_to_include):
     if _circular(page_id, web_id, page_name_to_include):
         raise CircularIncludeException()
-    _execute_single_with_parameters(
+    database.execute_single_with_parameters(
         "INSERT INTO wiki_references(" +
         "created_at, updated_at, page_id, referenced_name, link_type) " +
         "VALUES (" +
@@ -125,7 +99,7 @@ def _make_include_reference(
         [ page_id, original_page_name_to_include, "I" ])
 
 def _page_name_to_include(original_page_name_to_include, web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT page_id FROM wiki_references " +
         "LEFT JOIN pages ON pages.id = page_id " +
         "WHERE referenced_name = %s " +
@@ -136,7 +110,7 @@ def _page_name_to_include(original_page_name_to_include, web_id):
         page_id_to_include = query_results[0][0]
     except IndexError:
         page_id_to_include = _id_of_page(original_page_name_to_include, web_id)
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT name, web_id FROM pages " +
         "WHERE id = %s",
         [ page_id_to_include])
