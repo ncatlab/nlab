@@ -26,8 +26,11 @@ class FileController < ApplicationController
 
     if params['file']
       return unless is_post and check_allow_uploads
-      # form supplied
-      new_file = @web.wiki_files.create(params['file'])
+      new_file = @web.wiki_files.create(
+        :file_name   => @file_name,
+        :description => params['file']['description'],
+        :content     => params['file']['content']
+      )
       if new_file.valid?
         flash[:info] = "File '#{@file_name}' successfully uploaded"
         WikiReference.pages_that_link_to_file(@web, @file_name).each do |page_name|
