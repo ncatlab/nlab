@@ -8,6 +8,7 @@ such a block
 import find_block
 import MySQLdb
 import os
+import utilities
 
 class IncludeCannotBeEmptyException(Exception):
     pass
@@ -171,7 +172,7 @@ def include_processor(
         _address_of_web(web_id_of_page_to_include))
     path_to_page_to_include = os.path.join(
         page_content_directory,
-        "_".join(page_name_to_include.split()))
+        utilities.string_as_path_segment.print(page_name_to_include))
     if os.path.exists(path_to_page_to_include):
         with open(path_to_page_to_include, "r") as page_to_include_file:
             page_to_include = page_to_include_file.read()

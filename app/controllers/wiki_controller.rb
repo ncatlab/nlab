@@ -303,13 +303,8 @@ class WikiController < ApplicationController
       filter_spam(the_content)
       cookies['author'] = { :value => author_name.dup.as_bytes, :expires => Time.utc(2030) }
       if @page
-        new_name = params['new_name'] ? params['new_name'].purify : @page_name
-        new_name = new_name.split.join(" ").strip
-        new_name = @page_name if new_name.empty?
-
-        if new_name.include?("¤")
-          raise Instiki::ValidationError.new("Cannot use the symbol ¤ in a page name")
-        end
+        new_name = params['new_name'] ? params['new_name'].purify.split.join(" ").strip : nil
+        new_name = @page_name if new_name.nil? or new_name.empty?
 
         if @page_name != "Sandbox"
           spam_detector_path = ENV["NLAB_SPAM_DETECTOR_PATH"]
@@ -404,11 +399,10 @@ class WikiController < ApplicationController
         end
       else
         @page_name = @page_name.split.join(" ").strip
-
-        if @page_name.include?("¤")
-          raise Instiki::ValidationError.new(
-            "Cannot use the symbol ¤ in a page name")
+        if @page_name.empty?
+          raise Instiki::ValidationError.new("page name cannot be empty")
         end
+
         if the_content.blank?
           raise Instiki::ValidationError.new(
             "Some content must be added to a page before it can be created")
@@ -478,8 +472,9 @@ class WikiController < ApplicationController
           page_content_directory = File.join(
             ENV["NLAB_PAGE_CONTENT_DIRECTORY"],
             web_address(@page.web_id))
-          page_content_file_name = @page.name.split.join("_")
-          page_content_file_name = page_content_file_name.gsub("/", "¤")
+          # Following string_as_path_segment.print from script/src/renderer/utilities.py.
+          page_content_file_name = @page.name.gsub("/", "%0")
+          page_content_file_name = "%" + page_content_file_name if ["", ".", ".."].include?(page_content_file_name)
           page_content_file_path = File.join(page_content_directory, page_content_file_name)
           if File.file?(page_content_file_path)
             @rendered_content = File.read(page_content_file_path)
