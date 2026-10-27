@@ -57,6 +57,7 @@ import tex_parser
 import theorem_environment_blocks
 import tikz_diagram_block
 import time
+import utilities
 import vertical_space_block
 import xypic_diagram_block
 
@@ -275,10 +276,8 @@ def _write_to_file_for_maruku(page_id, content_for_rendering, is_initial=False):
             if osError.errno != errno.EEXIST:
                 raise osError
     page_name = _name_of_page(page_id)
-    if is_initial:
-        page_name = page_name + "--initial"
-    page_content_file_name = \
-        "_".join(page_name.split()).replace("/", "¤") + ".md"
+    page_name += "--initial" if is_initial else "--non-initial"
+    page_content_file_name = utilities.string_as_path_segment.print(page_name) + ".md"
     page_content_path = os.path.join(
         page_content_directory,
         page_content_file_name)
@@ -737,7 +736,7 @@ def add_table_of_contents(page_content):
 
 def _page_content_file_name(page_id):
     page_name = _name_of_page(page_id)
-    return "_".join(page_name.split()).replace("/", "¤")
+    return utilities.string_as_path_segment.print(page_name)
 
 def write_processed_content(
         page_id,

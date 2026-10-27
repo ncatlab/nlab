@@ -307,10 +307,6 @@ class WikiController < ApplicationController
         new_name = new_name.split.join(" ").strip
         new_name = @page_name if new_name.empty?
 
-        if new_name.include?("¤")
-          raise Instiki::ValidationError.new("Cannot use the symbol ¤ in a page name")
-        end
-
         if @page_name != "Sandbox"
           spam_detector_path = ENV["NLAB_SPAM_DETECTOR_PATH"]
           if new_name != @page_name
@@ -404,11 +400,6 @@ class WikiController < ApplicationController
         end
       else
         @page_name = @page_name.split.join(" ").strip
-
-        if @page_name.include?("¤")
-          raise Instiki::ValidationError.new(
-            "Cannot use the symbol ¤ in a page name")
-        end
         if the_content.blank?
           raise Instiki::ValidationError.new(
             "Some content must be added to a page before it can be created")
@@ -478,8 +469,9 @@ class WikiController < ApplicationController
           page_content_directory = File.join(
             ENV["NLAB_PAGE_CONTENT_DIRECTORY"],
             web_address(@page.web_id))
-          page_content_file_name = @page.name.split.join("_")
-          page_content_file_name = page_content_file_name.gsub("/", "¤")
+          # Following string_as_path_segment.print from script/src/renderer/utilities.py.
+          page_content_file_name = @page.name.gsub("/", "%0")
+          page_content_file_name = "%" + page_content_file_name if ["", ".", ".."].include?(page_content_file_name)
           page_content_file_path = File.join(page_content_directory, page_content_file_name)
           if File.file?(page_content_file_path)
             @rendered_content = File.read(page_content_file_path)
