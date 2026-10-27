@@ -303,9 +303,8 @@ class WikiController < ApplicationController
       filter_spam(the_content)
       cookies['author'] = { :value => author_name.dup.as_bytes, :expires => Time.utc(2030) }
       if @page
-        new_name = params['new_name'] ? params['new_name'].purify : @page_name
-        new_name = new_name.split.join(" ").strip
-        new_name = @page_name if new_name.empty?
+        new_name = params['new_name'] ? params['new_name'].purify.split.join(" ").strip : nil
+        new_name = @page_name if new_name.nil? or new_name.empty?
 
         if @page_name != "Sandbox"
           spam_detector_path = ENV["NLAB_SPAM_DETECTOR_PATH"]
@@ -400,6 +399,10 @@ class WikiController < ApplicationController
         end
       else
         @page_name = @page_name.split.join(" ").strip
+        if @page_name.empty?
+          raise Instiki::ValidationError.new("page name cannot be empty")
+        end
+
         if the_content.blank?
           raise Instiki::ValidationError.new(
             "Some content must be added to a page before it can be created")
