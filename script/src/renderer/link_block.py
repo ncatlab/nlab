@@ -5,36 +5,9 @@ Library defining a block for links, and a processor for the contents of
 such a block
 """
 
+import database
 import find_block
-import MySQLdb
-import os
 import urllib.parse
-
-"""
-For a single database query
-"""
-def _execute_single_with_parameters(query, parameters):
-    database_user = os.environ["NLAB_DATABASE_USER"]
-    database_password = os.environ["NLAB_DATABASE_PASSWORD"]
-    database_name = os.environ["NLAB_DATABASE_NAME"]
-    database_connection = MySQLdb.connect(
-        user = database_user,
-        password= database_password,
-        db = database_name,
-        charset = "utf8",
-        use_unicode = True)
-    cursor = database_connection.cursor()
-    try:
-        cursor.execute(query, parameters)
-        results = cursor.fetchall()
-        database_connection.commit()
-    except MySQLdb.Error as e:
-        database_connection.rollback()
-        raise e
-    finally:
-        cursor.close()
-        database_connection.close()
-    return results
 
 class InvalidWikiLinkFormatException(Exception):
     def __init__(self, message):
@@ -56,7 +29,7 @@ def _formatted_web_name(name):
     return "".join(name.split()).lower().strip().replace("'","")
 
 def _id_of_web(web_name):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT id, name, address FROM webs",
         [])
     for web_id, name, address in query_results:
@@ -67,7 +40,7 @@ def _id_of_web(web_name):
     raise _NoSuchWebException()
 
 def _address_of_web(web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT address FROM webs WHERE id = %s",
         [ web_id ])
     try:
@@ -76,7 +49,7 @@ def _address_of_web(web_id):
         raise _NoSuchWebException
 
 def _published(web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT published FROM webs WHERE id = %s",
         [ web_id ])
     try:
@@ -85,7 +58,7 @@ def _published(web_id):
         raise _NoSuchWebException
 
 def _existing_redirect(page_name, web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT wiki_references.id FROM wiki_references " +
         "LEFT JOIN pages ON pages.id = wiki_references.page_id " +
         "WHERE referenced_name = %s " +
@@ -99,7 +72,7 @@ def _existing_redirect(page_name, web_id):
         return False
 
 def _exists(page_name, web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT id FROM pages " +
         "WHERE name = %s " +
         "AND web_id = %s",
@@ -137,7 +110,7 @@ def _reference_to_wanted_page_already_present(
     return False
 
 def _make_reference_to_existing_page(page_id, reference_page_name):
-    _execute_single_with_parameters(
+    database.execute_single_with_parameters(
         "INSERT INTO wiki_references(" +
         "created_at, updated_at, page_id, referenced_name, link_type) " +
         "VALUES (" +
@@ -145,7 +118,7 @@ def _make_reference_to_existing_page(page_id, reference_page_name):
         [ page_id, reference_page_name, "L" ])
 
 def _make_reference_to_wanted_page(page_id, reference_page_name):
-    _execute_single_with_parameters(
+    database.execute_single_with_parameters(
         "INSERT INTO wiki_references(" +
         "created_at, updated_at, page_id, referenced_name, link_type) " +
         "VALUES (" +
@@ -153,7 +126,7 @@ def _make_reference_to_wanted_page(page_id, reference_page_name):
         [ page_id, reference_page_name, "W" ])
 
 def _exists_file(file_name, web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT description FROM wiki_files " +
         "WHERE file_name = %s " +
         "AND web_id = %s",
@@ -190,7 +163,7 @@ def _reference_to_wanted_file_already_present(
     return False
 
 def _make_reference_to_existing_file(page_id, file_name):
-    _execute_single_with_parameters(
+    database.execute_single_with_parameters(
         "INSERT INTO wiki_references(" +
         "created_at, updated_at, page_id, referenced_name, link_type) " +
         "VALUES (" +
@@ -198,7 +171,7 @@ def _make_reference_to_existing_file(page_id, file_name):
         [ page_id, file_name, "F" ])
 
 def _make_reference_to_wanted_file(page_id, file_name):
-    _execute_single_with_parameters(
+    database.execute_single_with_parameters(
         "INSERT INTO wiki_references(" +
         "created_at, updated_at, page_id, referenced_name, link_type) " +
         "VALUES (" +

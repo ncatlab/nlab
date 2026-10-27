@@ -31,6 +31,7 @@ From calling the sequential queue API:
 
 import argparse
 import category_block
+import database
 import errno
 import centre_block
 import find_block
@@ -39,7 +40,6 @@ import include_block
 import json
 import link_block
 import logging
-import MySQLdb
 import nowiki_block
 import os
 import re
@@ -76,32 +76,6 @@ logging_file_handler = logging.FileHandler(
 logging_file_handler.setFormatter(logging_formatter)
 logger.addHandler(logging_file_handler)
 
-"""
-For a single database query
-"""
-def _execute_single_with_parameters(query, parameters):
-    database_user = os.environ["NLAB_DATABASE_USER"]
-    database_password = os.environ["NLAB_DATABASE_PASSWORD"]
-    database_name = os.environ["NLAB_DATABASE_NAME"]
-    database_connection = MySQLdb.connect(
-        user = database_user,
-        password= database_password,
-        db = database_name,
-        charset = "utf8",
-        use_unicode = True)
-    cursor = database_connection.cursor()
-    try:
-        cursor.execute(query, parameters)
-        results = cursor.fetchall()
-        database_connection.commit()
-    except MySQLdb.Error as e:
-        database_connection.rollback()
-        raise e
-    finally:
-        cursor.close()
-        database_connection.close()
-    return results
-
 class Flag:
     def __init__(self):
         self.is_set = False
@@ -122,19 +96,19 @@ class XMLDetectionException(Exception):
         super().__init__(message)
 
 def _name_of_page(page_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT name FROM pages WHERE id = %s",
         [ page_id ])
     return query_results[0][0]
 
 def _web_id_of_page(page_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT web_id FROM pages WHERE id = %s",
         [ page_id ])
     return query_results[0][0]
 
 def _web_address_of_page(page_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT address FROM webs " +
         "LEFT JOIN pages ON pages.web_id = webs.id " +
         "WHERE pages.id = %s",
@@ -142,7 +116,7 @@ def _web_address_of_page(page_id):
     return query_results[0][0]
 
 def _content_of_page(page_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT content FROM revisions " +
         "WHERE page_id = %s " +
         "ORDER BY id DESC LIMIT 1",
@@ -150,7 +124,7 @@ def _content_of_page(page_id):
     return query_results[0][0]
 
 def _references_before_rendering(page_id, rendering_web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT wiki_references.id, referenced_name, link_type, web_id FROM " +
         "wiki_references LEFT JOIN pages ON page_id = pages.id " +
         "WHERE page_id = %s " +
@@ -169,7 +143,7 @@ def _update_pages_where_redirect_was_used(
         reference_name,
         rendering_web_id,
         pages_to_re_render_and_expire):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT page_id FROM wiki_references " +
         "LEFT JOIN pages ON pages.id = wiki_references.page_id " +
         "WHERE referenced_name = %s " +
@@ -178,7 +152,7 @@ def _update_pages_where_redirect_was_used(
         [ reference_name, "L", rendering_web_id ])
     pages_to_re_render_and_expire.extend(
         [ query_result[0] for query_result in query_results ])
-    _execute_single_with_parameters(
+    database.execute_single_with_parameters(
         "UPDATE wiki_references " +
         "LEFT JOIN pages ON pages.id = wiki_references.page_id " +
         "SET link_type = %s " +
@@ -207,14 +181,14 @@ def _delete_references_which_no_longer_exist(
     condition_string = "id = %s"
     for reference_id in reference_ids_to_delete[1:]:
         condition_string += " OR id = %s"
-    _execute_single_with_parameters(
+    database.execute_single_with_parameters(
         "DELETE FROM wiki_references WHERE (" +
         condition_string +
         ")",
         reference_ids_to_delete)
 
 def _pages_included_in(page_name, rendering_web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT page_id FROM wiki_references " +
         "LEFT JOIN pages ON pages.id = wiki_references.page_id " +
         "WHERE referenced_name = %s " +
@@ -224,7 +198,7 @@ def _pages_included_in(page_name, rendering_web_id):
     return [ query_result[0] for query_result in query_results ]
 
 def _pages_which_require(page_name, rendering_web_id):
-    query_results = _execute_single_with_parameters(
+    query_results = database.execute_single_with_parameters(
         "SELECT page_id FROM wiki_references " +
         "LEFT JOIN pages ON pages.id = wiki_references.page_id " +
         "WHERE referenced_name = %s " +

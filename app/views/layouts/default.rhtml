@@ -16,11 +16,17 @@
   <meta name="robots" content="<%= @robots_metatag_value %>" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <%- (@inline_style ? %w(nlab) : %w(instiki mathematics syntax nlab)).each do |s| -%>
+  <link rel="preload" as="style" href="<%= stylesheet_path(s) %>" />
+  <%- end -%>
+  <%- %w(prototype effects dragdrop controls application page_helper thm_numbering).each do |s| -%>
+  <link rel="preload" as="script" href="<%= javascript_path(s) %>" />
+  <%- end -%>
+
   <%= stylesheet_link_tag 'instiki', :media => 'all'  unless @inline_style %>
   <%= stylesheet_link_tag 'mathematics', :media => 'all'  unless @inline_style %>
   <%= stylesheet_link_tag 'syntax', :media => 'all'  unless @inline_style %>
   <%= stylesheet_link_tag 'nlab', :media => 'all' %>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts.css"/>
 
   <style type="text/css">
     h1#pageName, div.info, .newWikiWord a, a.existingWikiWord, .newWikiWord a:hover, [actiontype="toggle"]:hover, #TextileHelp h3 {
