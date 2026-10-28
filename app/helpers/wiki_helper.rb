@@ -1,3 +1,5 @@
+require 'zulip_announcer'
+
 module WikiHelper
 
   def navigation_menu_for_revision
@@ -37,13 +39,11 @@ module WikiHelper
   end
 
   def nforum_discussion
-    generic_nforum_link = "<a href=\"" + ENV["NFORUM_URL"] + "discussions/?CategoryID=0\">Discuss</a>"
-    if !(([1, 23, 39].include?(@web.id)) && (@page != nil) && (@page.name != "Sandbox"))
-      return generic_nforum_link
-    elsif @link_to_nforum_discussion.nil? || @link_to_nforum_discussion == ""
-       return generic_nforum_link
+    if ZulipAnnouncer::ANNOUNCED_WEB_IDS.include?(@web.id) && (@page != nil) && (@page.name != "Sandbox")
+      return link_to('Discuss', {:web => @web.address, :action => 'discuss', :id => @page.name},
+          {:rel => 'nofollow'})
     end
-    "<a href=\"" + @link_to_nforum_discussion + "\">Discuss</a>"
+    "<a href=\"" + ENV["NFORUM_URL"] + "\">Discuss</a>"
   end
 
   def history

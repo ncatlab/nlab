@@ -20,11 +20,7 @@ end
     <%= list_item 'Authors', {:action => 'authors'}, 'Everybody who has made an edit' %> |
   <%- end -%>
 <%- if (@web.name == "nLab") && (@page != nil) && (@page.name != "Sandbox") -%>
-  <%- if !(@link_to_nforum_discussion.nil?) && !(@link_to_nforum_discussion == "")  -%>
-    <a href="<%= @link_to_nforum_discussion -%>" title="Discuss this page in its dedicated thread on the nForum" style="color: black">Discuss this page</a> |
-  <%- else -%>
-    <a href="<%= ENV["NFORUM_URL"] %>discussions/?CategoryID=0" title="Discuss this page on the nForum. It does not yet have a dedicated thread; feel free to create one, giving it the same name as the title of this page" style="color:black">Discuss this page</a> |
-  <%- end -%>
+    <%= link_to("Discuss this page", {:web => @web.address, :action => "discuss", :id => @page.name}, {:title => "Discuss this page in its dedicated topic on the nForum", :style => "color: black", :rel => "nofollow"}) %> |
   <%- if ([1, 23, 39].include?(@web.id)) && (@page != nil) && (@page.name != "HomePage") && @is_author -%>
     <%= link_to("Pages contributed to", {:web => @web.address, :controller => "author", :action => "author", :name => @page.name}, {:title => "Overview of nLab pages which " + @page.name + " has edited", :style => "color: black"}) %>
   <%- end -%>
